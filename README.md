@@ -1,4 +1,4 @@
-# PmLogin
+# Project monitoring
 
 To start your Phoenix server:
 
