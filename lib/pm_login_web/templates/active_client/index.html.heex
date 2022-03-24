@@ -1,0 +1,28 @@
+<h1><i class="bi bi-people-fill"></i> Clients actifs</h1>
+
+<table id="tb-auth">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Client</th>
+      <th>email</th>
+      <th>Appartenant à la société</th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for active_client <- @active_clients do %>
+    <tr>
+      <td><img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{active_client.user.profile_picture}")} width="50"/></td>
+      <td><%= active_client.user.username %></td>
+      <td><%= active_client.user.email %></td>
+      <td><%= active_client.company.name %></td>
+
+      <!-- <td>
+        <span><%= link "Delete", to: Routes.active_client_path(@socket, :delete, active_client), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td> -->
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "+ Ajouter client à la liste des actifs", to: Routes.active_client_path(@socket, :new), class: "btn btn-lg btn-primary" %></span>

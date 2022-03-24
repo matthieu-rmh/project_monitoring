@@ -1,0 +1,40 @@
+  <h1><i class="bi bi-kanban"></i> Les projets</h1>
+  <%= if PmLogin.Login.get_user!(@curr_user_id).right_id == 1 or PmLogin.Login.get_user!(@curr_user_id).right_id == 2 do %>
+    <span><a href={ Routes.project_path(@socket, :new) } class="btn btn-lg btn-primary"><i class="bi bi-plus-circle"></i> Nouveau projet</a></span>
+  <% end %>
+  <table id="tb-auth" style="margin-top: 10px;">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Progression</th>
+        <th>Date de début</th>
+        <th>Date fin</th>
+        <th>Durée estimée</th>
+        <th>Durée accomplie</th>
+        <th>Date d'échéance</th>
+
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+  <%= for project <- @projects do %>
+      <tr>
+        <td><%= link "#{project.title}", to: Routes.project_path(@socket, :board, project) %></td>
+        <td><%= project.description %></td>
+        <td><%= project.progression %> %</td>
+        <td><%= Utilities.simple_date_format(project.date_start) %></td>
+        <td><%= if not is_nil(project.date_end) do Utilities.simple_date_format(project.date_end) else "-" end %></td>
+        <td><%= project.estimated_duration %> h</td>
+        <td><%= project.performed_duration %> h</td>
+        <td><%= Utilities.simple_date_format(project.deadline) %></td>
+
+        <td>
+          <span><a href={ Routes.project_path(@socket, :show, project) }><i class="bi bi-info-circle btn btn-info btn-lg" style="font-size: 20px;"></i></a></span>
+          <span><a href={ Routes.project_path(@socket, :edit, project) }><i class="bi bi-pencil-square btn btn-warning btn-lg" style="font-size: 20px;"></i></a></span>
+          <!-- <span><%= link "Supprimer", to: Routes.project_path(@socket, :delete, project), method: :delete, data: [confirm: "Are you sure?"] %></span> -->
+        </td>
+      </tr>
+  <% end %>
+    </tbody>
+  </table>

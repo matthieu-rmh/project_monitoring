@@ -1,0 +1,16 @@
+<h1>Bienvenue attributeur <%= @current_user.username %>!</h1>
+
+<div class="row">
+    <a href={Routes.project_path(@socket, :index)} class="column basecontents__without__radius esp__adm__col hover__growing">
+      <h3 class="header__link__title"><p id="adm">Projets <br/><span class="material-icons mat__ico">insert_chart</span></p></h3>
+    </a>
+    <a href={Routes.user_path(@socket, :show, @curr_user_id)} class="column basecontents__without__radius esp__adm__col">
+      <h3 class="header__link__title"><p id="adm">Mon profil <br/><span class="material-icons mat__ico">account_circle</span></p></h3>
+    </a>
+</div>
+
+<div class="row">
+    <a href={Routes.project_path(@socket, :contributors)} class="column basecontents__without__radius esp__adm__col">
+      <h3 class="header__link__title"><p id="adm">Contributeurs</p></h3>
+    </a>
+</div>

@@ -1,0 +1,19 @@
+.project-show{
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.pro__company__card{
+  display: inline;
+  width: 200px;
+  height: 30px;
+  /* transform: scale(0.5); */
+}
+
+.pro__company__card__title{
+  position: relative;
+  top: -10px;
+  margin-left: 2%; 
+  margin-bottom: 0;
+  font-size: 15px;
+}

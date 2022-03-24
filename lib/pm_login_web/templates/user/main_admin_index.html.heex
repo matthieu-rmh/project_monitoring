@@ -1,0 +1,18 @@
+  <h1 style="text-align: center;">ACCUEIL</h1>
+  <h1 style="text-align: center;"><span class="material-icons">home</span></h1>
+
+  <div class="container">
+    <div class="row">
+        <a href={Routes.company_path(@socket, :services)}  class="column basecontents__without__radius esp__adm__col hover__growing">
+        <h3 class="header__link__title"><p id="adm">Services <br/><span class="material-icons mat__ico">miscellaneous_services</span></p></h3>
+        </a>
+        <a href={Routes.user_path(@socket, :admin_space)} class="column basecontents__without__radius esp__adm__col">
+        <h3 class="header__link__title"><p id="space__adm">Espace administrateur <br/><span class="material-icons mat__ico">admin_panel_settings</span></p></h3>
+        </a>
+        <a href={Routes.project_path(@socket, :recaps)} class="column basecontents__without__radius esp__adm__col">
+        <h3 class="header__link__title"><p id="adm">Récapitulatifs <br/><span class="material-icons mat__ico">stacked_line_chart</span></p></h3>
+        </a>
+    </div>
+  </div>
+
+  <h1 style="text-align: center; margin-top: 20px;">Bienvenue administrateur Mgbi!</h1>

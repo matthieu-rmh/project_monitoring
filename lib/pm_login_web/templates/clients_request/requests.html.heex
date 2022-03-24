@@ -1,0 +1,51 @@
+<h1 class="my__requests"><span class="material-icons mat__ico__big">receipt_long</span>Requêtes des clients</h1>
+<div class="container request__container">
+  <%= for request <- @requests do %>
+    <div class="basecontents__without__radius request__panel">
+      <div class="row">
+        <div class="column">
+          <h2><%= request.title %></h2>
+        </div>
+        <div class="column">
+          <img class="profile-pic-header request__pp" src={Routes.static_path(@socket, "/#{request.active_client.company.logo}")} alt="" style="float: right;">
+        </div>
+      </div>
+
+        <p><%= request.content %></p>
+
+        <div class="column" style="margin-bottom: 20px;">
+          <%= for url <- request.file_urls do %>
+          <%= if Path.extname(url)==".jpg" or Path.extname(url)==".png" or Path.extname(url)==".jpeg" do %>
+            <a href={url} style="margin-bottom: 10px;"><img src={url} alt="" height="150"/></a>
+            <% else %>
+            <a href={url} download><%= Path.basename(url) %></a>
+            <br>
+            <% end %>
+          <% end %>
+        </div>
+
+        <i><img class="profile-pic-ultramini" src={Routes.static_path(@socket, "/#{request.active_client.user.profile_picture}")} width="20"/> <%= request.active_client.user.username %></i>
+  <br/>
+        <i><%= request.active_client.user.email %></i><br/>
+        <i>le <%= Utilities.letters_date_format_with_hours(request.date_post) %></i>
+
+        <div class="my_row" style="padding-left: 3em">
+            <div class="my_col request__checkbox__col">
+              <label for="vu">Vue</label>
+              <input id="vu" type="checkbox" phx-click="switch-seen" phx-value-id={request.id} checked={request.seen}>
+            </div>
+            <div class="my_col">
+              <label for="encours">En cours</label>
+              <input id="encours" type="checkbox" phx-click="switch-ongoing" phx-value-id={request.id} checked={request.ongoing}>
+            </div>
+
+            <div class="my_col">
+              <label for="accomplie">Accomplie</label>
+              <input id="accomplie" type="checkbox" phx-click="switch-done" phx-value-id={request.id } checked={request.done}>
+            </div>
+        </div>
+    </div>
+  <% end %>
+</div>
+<br>
+<span><a href={Routes.company_path(@socket, :services)} class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i> Services</a></span>
