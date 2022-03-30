@@ -99,3 +99,39 @@ header nav a {
     margin: 2rem 1rem;
   }
 }
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (min-width : 480px) {
+  .zoom-out {
+    font-size: 1.2rem;
+  }
+}
+/* Medium Devices, Desktops */
+
+@media only screen and (min-width : 1280px) {
+  .zoom-out {
+    font-size: 1.25rem;
+  }
+}
+
+@media only screen and (min-width : 1400px) {
+  .zoom-out {
+    font-size: 1.40rem;
+  }
+}
+
+.task-small {
+  color: #2ecc71;
+}
+
+.task-average {
+  color: #3498db;
+}
+
+.task-important {
+  color: #e67e22;
+}
+
+.task-urgent {
+  color: #e74c3c;
+}
