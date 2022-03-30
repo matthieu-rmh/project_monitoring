@@ -215,6 +215,7 @@
 .card__name {
   font-size: 12px;  
   font-weight: bold;
+  word-wrap: break-word;
 }
 
 .draggable-handle {
