@@ -27,9 +27,9 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
             <div class="modal-inner-card">
               <!-- Title -->
               <%= if @title != nil do %>
-              <div class="modal-title" style="margin-bottom: 30px;">
+              <div class="modal-title" style="margin-top: 5px; margin-bottom: 10px;">
                 <%= @title %>
-                <a href="#" style="position: relative; left: 30%;" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
+                <a href="#" style="position: relative; left: 30%" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
               </div>
               <% end %>
 
@@ -64,7 +64,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <div class="column">
                             <label class="zoom-out">Attributeur</label>
                             <div>
-                              <img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{@card.task.attributor.profile_picture}")} width="40"/>
+                              <img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{@card.task.attributor.profile_picture}")} width="36"/>
                             </div>
                             <div class="zoom-out">
                               <%= @card.task.attributor.username %>
@@ -77,7 +77,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <label class="zoom-out"> Durée estimée (en heure) </label>
                             <%= if @is_admin or @is_attributor do %>
                                 <b class="zoom-out"><%= number_input f, :estimated_duration, style: "width: 70px", value: @card.task.estimated_duration %> h</b>
-                                <p class="zoom-out"> <%= error_tag f, :negative_estimated %> </p>
+                                <b class="zoom-out"> <%= error_tag f, :negative_estimated %> </b>
                             <% else %>
                                 <b class="zoom-out"><%= @card.task.estimated_duration %></b>
                             <% end %>

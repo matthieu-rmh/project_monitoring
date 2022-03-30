@@ -28,9 +28,9 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
               <div class="modal-inner-card">
                 <!-- Title -->
                 <%= if @title != nil do %>
-                <div class="modal-title" style="margin-bottom: 30px;">
+                <div class="modal-title" style="margin-top: 5px; margin-bottom: 10px;">
                   <%= @title %>
-                  <a href="#" style="position: relative; left: 40%;" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
+                  <a href="#" style="position: relative; left: 40%" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
                 </div>
                 <% end %>
 
@@ -63,7 +63,7 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                             </div>
                           </div>
                           <div class="column" style="position: relative; top: -7px;">
-                            <img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{@card.task.attributor.profile_picture}")} width="40"/>
+                            <img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{@card.task.attributor.profile_picture}")} width="36"/>
                           </div>
                         </div>
 
@@ -79,7 +79,7 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                               </div>
                             </div>
                             <div class="column" style="position: relative; top: -7px; left: 3px;">
-                              <img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{@card.task.contributor.profile_picture}")} width="40"/>
+                              <img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{@card.task.contributor.profile_picture}")} width="36"/>
                             </div>
                           </div>
                         <% end %>
@@ -175,29 +175,28 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
 
                                   <div class="column">
                                     <label class="zoom-out">Progression</label>
-                                    <p class="zoom-out"><%= @card.task.progression%> %</p>
+                                    <div class="zoom-out"><%= @card.task.progression%> %</div>
                                   </div>
 
                                   <div class="column">
                                     <label class="zoom-out">Date d'échéance</label>
-                                    <p class="zoom-out"><%= Utilities.letters_date_format(@card.task.deadline)%></p>
+                                    <div class="zoom-out"><%= Utilities.letters_date_format(@card.task.deadline)%></div>
                                   </div>
                                 </div>
 
-                                <div class="row" style="margin-top: 6px;">
+                                <div class="row" style="margin-top: 6px; margin-bottom: 6px">
                                   <div class="column">
                                     <label class="zoom-out">Description</label>
-                                    <p class="text-break zoom-out"> <%= @card.task.description %> </p>
+                                    <div class="text-break zoom-out"> <%= @card.task.description %> </div>
                                   </div>
                                 </div>
                               <!-- END OF FOURTH ROW -->
 
                               <!-- FIFTH ROW -->
-
-                              <p class="zoom-out">
+                              <div class="zoom-out" style="margin-bottom: 6px">
                                 Nombre approximatif d'heures par jour ouvrable pour l'intervenant pour terminer cette tâche avant la date d'échéance:
-                              </p>
-                              <p class="column"><%= PmLogin.Monitoring.avg_working_hours(@card.task) %> heure</p>
+                              </div>
+                              <p class="column zoom-out task-working-hours" style="margin-bottom: 10px"><%= PmLogin.Monitoring.avg_working_hours(@card.task) %> heures</p>
 
 
 
