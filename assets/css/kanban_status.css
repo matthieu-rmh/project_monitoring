@@ -11,7 +11,7 @@
 .urg__priority__point{
   width: 10px;
   height: 10px;
-  background-color: red;
+  background-color: #e74c3c;
   border-radius: 999px;
   position: relative;
   left: 110px;
@@ -21,7 +21,7 @@
 .high__priority__point{
   width: 10px;
   height: 10px;
-  background-color: #f8961e;
+  background-color: #e67e22;
   border-radius: 999px;
   position: relative;
   left: 110px;
@@ -31,7 +31,7 @@
 .avg__priority__point{
   width: 10px;
   height: 10px;
-  background-color: #4361ee;
+  background-color: #3498db;;
   border-radius: 999px;
   position: relative;
   left: 110px;
@@ -41,7 +41,7 @@
 .low__priority__point{
   width: 10px;
   height: 10px;
-  background-color: lightgreen;
+  background-color: #2ecc71;
   border-radius: 999px;
   position: relative;
   left: 110px;
