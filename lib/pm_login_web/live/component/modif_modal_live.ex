@@ -101,19 +101,20 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                               <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", selected: @card.task.contributor_id %>
                               <%= error_tag f, :contributor_id %>
                             <% else %>
-                              <%= label f, "Contributeur" %>
-                                <%= if !is_nil(@card.task.contributor_id) do %>
-                                  <%= @card.task.contributor.username %>
-                                  <% else %>
-                                  <%= "Pas d'intervenant" %>
-                                <% end %>
+                              <label class="zoom-out">Contributeur</label>
+
+                              <%= if !is_nil(@card.task.contributor_id) do %>
+                                <p class="zoom-out"> <%= @card.task.contributor.username %> </p>
+                                <% else %>
+                                <p class="zoom-out"> <%= "Pas d'intervenant" %> </p>
+                              <% end %>
                             <% end %>
                         </div>
 
                         <div class="column">
                           <label class="zoom-out">Priorité</label>
                           <%= if @is_contributor and is_nil(@card.task.parent_id) do %>
-                            <p><%= @card.task.priority.title %></p>
+                            <p class="zoom-out"><%= @card.task.priority.title %></p>
                           <% else %>
                             <%= select f, :priority_id, @priorities, value: @card.task.priority_id %>
                           <% end %>
@@ -126,7 +127,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <%= if (@is_admin or @is_attributor)do %>
                             <%= date_input f, :date_start, value: @card.task.date_start %>
                           <% else %>
-                            <p><%= Utilities.letters_date_format(@card.task.date_start) %></p>
+                            <p class="zoom-out"><%= Utilities.letters_date_format(@card.task.date_start) %></p>
                           <% end %>
                         </div>
 
@@ -137,7 +138,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                             <%= error_tag f, :dt_end_lt_start %>
                           <% else %>
                               <%= if !is_nil(@card.task.date_end) do %>
-                                <p><%= Utilities.letters_date_format(@card.task.date_end) %></p>
+                                <p class="zoom-out"> <%= Utilities.letters_date_format(@card.task.date_end) %></p>
                               <% else %>
                                 <p class="zoom-out">En attente</p>
                               <% end %>
