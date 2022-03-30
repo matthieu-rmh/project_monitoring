@@ -187,7 +187,7 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                                 <div class="row" style="margin-top: 6px;">
                                   <div class="column">
                                     <label class="zoom-out">Description</label>
-                                    <p class="zoom-out"> <%= @card.task.description %> </p>
+                                    <p class="text-break zoom-out"> <%= @card.task.description %> </p>
                                   </div>
                                 </div>
                               <!-- END OF FOURTH ROW -->

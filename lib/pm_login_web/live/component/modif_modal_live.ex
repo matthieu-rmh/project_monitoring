@@ -77,7 +77,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <label class="zoom-out"> Durée estimée (en heure) </label>
                             <%= if @is_admin or @is_attributor do %>
                                 <b class="zoom-out"><%= number_input f, :estimated_duration, style: "width: 70px", value: @card.task.estimated_duration %> h</b>
-                                <%= error_tag f, :negative_estimated %>
+                                <p class="zoom-out"> <%= error_tag f, :negative_estimated %> </p>
                             <% else %>
                                 <b class="zoom-out"><%= @card.task.estimated_duration %></b>
                             <% end %>
@@ -87,7 +87,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <label class="zoom-out">Durée effectuée</label>
                           <%= if @is_contributor do %>
                             <b class="zoom-out"><%= number_input f, :performed_duration, style: "width: 70px", value: @card.task.performed_duration %> h</b>
-                            <%= error_tag f, :negative_performed%>
+                            <p class="zoom-out"> <%= error_tag f, :negative_performed%> </p>
                           <% else %>
                             <b class="zoom-out"><%= @card.task.performed_duration %> h</b>
                           <% end %>
@@ -150,17 +150,21 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                         <div class="column">
                         <label class="zoom-out">Progression</label>
                           <b><%= number_input f, :progression, value: @card.task.progression, style: "width: 70px; margin-left: 20px;" %> %</b>
-                          <%= error_tag f, :invalid_progression %>
-                          <%= error_tag f, :progression_not_int %>
+                          <div class="zoom-out">
+                            <%= error_tag f, :invalid_progression %>
+                            <%= error_tag f, :progression_not_int %>
+                          </div>
                         </div>
 
                         <div class="column">
                           <%= if (@is_admin or @is_attributor) do %>
                             <label class="zoom-out">Date d'écheance</label>
                             <%= date_input f, :deadline, value: @card.task.deadline %>
-                            <%= error_tag f, :deadline %>
-                            <%= error_tag f, :deadline_lt %>
-                            <%= error_tag f, :deadline_before_dtstart %>
+                            <div class="zoom-out">
+                              <%= error_tag f, :deadline %>
+                              <%= error_tag f, :deadline_lt %>
+                              <%= error_tag f, :deadline_before_dtstart %>
+                            </div>
                           <% end %>
                         </div>
                       </div>
