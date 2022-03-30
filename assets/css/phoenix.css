@@ -135,3 +135,7 @@ header nav a {
 .task-urgent {
   color: #e74c3c;
 }
+
+.text-break {
+  word-wrap: break-word;
+}
