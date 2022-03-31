@@ -29,7 +29,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
               <%= if @title != nil do %>
               <div class="modal-title" style="margin-top: 5px; margin-bottom: 10px;">
                 <%= @title %>
-                <a href="#" style="position: relative; left: 30%" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
+                <a href="#" class="x__close" style="position: relative; left: 0; margin-top: -5px;" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
               </div>
               <% end %>
 
@@ -175,7 +175,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
 
                       <div class="modal-buttons">
                         <!-- Left Button -->
-                        <button class="btn btn-lg btn-default left-button"
+                        <button class="button button-outline"
                                 type="button"
                                 phx-click="left-button-click"
                                 phx-target={"#modal-#{@id}"}>
@@ -184,7 +184,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           </div>
                         </button>
                           <div class="">
-                            <%= submit "Valider", class: "btn btn-lg btn-primary right-button" %>
+                            <%= submit "Valider", class: "button right-button" %>
                           </div>
                       </div>
 
