@@ -73,9 +73,9 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
                     <div class="row modal-title">
                       <%= @title %>
                       <div class="load__icons">
-                        <a href="#" title="derniers commentaires" phx-click="scroll-bot"><i class="bi bi-arrow-bar-down"></i></a>
-                        <a href="#" id="clock_comment" title="charger anciennes commentaires" phx-click="load_comments"><i class="bi bi-arrow-clockwise"></i></a>
-                        <a href="#" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
+                        <a href="#" style="font-size: 25px;" title="derniers commentaires" phx-click="scroll-bot"><i class="bi bi-arrow-bar-down"></i></a>
+                        <a href="#" style="font-size: 25px;" id="clock_comment" title="charger anciennes commentaires" phx-click="load_comments"><i class="bi bi-arrow-clockwise"></i></a>
+                        <a href="#" style="font-size: 30px;" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
                       </div>
                     </div>
                   <% end %>
