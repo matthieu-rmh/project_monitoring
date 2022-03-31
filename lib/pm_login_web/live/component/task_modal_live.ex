@@ -41,59 +41,82 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
               <!-- MY FORM -->
               <div class="modal-body">
               <.form let={f} for={@task_changeset} phx-submit="save">
-                  <%= label f, "Tâche" %>
-                  <%= text_input f, :title %>
-                  <%= error_tag f, :title %>
-                  <%= hidden_input f, :project_id, value: @pro_id %>
-                  <%= hidden_input f, :attributor_id, value: @curr_user_id %>
+
+                  <div class="column">
+                    <label class="zoom-out">Tâche</label>
+                    <%= text_input f, :title %>
+                    <div class="zoom-out">
+                      <%= error_tag f, :title %>
+                    </div>
+                    <%= hidden_input f, :project_id, value: @pro_id %>
+                    <%= hidden_input f, :attributor_id, value: @curr_user_id %>
+                  </div>
+
+                  <div class="column">
+                    <label class="zoom-out">Description</label>
+                    <div class="zoom-out">
+                      <%= textarea f, :description%>
+                      <%= error_tag f, :description %>
+                    </div>
+                  </div>
+                    
+                  <div class="column">
+                    <label class="zoom-out">Durée estimée (en heure)</label>
+                    <%= number_input f, :estimated_duration %>
+                    <div class="zoom-out">
+                      <%= error_tag f, :estimated_duration %>
+                      <%= error_tag f, :negative_estimated %>
+                    </div>
+                  </div>
+
                   <div class="row">
 
                     <div class="column">
-                      <%= label f, "Date d'échéance" %>
+                      <label class="zoom-out">Date d'écheance</label>
                       <%= date_input f, :deadline %>
-                      <%= error_tag f, :deadline %>
-                      <%= error_tag f, :deadline_lt %>
-                      <%= error_tag f, :deadline_before_dtstart %>
+                      <div class="zoom-out">
+                        <%= error_tag f, :deadline %>
+                        <%= error_tag f, :deadline_lt %>
+                        <%= error_tag f, :deadline_before_dtstart %>
+                      </div>
+                      
                     </div>
 
                   <%= if not @is_contributor do %>
                     <div class="column">
-                        <%= label f, "Assigner intervenant" %>
-                        <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:" %>
+                      <label class="zoom-out">Assigner intervenant</label>
+                      <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:" %>
+                      <div class="zoom-out">
                         <%= error_tag f, :contributor_id %>
+                      </div>
                     </div>
                   <% end %>
                   </div>
 
                   <div class="row">
                     <div class="column">
-                        <%= label f, "Sans contrôle" %>
-                        <%= checkbox f, :without_control %>
+                      <label class="zoom-out">Sans contrôle</label>
+                      <%= checkbox f, :without_control %>
                     </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="column">
-                      <%= label f, "Durée estimée (en heure)" %>
-                      <%= number_input f, :estimated_duration %>
-                      <%= error_tag f, :estimated_duration %>
-                      <%= error_tag f, :negative_estimated %>
-                    </div>
-
                   </div>
 
                   <!-- Buttons -->
                   <div class="modal-buttons">
-                    <!-- Left Button -->
-                    <a href="#" class="btn btn-lg btn-default left-button"
-                            type="button"
-                            phx-click="left-button-click"
-                            phx-target={"#modal-#{@id}"}>
-                      <div>
-                        <%= @left_button %>
+                      <!-- Left Button -->
+                      <a 
+                        href="#" class="button button-outline"
+                        type="button"
+                        phx-click="left-button-click"
+                        phx-target={"#modal-#{@id}"}>
+                        <div>
+                          <%= @left_button %>
+                        </div>
+                      </a>
+
+                      <div class="right-button">
+                        <%= submit "Créer tâche" %>
                       </div>
-                    </a>
-                      <%= submit "Créer tâche", class: "btn btn-lg btn-primary right-button button__modified" %>
+                      
                   </div>
 
 
