@@ -28,9 +28,9 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
               <div class="modal-inner-card">
                 <!-- Title -->
                 <%= if @title != nil do %>
-                <div class="modal-title" style="margin-top: 5px; margin-bottom: 10px;">
+                <div class="modal-title" style="margin-top: 5px; margin-bottom: 15px;">
                   <%= @title %>
-                  <a href="#" style="position: relative; left: 40%" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
+                  <a href="#" class="x__close" style="position: relative; left: 0; margin-top: -5px;" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
                 </div>
                 <% end %>
 
@@ -202,7 +202,7 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
 
                     <!-- Buttons -->
 
-                      <button class="btn btn-lg left-button" type="button" phx-click="left-button-click" phx-target={"#modal-#{@id}"}>
+                      <button class="button button-outline" type="button" phx-click="left-button-click" phx-target={"#modal-#{@id}"}>
                         <div>
                           <%= @left_button %>
                         </div>
