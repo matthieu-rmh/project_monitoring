@@ -303,16 +303,16 @@
   <a class="x__close" title="Fermer" phx-click="close_modal"><i class="bi bi-x"></i></a>
     <div class="row">
       <div class="column">
-        <h3 style="text-align: center;">Archiver?</h3>
-        <p style="text-align: center;">Êtes-vous sûr(e) d'archiver la tâche <%= if not is_nil(@arch_id), do: PmLogin.Monitoring.get_task!(@arch_id).title %> ?</p>
+        <h5 style="text-align: center;" class="bi bi-archive">Archiver ?</h5>
+        <p class="zoom-out" style="text-align: center;">Êtes-vous sûr(e) d'archiver la tâche <%= if not is_nil(@arch_id), do: PmLogin.Monitoring.get_task!(@arch_id).title %> ?</p>
 
             <div class="modal-buttons" style="margin-bottom: 20px;">
                 <!-- Left Button -->
-                <a href="#" class="btn btn-lg left-button" type="button" phx-click="close_modal">
+                <a href="#" class="button button-outline" type="button" phx-click="close_modal">
                   <div>NON</div>
                 </a>
                 <!-- Right Button -->
-                <a href="#" class="btn btn-lg btn-primary right-button" type="button" phx-click="archive_task" phx-value-id={ @arch_id }>
+                <a href="#" class="button right-button" type="button" phx-click="archive_task" phx-value-id={ @arch_id }>
                   <div>OUI</div>
                 </a>
             </div>
@@ -326,10 +326,10 @@
   <a class="x__close" title="Fermer" phx-click="close_hidden_modal"><i class="bi bi-x"></i></a>
     <div class="row">
       <div class="column" style="padding-bottom: -20px !important;">
-        <h3 style="text-align: center;"><i class="bi bi-archive-fill"></i> Tâches archivées</h3>
+        <h5 style="text-align: center;"><i class="bi bi-archive-fill"></i> Tâches archivées</h5>
         <div class="my_row">
-            <div class="my_col"><h4>Tâche</h4></div>
-            <div class="my_col" style="float:right;"><h4>Contributeur</h4></div>
+            <div class="my_col"><h5>Tâche</h5></div>
+            <div class="my_col" style="float:right;"><h5>Contributeur</h5></div>
         </div>
         <.form let={f} for={:oi} phx-submit="restore_tasks" style="margin-bottom: 0px;">
         <div class="hidden__contents__container">
@@ -337,10 +337,10 @@
           <div class="simple_basecontents" style="margin-bottom: 10px;padding-bottom: 10px;">
             <div class="my_row">
                 <div class="my_col">
-                    <b><%= hidden_task.title %></b>
+                    <b class="zoom-out" style="word-wrap: anywhere"><%= hidden_task.title %></b>
                 </div>
                 <div class="my_col" style="float:right;">
-                    <b>
+                    <b class="zoom-out">
                     <%= if not is_nil(hidden_task.contributor) do
                       hidden_task.contributor.username
                       else
@@ -357,7 +357,7 @@
          <%= if @no_selected_hidden do %>
           <p class="invalid-feedback" style="text-align: center;">Sélectionner tâche à restaurer</p>
           <% end %>
-          <div class="my_row" style="text-align: center; margin-top: 10px;">
+          <div class="my_row" style="text-align: center; margin-top: 20px;">
           <%= if length(@hidden_tasks) != 0 do %>
               <button class="button" type="submit">Restaurer</button>
           <% end %>
