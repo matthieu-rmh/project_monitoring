@@ -56,7 +56,6 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                           <div class="column">
                             <label class="zoom-out">Attributeur </label>
                           </div>
-                          <div> | </div>
                           <div class="column">
                             <div class="zoom-out">
                               <%= @card.task.attributor.username %>
@@ -72,7 +71,6 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                             <div class="column">
                               <label class="zoom-out">Contributeur</label>
                             </div>
-                            <div> | </div>
                             <div class="column">
                               <div class="zoom-out">
                                 <%= @card.task.contributor.username %>
