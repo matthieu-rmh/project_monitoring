@@ -48,41 +48,33 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                     <div class="row">
                       <div class="column">
                           <label class="zoom-out"> Nom </label>
-                          <div class="zoom-out"><%= @card.name %></div>
+                          <div class="zoom-out text-break"><%= @card.name %></div>
                       </div>
 
                       <div class="column">
-                        <div class="row">
-                          <div class="column">
-                            <label class="zoom-out">Attributeur </label>
-                          </div>
-                          <div class="column">
-                            <div class="zoom-out">
-                              <%= @card.task.attributor.username %>
-                            </div>
-                          </div>
-                          <div class="column" style="position: relative; top: -7px;">
-                            <img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{@card.task.attributor.profile_picture}")} width="36"/>
-                          </div>
+                        <label class="zoom-out">Attributeur </label>
+                        <div>
+                          <img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{@card.task.attributor.profile_picture}")} width="36"/>
                         </div>
+                        <div class="zoom-out">
+                          <%= @card.task.attributor.username %>
+                        </div>
+                      </div>
 
+                      <div>
                         <%= if @card.task.contributor != nil do  %>
-                          <div class="row">
-                            <div class="column">
-                              <label class="zoom-out">Contributeur</label>
-                            </div>
-                            <div class="column">
-                              <div class="zoom-out">
-                                <%= @card.task.contributor.username %>
-                              </div>
-                            </div>
-                            <div class="column" style="position: relative; top: -7px; left: 3px;">
+                          <div class="column">
+                            <label class="zoom-out">Contributeur</label>
+                            <div>
                               <img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{@card.task.contributor.profile_picture}")} width="36"/>
+                            </div>
+                            <div class="zoom-out">
+                              <%= @card.task.contributor.username %>
                             </div>
                           </div>
                         <% end %>
-
                       </div>
+
                     </div>
 
                         <div class="row" style="margin-top: 6px;">

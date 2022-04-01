@@ -124,10 +124,11 @@
 
         <ul data-stage-id={ stage.id } class={if (not @is_admin and not @is_attributor) and stage.status_id == 5 do "" else "stage__cards" end}>
 
-          <%= for card <- stage.cards do %>
-            <%= if @is_admin or @is_attributor or @curr_user_id == card.task.contributor_id do %>
+      <%= for card <- stage.cards do %>
+        <%= if @is_admin or @is_attributor or @curr_user_id == card.task.contributor_id do %>
 
-          <div data-card-id={ card.id } class={"card basecontents__without__radius #{if is_nil(card.task.parent_id) do "" else "secondary__kanban" end}"} style={"display: #{ if card.task.hidden, do: "none !important" };"}>
+        <div>
+          <div data-card-id={ card.id } class={"card basecontents__without__radius #{if is_nil(card.task.parent_id) do "" else "secondary__kanban" end}"} style={"display: #{ if card.task.hidden, do: "none !important" }; margin-bottom: 50px;"}>
 
             <%= case card.task.priority_id do %>
               <% 1 -> %><div class="low__priority__point"></div>
@@ -137,17 +138,7 @@
               <% _ -> %><div class="priority__point"></div>
             <% end %>
 
-                <div class="card__name"><%= card.task.title %></div>
-
-                <i class="card__date">Créée le <%= Utilities.simple_date_format_with_hours(card.task.inserted_at) %>, par</i>
-                <br/>
-                <i style="font-size: 10px;"><img class="profile-pic-mini-resized" src={ Routes.static_path(@socket, "/#{card.task.attributor.profile_picture}") } width="50" style="position: relative; top:10px;"/><%= "(#{card.task.attributor.username})" %>
-                 <%= if card.task.contributor != nil do %>
-                 <br/>pour
-                  <img class="profile-pic-mini-resized" src={ Routes.static_path(@socket, "/#{card.task.contributor.profile_picture}") } width="50" style="position: relative; top:10px;"/>
-                      <%= "(#{card.task.contributor.username})" %>
-                 <% end %>
-                 </i>
+                <div class="card__name" style="margin-top: 10px; margin-bottom: 5px;"><%= card.task.title %></div>
 
                  <%= if !is_nil(card.task.parent_id) do %>
 
@@ -170,16 +161,93 @@
                       </div>
                     </div>
                  <% end %>
-          </div>
-          <i title="Afficher" style={"display: #{ if card.task.hidden, do: "none !important" };"} class="bi bi-plus plus__icon" phx-click="show_plus_modal" phx-value-id={card.id}></i>
-          <i title="Commenter" style={"display: #{ if card.task.hidden, do: "none !important" };"} class="bi bi-chat-left-dots comment__icon" phx-click="show_comments_modal" phx-value-id={ card.id }></i>
-          <i title="Modifier" style={"display: #{ if card.task.hidden, do: "none !important" };"} class="bi bi-pencil-square modif__icon" phx-click="show_modif_modal" phx-value-id={ card.id }></i>
-          <%= if @is_admin or @is_attributor do %>
-          <i title="Archiver" style={"display: #{ if card.task.hidden, do: "none !important" };"} class="bi bi-x delete__icon" phx-click="go_archive" phx-value-id={card.task.id}></i>
-          <% end %>
+
+                 <div class="column" style="margin-bottom: 5px;">
+                    <div style="font-size: 10px;">
+                      <div style="display: flex;">
+                          <img class="profile-pic-mini-resized" src={ Routes.static_path(@socket, "/#{card.task.attributor.profile_picture}") } width="50"/>
+
+                          <div class="zoom-out" style="font-size: 9px; margin-top: 4px; word-wrap: anywhere; margin-left: 4px;">
+                             <%= "#{card.task.attributor.username}" %>
+                          </div>
+
+                          <%= if card.task.contributor != nil do %>
+                            <div class="right-button" style="display: flex;">
+                                <img class="profile-pic-mini-resized" src={ Routes.static_path(@socket, "/#{card.task.contributor.profile_picture}") } width="50"/>
+
+                                <div class="zoom-out" style="font-size: 9px; margin-top: 4px; word-wrap: anywhere; margin-left: 4px;">
+                                   <%= "#{card.task.contributor.username}" %>
+                                </div>
+                            </div>
+                          <% end %>
+                      </div>
+                    </div>
+
+                </div>
+
+                <div style="float: right;">
+                  <div
+                    class="card__date" 
+                    style="font-size: 8px;"
+                  >
+                    Le <%= Utilities.simple_date_format_with_hours(card.task.inserted_at) %>
+                  </div>
+                </div>
+
+        <div 
+          style="display: flex; 
+                 box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.2);
+                 background-color: #3498db; 
+                 float: right; 
+                 margin-top: 3px; 
+                 margin-right: -10px; 
+                 padding-right: 4px;
+                 position: relative;
+                 top: 0;
+                 left: 0;
+                ">
+            <a
+              title="Afficher" 
+              style={"display: #{ if card.task.hidden, do: "none !important" };"} 
+              class="bi bi-plus plus__icon" 
+              phx-click="show_plus_modal" 
+              phx-value-id={card.id}>
+              </a>
+
+            <a 
+              title="Commenter" 
+              style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"} 
+              class="bi bi-chat-dots comment__icon" 
+              phx-click="show_comments_modal" 
+              phx-value-id={ card.id }>    
+          </a>
+
+            <a
+              title="Modifier" 
+              style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"} 
+              class="bi bi-pencil modif__icon" 
+              phx-click="show_modif_modal" 
+              phx-value-id={ card.id }>
+          </a>
+
+            <%= if @is_admin or @is_attributor do %>
+              <a
+                title="Archiver" 
+                style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"} 
+                class="bi bi-trash3 delete__icon" 
+                phx-click="go_archive" 
+                phx-value-id={card.task.id}>  
+        </a>
             <% end %>
-          <% end %>
-        </ul>
+          </div>
+
+          </div>
+
+        </div>        
+
+        <% end %>
+      <% end %>
+    </ul>
 
       </div>
     <% end %>

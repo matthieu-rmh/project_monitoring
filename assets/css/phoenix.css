@@ -148,6 +148,6 @@ header nav a {
 }
 
 .text-break {
-  word-wrap: break-word;
+  word-wrap: anywhere;
 }
 

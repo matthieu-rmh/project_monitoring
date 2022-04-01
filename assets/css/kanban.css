@@ -2,18 +2,18 @@
   color: #fff;
   text-align: center;
 }
-.boardheader{
+.boardheader {
   /* margin-bottom: 20px; */
   margin-top: -1.5%;
 }
 
-.boardpage{
+.boardpage {
   position: relative;
   left: -8%;
 }
 
 @media (max-width: 650px) {
-  .hide__task__button{
+  .hide__task__button {
     /* margin-top: 10px;
     margin-bottom: 10px;
     float: left !important; */
@@ -34,7 +34,7 @@
   /* left: -0; */
   /* width: 130.0rem; */
   /* max-height: 500px; */
-  background-color: #F3EBF6;
+  background-color: #f3ebf6;
 }
 
 .stage {
@@ -64,7 +64,7 @@
   width: 200px;
 }
 
-#stage__header__sticked{
+#stage__header__sticked {
   position: sticky;
   z-index: 5;
   top: 0;
@@ -85,58 +85,36 @@
   border-radius: 9999px;
 }
 
-.counter__nb{
+.counter__nb {
   position: relative;
   top: 2px;
   font-size: 12px;
 }
 
-.delete__icon{
-  color: gray;
+.delete__icon,
+.modif__icon,
+.comment__icon,
+.plus__icon {
+  color: #fff;
   cursor: pointer;
-  font-size: 30px;
-  position: relative;
-  left: 90px;
-  top: -32px;
-}
-.delete__icon:hover{
-  color : lightgray;
+  padding: 5px;
 }
 
-.modif__icon{
-  color: gray;
-  cursor: pointer;
-  font-size: 17px;
-  position: relative;
-  left: 117px;
-  top: -60px;
-}
-.modif__icon:hover{
-  color : lightgray;
+.plus__icon {
+  font-size: 23px;
 }
 
-.comment__icon{
-  color: gray;
-  cursor: pointer;
+.comment__icon,
+.modif__icon,
+.delete__icon {
   font-size: 15px;
-  position: relative;
-  left: 137px;
-  top: -80px;
-}
-.comment__icon:hover{
-  color : lightgray;
 }
 
-.plus__icon{
-  color: gray;
-  cursor: pointer;
-  font-size: 25px;
-  position: relative;
-  left: 160px;
-  top: -100px;
-}
-.plus__icon:hover{
-  color : lightgray;
+.delete__icon:hover,
+.modif__icon:hover,
+.comment__icon:hover,
+.plus__icon:hover {
+  color: #e9e9e9;
 }
 
 .card__plus {
@@ -178,7 +156,7 @@
   top: -72px;
 }
 
-.card__date{
+.card__date {
   font-size: 65%;
 }
 
@@ -193,9 +171,9 @@
   background-color: #ffffff;
   padding: 1em;
   cursor: move;
-  width: 75%;
+  width: 98%;
   height: auto;
-  margin-bottom: -10px;
+  margin: 0;
 }
 
 .card__recap {
@@ -213,9 +191,9 @@
 }
 
 .card__name {
-  font-size: 12px;  
-  font-weight: bold;
-  word-wrap: break-word;
+  font-size: 12px;
+  font-weight: normal;
+  word-wrap: anywhere;
 }
 
 .draggable-handle {
@@ -235,13 +213,12 @@
   opacity: 0.25;
 }
 
-.secondary__kanban{
+.secondary__kanban {
   background-color: lightgray !important;
 }
 
-@media (min-width: 1500px){
-  .stage{
-   margin-right: 150px !important;
+@media (min-width: 1500px) {
+  .stage {
+    margin-right: 150px !important;
   }
 }
-
