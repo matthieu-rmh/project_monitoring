@@ -85,7 +85,7 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
                   <%= if not @is_contributor do %>
                     <div class="column">
                       <label class="zoom-out">Assigner intervenant</label>
-                      <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:" %>
+                      <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", style: "width: -moz-available;" %>
                       <div class="zoom-out">
                         <%= error_tag f, :contributor_id %>
                       </div>

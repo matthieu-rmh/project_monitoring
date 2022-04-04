@@ -55,7 +55,7 @@
     </div>
     <div class="column">
       <%= label f, "Client attitré" %>
-      <%= select f, :active_client_id, @ac_ids %>
+      <%= select f, :active_client_id, @ac_ids, style: "width: -moz-available;" %>
       <%= error_tag f, :active_client_id %>
     </div>
   </div>

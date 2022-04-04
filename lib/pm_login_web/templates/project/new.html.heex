@@ -37,7 +37,7 @@
         <%= error_tag f, :password_confirmation %>
 
         <label for="company_id">Pour société: </label>
-        <%= select f, :company_id, @companies_ids %>
+        <%= select f, :company_id, @companies_ids, style: "width: -moz-available;" %>
         <%= error_tag f, :company_id %>
 
         <%= hidden_input f, :right_id, value: 4 %>

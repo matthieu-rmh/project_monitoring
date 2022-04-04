@@ -13,7 +13,7 @@
     </div>
     <div class="column">
       <%= label f, "pour société" %>
-      <%= select f, :company_id, @companies %>
+      <%= select f, :company_id, @companies, style: "width: -moz-available;" %>
       <%= error_tag f, :company_id %>
     </div>
   </div>

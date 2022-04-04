@@ -98,7 +98,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                         <div class="column">
                             <%= if @is_admin or @is_attributor do %>
                               <label class="zoom-out">Assigner contributeur</label>
-                              <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", selected: @card.task.contributor_id %>
+                              <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", selected: @card.task.contributor_id, style: "width: -moz-available;" %>
                               <%= error_tag f, :contributor_id %>
                             <% else %>
                               <label class="zoom-out">Contributeur</label>
@@ -116,7 +116,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <%= if @is_contributor and is_nil(@card.task.parent_id) do %>
                             <p class="zoom-out"><%= @card.task.priority.title %></p>
                           <% else %>
-                            <%= select f, :priority_id, @priorities, value: @card.task.priority_id %>
+                            <%= select f, :priority_id, @priorities, value: @card.task.priority_id, style: "width: -moz-available;" %>
                           <% end %>
                         </div>
                       </div>

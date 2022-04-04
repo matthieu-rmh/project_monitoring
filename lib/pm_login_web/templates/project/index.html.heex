@@ -2,7 +2,7 @@
   <%= if PmLogin.Login.get_user!(@curr_user_id).right_id == 1 or PmLogin.Login.get_user!(@curr_user_id).right_id == 2 do %>
     <span><a href={ Routes.project_path(@socket, :new) } class="btn btn-lg btn-primary"><i class="bi bi-plus-circle"></i> Nouveau projet</a></span>
   <% end %>
-  <table id="tb-auth" style="margin-top: 10px;">
+  <table id="tb-auth" style="margin-top: 10px; font-size: 13px">
     <thead>
       <tr>
         <th>Nom</th>

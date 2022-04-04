@@ -13,7 +13,7 @@
       <input type="hidden" name="client_id" value={client.id}>
         <td><%= client.username %></td>
         <td><%= client.email %></td>
-        <td><%= select f, "company_id", @companies %></td>
+        <td><%= select f, "company_id", @companies, style: "width: -moz-available;" %></td>
         <td><%= submit "Rendre actif", class: "btn btn-lg btn-primary" %></td>
     </.form>
   </tr>
