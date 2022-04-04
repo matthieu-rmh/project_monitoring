@@ -159,11 +159,12 @@
             margin-bottom: 50px;"}>
 
             <%= case card.task.priority_id do %>
-            <% 1 -> %><div class="low__priority__point"></div>
-            <% 2 -> %><div class="avg__priority__point"></div>
-            <% 3 -> %><div class="high__priority__point"></div>
-            <% 4 -> %><div class="urg__priority__point"></div>
-            <% _ -> %><div class="priority__point"></div>
+            <% 1 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+              class="low__priority__point"> Faible</div>
+            <% 2 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="avg__priority__point"> Moyenne</div>
+            <% 3 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="high__priority__point"> Importante</div>
+            <% 4 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="urg__priority__point"> Urgente</div>
+            <% _ -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="priority__point"></div>
             <% end %>
 
             <div class="card__name" style="margin-top: 10px; margin-bottom: 5px;">
@@ -204,8 +205,9 @@
                     <div style="font-size: 9px; font-weight: bold;"> Attributeur </div>
                     <img class="profile-pic-mini-resized" src={
                       Routes.static_path(@socket, "/#{card.task.attributor.profile_picture}" ) } width="50" />
-  
-                    <div class="zoom-out" style="font-size: 8px; margin-top: 4px; word-wrap: anywhere; margin-left: 2px;">
+
+                    <div class="zoom-out"
+                      style="font-size: 8px; margin-top: 4px; word-wrap: anywhere; margin-left: 2px;">
                       <%= "#{card.task.attributor.username}" %>
                     </div>
                   </div>
@@ -216,7 +218,7 @@
                       <div style="font-size: 9px; font-weight: bold;"> Contributeur </div>
                       <img class="profile-pic-mini-resized" src={
                         Routes.static_path(@socket, "/#{card.task.contributor.profile_picture}" ) } width="50" />
-  
+
                       <div class="zoom-out"
                         style="font-size: 8px; margin-top: 4px; word-wrap: anywhere; margin-left: 2px;">
                         <%= "#{card.task.contributor.username}" %>
@@ -433,8 +435,7 @@
             <div class="row">
               <div class="column">
                 <%= label f, "Assigner intervenant : " , style: "font-size: 80%;" %>
-                <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:"
-                                                    %>
+                <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", style: "width: -moz-available;" %>
               </div>
               <div class="column">
                 <%= label f, "Durée estimée : " , style: "font-size: 80%;" %>
