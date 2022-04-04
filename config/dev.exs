@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :pm_login, PmLogin.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "postgres", #odoo
+  password: "postgres", #123456
   hostname: "localhost",
   database: "pm_users",
   show_sensitive_data_on_connection_error: true,
