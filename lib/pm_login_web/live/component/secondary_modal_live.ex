@@ -27,7 +27,7 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
               <%= if @title != nil do %>
               <div class="modal-title">
                 <%= @title %>
-                <a href="#" style="position: relative; left: 20%;" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
+                <a href="#" class="x__close" style="position: relative; left: 0; margin-top: -5px;" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
               </div>
               <% end %>
 
@@ -41,61 +41,86 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
               <!-- MY FORM -->
               <div class="modal-body">
               <.form let={f} for={@task_changeset} phx-submit="submit_secondary">
-                  <%= label f, "Tâche" %>
-                  <%= text_input f, :title %>
-                  <%= error_tag f, :title %>
-                  <%= hidden_input f, :project_id, value: @pro_id %>
-                  <div class="row">
-                    <div class="column">
-                      <%= label f, "Date d'échéance" %>
-                      <%= date_input f, :deadline %>
-                      <%= error_tag f, :deadline %>
-                      <%= error_tag f, :deadline_lt %>
-                      <%= error_tag f, :deadline_before_dtstart %>
+                <div class="row">
+                  <div class="column">
+                    <label class="zoom-out">Tâche</label>
+                    <%= text_input f, :title %>
+                    <div class="zoom-out">
+                      <%= error_tag f, :title %>
                     </div>
+                    <%= hidden_input f, :project_id, value: @pro_id %>
+                  </div>  
+                </div>
 
-                    <div class="column">
-                      <%= label f, "Assigner intervenant" %>
-                      <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:" %>
-                      <%= error_tag f, :contributor_id %>
-                  </div>
-
-                  </div>
-                  <div class="row">
-                    <div class="column">
-                      <%= label f, "Durée estimée (en heure)" %>
-                      <%= number_input f, :estimated_duration %>
+                <div class="row">
+                  <div class="column">
+                    <label class="zoom-out">Durée estimée (en heure)</label>
+                    <%= number_input f, :estimated_duration %>
+                    <div class="zoom-out"> 
                       <%= error_tag f, :estimated_duration %>
                       <%= error_tag f, :negative_estimated %>
                     </div>
-                    <div class="column">
-                    <%= label f, "Tâche mère" %>
-                    <%= select f, :parent_id, @primaries %>
-                    <%= error_tag f, :parent_id %>
-                    </div>
                   </div>
+                </div>
+                  
+                  <div class="row">
+                    <div class="column">
+                      <label class="zoom-out">Date d'échéance</label>
+                      <%= date_input f, :deadline %>
+                      <div class="zoom-out">
+                        <%= error_tag f, :deadline %>
+                        <%= error_tag f, :deadline_lt %>
+                        <%= error_tag f, :deadline_before_dtstart %>
+                      </div>
+                    </div>
 
+                    <div class="column">
+                      <label class="zoom-out">Assigner intervenant</label>
+                      <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:" %>
+                      <div class="zoom-out">
+                        <%= error_tag f, :contributor_id %>
+                      </div>  
+                    </div>
+
+                  </div>
 
                   <div class="row">
                     <div class="column">
-                        <%= label f, "Sans contrôle" %>
-                        <%= checkbox f, :without_control %>
+                      <label class="zoom-out">Tâche mère</label>
+                      <div class="text-wrap">
+                        <%= select f, :parent_id, @primaries %>
+                      </div>
+                      <div class="zoom-out">
+                        <%= error_tag f, :parent_id %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="column">
+                      <label class="zoom-out">Sans contrôle</label>
+                      <%= checkbox f, :without_control %>
                     </div>
                   </div>
 
 
                   <!-- Buttons -->
                   <div class="modal-buttons">
-                    <!-- Left Button -->
-                      <a href="#" class="btn btn-lg btn-default left-button"
-                      type="button"
-                      phx-click="left-button-click"
-                      phx-target={"#modal-#{@id}"}>
-                <div>
-                  <%= @left_button %>
-                </div>
-              </a>
-                <%= submit "Créer sous-tâche", class: "btn btn-lg btn-primary right-button button__modified" %>
+                      <!-- Left Button -->
+                      <a 
+                        href="#" class="button button-outline"
+                        type="button"
+                        phx-click="left-button-click"
+                        phx-target={"#modal-#{@id}"}>
+                        <div>
+                          <%= @left_button %>
+                        </div>
+                      </a>
+
+                      <div class="right-button">
+                        <%= submit "Créer sous-tâche" %>
+                      </div>
+                      
                   </div>
 
 

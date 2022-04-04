@@ -31,7 +31,7 @@
   src:url("/fonts/Axiforma-Medium.ttf") format("truetype");
 }
 /* Alerts and form errors used by phx.new */
-.alert {
+/* .alert {
   padding: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
@@ -62,7 +62,104 @@
   color: #a94442;
   display: block;
   margin: -1rem 0 2rem;
+} */
+
+/* Alerts and form errors */
+.alert {
+  float: right;
+  position: fixed;
+  top: 5em;
+  right: 7em;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  z-index: 997;
+  transition: opacity 0.2s linear;
 }
+
+.alert__cross{
+  position: relative;
+  margin-top: 5px;
+  margin-left: 5px;
+  font-size: 20px;
+}
+.alert__cross:hover{
+  cursor: pointer;
+}
+
+#alert_anim{
+  transition: opacity 0.2s linear;
+}
+
+@media (max-width: 650px){
+  .alert {
+    top: 80px;
+    right: 20px;
+  }
+}
+
+.btn,.bi{
+  font-weight: 600 !important;
+}
+
+
+@-webkit-keyframes cssAnimation {
+    to {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes showAlertAnimation {
+  from {
+      opacity: 0;
+      visibility: hidden;
+  }
+    to {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+.my_alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.none_alert{
+  text-align: center;
+}
+
+.alert-info {
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+}
+.alert-warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+}
+.alert-danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+.alert p {
+  margin-bottom: 0;
+}
+.alert:empty {
+  opacity: 0;
+  visibility: hidden;
+}
+.invalid-feedback {
+  color: #a94442;
+  display: block;
+  margin: -1rem 0 2rem;
+}
+
 
 /* LiveView specific classes for your customization */
 .phx-no-feedback.invalid-feedback,
@@ -371,8 +468,8 @@ body {
   }
   
   .profile-pic-mini{
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     max-width: 40px;
     max-height: 40px;
     border: 1px solid gray;

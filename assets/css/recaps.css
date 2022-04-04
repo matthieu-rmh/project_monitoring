@@ -43,8 +43,9 @@
 }
 
 .x__close{
-  font-size: 25px;
+  font-size: 35px;
   float: right;
+  margin-top: 15px;
   transition: font-size 0.5s ease;
 }
 
