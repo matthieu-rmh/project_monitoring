@@ -59,7 +59,7 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
                       <%= error_tag f, :description %>
                     </div>
                   </div>
-                    
+
                   <div class="column">
                     <label class="zoom-out">Durée estimée (en heure)</label>
                     <%= number_input f, :estimated_duration %>
@@ -79,7 +79,7 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
                         <%= error_tag f, :deadline_lt %>
                         <%= error_tag f, :deadline_before_dtstart %>
                       </div>
-                      
+
                     </div>
 
                   <%= if not @is_contributor do %>
@@ -103,7 +103,7 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
                   <!-- Buttons -->
                   <div class="modal-buttons">
                       <!-- Left Button -->
-                      <a 
+                      <a
                         href="#" class="button button-outline"
                         type="button"
                         phx-click="left-button-click"
@@ -116,7 +116,7 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
                       <div class="right-button">
                         <%= submit "Créer tâche" %>
                       </div>
-                      
+
                   </div>
 
 

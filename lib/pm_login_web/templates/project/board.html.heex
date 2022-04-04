@@ -2,605 +2,604 @@
   <div class="boardheader">
     <div class="row">
       <div class="column">
-          <div class="key__cancel" phx-window-keydown="key_cancel">
+        <div class="key__cancel" phx-window-keydown="key_cancel">
+
+        </div>
+        <%= cond do %>
+        <% @is_admin or @is_attributor-> %>
+        <div class="row">
+          <h2 style="margin: 0; font-size: 20px;"><span class="material-icons">checklist_rtl</span>
+            <%= @board.project.title %>
+          </h2>
+          <i style="margin-left: 20px; font-size: 13px;">
+            <%= @board.project.description %>
+          </i>
+
+          <div class="basecontents__without__radius pro__company__card" style="margin-left: 300px;">
+            <p style="font-size: 10px;margin-top: -20px;">pour <b>
+                <%= @board.project.active_client.company.name %>
+              </b><img class="profile-pic-header" src={
+                Routes.static_path(@socket, "/#{@board.project.active_client.company.logo}" ) } width="50"
+                style="position: relative; top: 10px; margin-left: 10px;" />
+              <%= "(#{@board.project.active_client.user.username})" %>
+            </p>
 
           </div>
-          <%= cond do %>
-          <% @is_admin or @is_attributor-> %>
-          <div class="row">
-            <h2 style="margin: 0; font-size: 20px;"><span class="material-icons">checklist_rtl</span> <%= @board.project.title %></h2>
-            <i style="margin-left: 20px; font-size: 13px;"><%= @board.project.description %></i>
 
-            <div class="basecontents__without__radius pro__company__card" style="margin-left: 300px;">
-                <p style="font-size: 10px;margin-top: -20px;">pour <b><%= @board.project.active_client.company.name %></b><img class="profile-pic-header" src={ Routes.static_path(@socket, "/#{@board.project.active_client.company.logo}") } width="50" style="position: relative; top: 10px; margin-left: 10px;"/>
-                 <%= "(#{@board.project.active_client.user.username})" %>
-                </p>
-
-            </div>
-
-          </div>
-          <% @is_contributor -> %>
-          <h2 style="margin: 0; font-size: 20px;"><i class="bi bi-list-task"></i> Mes tâches sur  "<%= @board.project.title %>"</h2>
-          <% true -> %><h2></h2>
-          <% end %>
+        </div>
+        <% @is_contributor -> %>
+        <h2 style="margin: 0; font-size: 20px;"><i class="bi bi-list-task"></i> Mes tâches sur "<%=
+                  @board.project.title %>"</h2>
+        <% true -> %><h2></h2>
+        <% end %>
 
         <div class="my_row">
-            <%= if @is_admin or @is_attributor or @is_contributor do%>
-              <fieldset class="generic_fieldset">
-                  <legend class="fs_legend_resized">Boutons</legend>
-                  <a id="show__task__modal__btn" href="#" class="btn btn-lg btn-primary btn__resized" phx-click="show_task_modal"><i class="bi bi-plus-circle"></i> Nouvelle tâche</a>
-                  <a href="#" class="btn btn-lg btn-secondary btn__resized" phx-click="show-secondary"><i class="bi bi-plus-circle"></i> Créer sous-tâche</a>
-                  <a href="#" class="btn btn-lg btn-info btn__resized" phx-click="show_hidden_tasks">Restaurer tâches archivées <i class="bi bi-plus-circle"></i></a>
-              </fieldset>
+          <%= if @is_admin or @is_attributor or @is_contributor do%>
+          <fieldset class="generic_fieldset">
+            <legend class="fs_legend_resized">Boutons</legend>
+            <a id="show__task__modal__btn" href="#" class="btn btn-lg btn-primary btn__resized"
+              phx-click="show_task_modal"><i class="bi bi-plus-circle"></i> Nouvelle tâche</a>
+            <a href="#" class="btn btn-lg btn-secondary btn__resized" phx-click="show-secondary"><i
+                class="bi bi-plus-circle"></i> Créer sous-tâche</a>
+            <a href="#" class="btn btn-lg btn-info btn__resized" phx-click="show_hidden_tasks">Restaurer
+              tâches archivées <i class="bi bi-plus-circle"></i></a>
+          </fieldset>
+          <% end %>
+
+
+          <fieldset class="generic_fieldset">
+            <legend class="fs_legend_resized">Filtres et recherche</legend>
+            <%= if @is_admin or @is_attributor do%>
+
+            <span class="material-icons-round filter__icon filt__and__sort__ico filter__icon__resized">person</span>
+            <form class="form_under_fieldset" phx-change="attributor_selected">
+
+              <select class="field_under_form_under_fieldset select__resized" id="task_filter" name="attributor_select">
+                <option value="" selected disabled hidden>Attributeur</option>
+                <option value="9000">Tout</option>
+                <%= for attributor <- @project_attributors do %>
+                <option value={attributor.id}>
+                  <%= attributor.username %>
+                </option>
+                <% end %>
+              </select>
+
+            </form>
+
+            <span
+              class="material-icons-round filter__icon filt__and__sort__ico filter__icon__resized">supervisor_account</span>
+            <form class="form_under_fieldset" phx-change="contributor_selected">
+
+              <select class="field_under_form_under_fieldset select__resized" id="task_filter"
+                name="contributor_select">
+                <option value="" selected disabled hidden>Contributeur</option>
+                <option value="9000">Tout</option>
+                <%= for contributor <- @project_contributors do %>
+                <option value={contributor.id}>
+                  <%= contributor.username %>
+                </option>
+                <% end %>
+                <option value="-1">Sans contributeur</option>
+              </select>
+
+            </form>
+
             <% end %>
+            <span class="material-icons-round filt__and__sort__ico filter__icon__resized">search</span>
+            <form class="form_under_fieldset" phx-change="search_task">
+              <input class="field_under_form_under_fieldset select__resized" autocomplete="off" type="text"
+                name="search-a" style="width: 125px; line-height: 10px;">
+            </form>
+          </fieldset>
 
 
+          <div class="my_col">
             <fieldset class="generic_fieldset">
-                  <legend class="fs_legend_resized">Filtres et recherche</legend>
-                    <%= if @is_admin or @is_attributor do%>
-
-                          <span class="material-icons-round filter__icon filt__and__sort__ico filter__icon__resized">person</span>
-                          <form class="form_under_fieldset" phx-change="attributor_selected">
-
-                            <select class="field_under_form_under_fieldset select__resized" id="task_filter" name="attributor_select">
-                            <option value="" selected disabled hidden>Attributeur</option>
-                            <option value="9000">Tout</option>
-                            <%= for attributor <- @project_attributors do %>
-                              <option value={attributor.id}><%= attributor.username %></option>
-                            <% end %>
-                            </select>
-
-                          </form>
-
-                          <span class="material-icons-round filter__icon filt__and__sort__ico filter__icon__resized">supervisor_account</span>
-                          <form class="form_under_fieldset" phx-change="contributor_selected">
-
-                            <select class="field_under_form_under_fieldset select__resized" id="task_filter" name="contributor_select">
-                            <option value="" selected disabled hidden>Contributeur</option>
-                            <option value="9000">Tout</option>
-                            <%= for contributor <- @project_contributors do %>
-                              <option value={contributor.id}><%= contributor.username %></option>
-                            <% end %>
-                            <option value="-1">Sans contributeur</option>
-                            </select>
-
-                          </form>
-
-                    <% end %>
-                          <span class="material-icons-round filt__and__sort__ico filter__icon__resized">search</span>
-                          <form class="form_under_fieldset" phx-change="search_task">
-                              <input class="field_under_form_under_fieldset select__resized" autocomplete="off" type="text" name="search-a" style="width: 125px; line-height: 10px;">
-                          </form>
-                </fieldset>
-
-
-            <div class="my_col">
-              <fieldset class="generic_fieldset">
-                <legend class="fs_legend_resized">Vues</legend>
-                <form class="vue__form__resized" phx-change="distinct_task">
+              <legend class="fs_legend_resized">Vues</legend>
+              <form class="vue__form__resized" phx-change="distinct_task">
                 <div class="row" style="margin-left: 0px;">
-                    <label class="vues__fs__content" for="primary" style="font-size: 12px;">Tâches</label>
-                    <input class="vues__fs__content" type="radio" id="primary" name="task_view" value="task" checked={@showing_primaries}>
-                    <label class="vues__fs__content" for="secondary" style="font-size: 12px;">Sous-tâches</label>
-                    <input class="vues__fs__content" type="radio" id="secondary" name="task_view" value="subtask" checked={@showing_primaries}>
+                  <label class="vues__fs__content" for="primary" style="font-size: 12px;">Tâches</label>
+                  <input class="vues__fs__content" type="radio" id="primary" name="task_view" value="task"
+                    checked={@showing_primaries}>
+                  <label class="vues__fs__content" for="secondary" style="font-size: 12px;">Sous-tâches</label>
+                  <input class="vues__fs__content" type="radio" id="secondary" name="task_view" value="subtask"
+                    checked={@showing_primaries}>
                 </div>
-                </form>
+              </form>
 
-              </fieldset>
-            </div>
+            </fieldset>
+          </div>
 
         </div>
 
       </div>
-      
+
     </div>
   </div>
 
 
-  
+
   <div class="meter">
-    <%
-    prog_color = cond do
-      @board.project.progression <= 20  -> "#e63946"
+    <% prog_color=cond do @board.project.progression <=20 -> "#e63946"
       @board.project.progression > 20 and @board.project.progression <= 40 -> "#e76f51"
-      @board.project.progression > 40 and @board.project.progression <= 60 -> "#ffba08"
-      @board.project.progression > 60 and @board.project.progression <= 80 -> "#457b9d"
-      @board.project.progression >80 and @board.project.progression <= 100 -> "#2a9d8f"
-      true -> "black"
-    end
-    %>
+        @board.project.progression > 40 and @board.project.progression <= 60 -> "#ffba08"
+          @board.project.progression > 60 and @board.project.progression <= 80 -> "#457b9d"
+            @board.project.progression >80 and @board.project.progression <= 100 -> "#2a9d8f"
+              true -> "black"
+              end
+              %>
     <span class="prog_bar" style={"width: #{@board.project.progression}%; background-color: #{prog_color};"}>
-      <h2 class="progression__nb"><%= @board.project.progression %>%</h2>
+      <h2 class="progression__nb">
+        <%= @board.project.progression %>%
+      </h2>
     </span>
   </div>
 
   <section id="the_board" class="board" phx-hook="Board" style="">
     <%= for stage <- @board.stages do %>
-      <div data-stage-id={ stage.id } class="stage basecontents__without__shadow__and__radius">
-        <div class="stage__header basecontents__without__radius" id="stage__header__sticked">
-          <div class="stage__name"><%= stage.name %></div>
-          <span class="stage__counter"><b class="counter__nb"><%= length(stage.cards) %></b></span>
+    <div data-stage-id={ stage.id } class="stage basecontents__without__shadow__and__radius">
+      <div class="stage__header basecontents__without__radius" id="stage__header__sticked">
+        <div class="stage__name">
+          <%= stage.name %>
         </div>
+        <span class="stage__counter"><b class="counter__nb">
+            <%= length(stage.cards) %>
+          </b></span>
+      </div>
 
-        <ul data-stage-id={ stage.id } class={if (not @is_admin and not @is_attributor) and stage.status_id == 5 do "" else "stage__cards" end}>
+      <ul data-stage-id={ stage.id } class={if (not @is_admin and not @is_attributor) and stage.status_id==5 do ""
+        else "stage__cards" end}>
 
-      <%= for card <- stage.cards do %>
-        <%= if @is_admin or @is_attributor or @curr_user_id == card.task.contributor_id do %>
+        <%= for card <- stage.cards do %>
+        <%= if @is_admin or @is_attributor or @curr_user_id==card.task.contributor_id do %>
 
         <div>
-          <div data-card-id={ card.id } class={"card basecontents__without__radius #{if is_nil(card.task.parent_id) do "" else "secondary__kanban" end}"} style={"display: #{ if card.task.hidden, do: "none !important" }; margin-bottom: 50px;"}>
+          <div data-card-id={ card.id } class={"card basecontents__without__radius #{if is_nil(card.task.parent_id)
+            do "" else "secondary__kanban" end}"} style={"display: #{ if card.task.hidden, do: "none !important" };
+            margin-bottom: 50px;"}>
 
             <%= case card.task.priority_id do %>
-              <% 1 -> %><div class="low__priority__point"></div>
-              <% 2 -> %><div class="avg__priority__point"></div>
-              <% 3 -> %><div class="high__priority__point"></div>
-              <% 4 -> %><div class="urg__priority__point"></div>
-              <% _ -> %><div class="priority__point"></div>
+            <% 1 -> %><div class="low__priority__point"></div>
+            <% 2 -> %><div class="avg__priority__point"></div>
+            <% 3 -> %><div class="high__priority__point"></div>
+            <% 4 -> %><div class="urg__priority__point"></div>
+            <% _ -> %><div class="priority__point"></div>
             <% end %>
 
-                <div class="card__name" style="margin-top: 10px; margin-bottom: 5px;"><%= card.task.title %></div>
+            <div class="card__name" style="margin-top: 10px; margin-bottom: 5px;">
+              <%= card.task.title %>
+            </div>
 
-                 <%= if !is_nil(card.task.parent_id) do %>
+            <%= if !is_nil(card.task.parent_id) do %>
 
-                 <div class="row" style="margin-top: 5px;">
-                  <div class="column column-20">
+            <div class="row" style="margin-top: 5px;">
+              <div class="column column-20">
+              </div>
+              <div class="column column-80" style="">
+                <i style="font-size: 60%;white-space: normal;">Tâche mère: <%=
+                                          card.task.parent.title %></i>
+              </div>
+            </div>
+
+            <% end %>
+
+            <%= if length(card.task.children) !=0 do %>
+            <div class="row">
+              <div class="column">
+              </div>
+              <div class="column" style="margin-left: 60px;">
+                <i style="font-size: 80%;white-space: nowrap;">
+                  <%= card.task.progression %> % <p style="display: inline; font-size: 10px;">
+                    <%= "(#{length(card.task.children)})" %>
+                  </p>
+                </i>
+              </div>
+            </div>
+            <% end %>
+
+            <div class="column" style="margin-bottom: 5px;">
+              <div style="font-size: 10px; text-align: center;">
+                <div style="display: flex;">
+                  <div class="column">
+                    <div style="font-size: 9px; font-weight: bold;"> Attributeur </div>
+                    <img class="profile-pic-mini-resized" src={
+                      Routes.static_path(@socket, "/#{card.task.attributor.profile_picture}" ) } width="50" />
+  
+                    <div class="zoom-out" style="font-size: 8px; margin-top: 4px; word-wrap: anywhere; margin-left: 2px;">
+                      <%= "#{card.task.attributor.username}" %>
+                    </div>
                   </div>
-                  <div class="column column-80" style="">
-                    <i style="font-size: 60%;white-space: normal;">Tâche mère: <%= card.task.parent.title %></i>
-                  </div>
-                 </div>
 
-                 <% end %>
-
-                 <%= if length(card.task.children) != 0 do %>
-                    <div class="row">
-                      <div class="column">
-                      </div>
-                      <div class="column" style="margin-left: 60px;">
-                        <i style="font-size: 80%;white-space: nowrap;"><%= card.task.progression %> % <p style="display: inline; font-size: 10px;"><%= "(#{length(card.task.children)})" %></p></i>
+                  <%= if card.task.contributor !=nil do %>
+                  <div class="right-button" style="display: flex;">
+                    <div class="column">
+                      <div style="font-size: 9px; font-weight: bold;"> Contributeur </div>
+                      <img class="profile-pic-mini-resized" src={
+                        Routes.static_path(@socket, "/#{card.task.contributor.profile_picture}" ) } width="50" />
+  
+                      <div class="zoom-out"
+                        style="font-size: 8px; margin-top: 4px; word-wrap: anywhere; margin-left: 2px;">
+                        <%= "#{card.task.contributor.username}" %>
                       </div>
                     </div>
-                 <% end %>
-
-                 <div class="column" style="margin-bottom: 5px;">
-                    <div style="font-size: 10px;">
-                      <div style="display: flex;">
-                          <img class="profile-pic-mini-resized" src={ Routes.static_path(@socket, "/#{card.task.attributor.profile_picture}") } width="50"/>
-
-                          <div class="zoom-out" style="font-size: 9px; margin-top: 4px; word-wrap: anywhere; margin-left: 4px;">
-                             <%= "#{card.task.attributor.username}" %>
-                          </div>
-
-                          <%= if card.task.contributor != nil do %>
-                            <div class="right-button" style="display: flex;">
-                                <img class="profile-pic-mini-resized" src={ Routes.static_path(@socket, "/#{card.task.contributor.profile_picture}") } width="50"/>
-
-                                <div class="zoom-out" style="font-size: 9px; margin-top: 4px; word-wrap: anywhere; margin-left: 4px;">
-                                   <%= "#{card.task.contributor.username}" %>
-                                </div>
-                            </div>
-                          <% end %>
-                      </div>
-                    </div>
-
-                </div>
-
-                <div style="float: right;">
-                  <div
-                    class="card__date" 
-                    style="font-size: 8px;"
-                  >
-                    Le <%= Utilities.simple_date_format_with_hours(card.task.inserted_at) %>
                   </div>
+                  <% end %>
                 </div>
+              </div>
 
-        <div 
-          style="display: flex; 
-                 box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.2);
+            </div>
+
+            <div style="float: right;">
+              <div class="card__date" style="font-size: 8px;">
+                Le <%= Utilities.simple_date_format_with_hours(card.task.inserted_at) %>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; 
+                 box-shadow: 0px 11px 35px 2px rgba(90, 87, 87, 0.2);
                  background-color: #3498db; 
                  float: right; 
-                 margin-top: 3px; 
-                 margin-right: -10px; 
+                 margin-top: -50px;
+                 margin-right: 4px; 
                  padding-right: 4px;
-                 position: relative;
-                 top: 0;
-                 left: 0;
+                 z-index: 0;
                 ">
-            <a
-              title="Afficher" 
-              style={"display: #{ if card.task.hidden, do: "none !important" };"} 
-              class="bi bi-plus plus__icon" 
-              phx-click="show_plus_modal" 
-              phx-value-id={card.id}>
-              </a>
+            <a title="Afficher" style={"display: #{ if card.task.hidden, do: "none !important" };"}
+              class="bi bi-plus plus__icon" phx-click="show_plus_modal" phx-value-id={card.id}>
+            </a>
 
-            <a 
-              title="Commenter" 
-              style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"} 
-              class="bi bi-chat-dots comment__icon" 
-              phx-click="show_comments_modal" 
-              phx-value-id={ card.id }>    
-          </a>
+            <a title="Commenter" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
+              class="bi bi-chat-dots comment__icon" phx-click="show_comments_modal" phx-value-id={ card.id }>
+            </a>
 
-            <a
-              title="Modifier" 
-              style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"} 
-              class="bi bi-pencil modif__icon" 
-              phx-click="show_modif_modal" 
-              phx-value-id={ card.id }>
-          </a>
+            <a title="Modifier" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
+              class="bi bi-pencil modif__icon" phx-click="show_modif_modal" phx-value-id={ card.id }>
+            </a>
 
             <%= if @is_admin or @is_attributor do %>
-              <a
-                title="Archiver" 
-                style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"} 
-                class="bi bi-trash3 delete__icon" 
-                phx-click="go_archive" 
-                phx-value-id={card.task.id}>  
-        </a>
+            <a title="Archiver" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
+              class="bi bi-trash3 delete__icon" phx-click="go_archive" phx-value-id={card.task.id}>
+            </a>
             <% end %>
           </div>
 
-          </div>
-
-        </div>        
+        </div>
 
         <% end %>
-      <% end %>
-    </ul>
+        <% end %>
+      </ul>
 
-      </div>
+    </div>
     <% end %>
   </section>
 
 
 
-  <%= live_component(@socket,
-                  TaskModalLive,
-                  id: "confirm-arch",
-                  title: "Créer tâche",
-                  body: nil,
-                  right_button: nil,
-                  right_button_action: nil,
-                  right_button_param: nil,
-                  left_button: "Annuler",
-                  left_button_action: "cancel",
-                  task_changeset: @task_changeset,
-                  contributors: @contributors,
-                  pro_id: @pro_id,
-                  show_task_modal: @show_task_modal,
-                  is_contributor: @is_contributor,
-                  curr_user_id: @curr_user_id)
-  %>
+  <%= live_component(@socket, TaskModalLive, id: "confirm-arch" , title: "Créer tâche" , body: nil, right_button: nil,
+    right_button_action: nil, right_button_param: nil, left_button: "Annuler" , left_button_action: "cancel" ,
+    task_changeset: @task_changeset, contributors: @contributors, pro_id: @pro_id, show_task_modal: @show_task_modal,
+    is_contributor: @is_contributor, curr_user_id: @curr_user_id) %>
 
 
 
 
-  <%= live_component(@socket,
-                  SecondaryModalLive,
-                  id: "confirm-arch",
-                  title: "Créer sous-tâche",
-                  body: nil,
-                  right_button: nil,
-                  right_button_action: nil,
-                  right_button_param: nil,
-                  left_button: "Annuler",
-                  left_button_action: "cancel-secondary",
-                  task_changeset: @secondary_changeset,
-                  contributors: @contributors,
-                  primaries: @primaries,
-                  pro_id: @pro_id,
-                  show_secondary: @show_secondary,
-                  curr_user_id: @curr_user_id)
-  %>
+  <%= live_component(@socket, SecondaryModalLive, id: "confirm-arch" , title: "Créer sous-tâche" , body: nil,
+      right_button: nil, right_button_action: nil, right_button_param: nil, left_button: "Annuler" ,
+      left_button_action: "cancel-secondary" , task_changeset: @secondary_changeset, contributors: @contributors,
+      primaries: @primaries, pro_id: @pro_id, show_secondary: @show_secondary, curr_user_id: @curr_user_id) %>
 
 
 
-  <%= live_component(@socket,
-                  PlusModalLive,
-                  id: "confirm-arch",
-                  title: "Tâche",
-                  body: nil,
-                  right_button: nil,
-                  right_button_action: nil,
-                  right_button_param: nil,
-                  left_button: "Retour",
-                  left_button_action: "cancel-plus",
-                  task_changeset: @task_changeset,
-                  pro_id: @pro_id,
-                  curr_user_id: @curr_user_id,
-                  show_plus_modal: @show_plus_modal,
-                  card: @card)
-  %>
+  <%= live_component(@socket, PlusModalLive, id: "confirm-arch" , title: "Tâche" , body: nil, right_button: nil,
+        right_button_action: nil, right_button_param: nil, left_button: "Retour" , left_button_action: "cancel-plus" ,
+        task_changeset: @task_changeset, pro_id: @pro_id, curr_user_id: @curr_user_id, show_plus_modal:
+        @show_plus_modal, card: @card) %>
 
 
 
-  <%= live_component(@socket,
-                  ModifModalLive,
-                  id: "confirm-arch",
-                  title: "Modifier tâche",
-                  body: nil,
-                  right_button: nil,
-                  right_button_action: nil,
-                  right_button_param: nil,
-                  left_button: "Retour",
-                  left_button_action: "cancel-modif",
-                  task_changeset: @task_changeset,
-                  pro_id: @pro_id,
-                  curr_user_id: @curr_user_id,
-                  modif_changeset: @modif_changeset,
-                  priorities: @priorities,
-                  contributors: @contributors,
-                  is_admin: @is_admin,
-                  is_contributor: @is_contributor,
-                  is_attributor: @is_attributor,
-                  show_modif_modal: @show_modif_modal,
-                  card: @card)
-  %>
+  <%= live_component(@socket, ModifModalLive, id: "confirm-arch" , title: "Modifier tâche" , body: nil,
+          right_button: nil, right_button_action: nil, right_button_param: nil, left_button: "Retour" ,
+          left_button_action: "cancel-modif" , task_changeset: @task_changeset, pro_id: @pro_id, curr_user_id:
+          @curr_user_id, modif_changeset: @modif_changeset, priorities: @priorities, contributors: @contributors,
+          is_admin: @is_admin, is_contributor: @is_contributor, is_attributor: @is_attributor, show_modif_modal:
+          @show_modif_modal, card: @card) %>
 
 
-<%= live_component(@socket,
-                     CommentsModalLive,
-                     id: "confirm-arch",
-                     title: "Commentaires",
-                     body: nil,
-                     right_button: "Oui",
-                     right_button_action: "arch",
-                     right_button_param: "", #@arch_id
-                     left_button: "Annuler",
-                     left_button_action: "cancel-comments",
-                     curr_user_id: @curr_user_id,
-                     changeset: @comment_changeset,
-                     show_comments_modal: @show_comments_modal,
-                     uploads: @uploads,
-                     card: @card_with_comments)
-  %>
+  <%= live_component(@socket, CommentsModalLive, id: "confirm-arch" , title: "Commentaires" , body: nil,
+            right_button: "Oui" , right_button_action: "arch" , right_button_param: "" , #@arch_id
+            left_button: "Annuler" , left_button_action: "cancel-comments" , curr_user_id: @curr_user_id, changeset:
+            @comment_changeset, show_comments_modal: @show_comments_modal, uploads: @uploads, card: @card_with_comments)
+            %>
 
 
 
 
-<br/>
-<%= if @is_admin or @is_attributor do %>
-  <span><a href={ Routes.project_path(@socket, :index) } class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i> Retour</a></span>
+  <br />
+  <%= if @is_admin or @is_attributor do %>
+  <span><a href={ Routes.project_path(@socket, :index) } class="btn btn-lg btn-secondary"><i
+        class="bi bi-arrow-bar-left"></i> Retour</a></span>
   <% else %>
-  <span><a href={ Routes.contributor_path(@socket, :my_projects) } class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i> Retour</a></span>
-<% end %>
+  <span><a href={ Routes.contributor_path(@socket, :my_projects) } class="btn btn-lg btn-secondary"><i
+        class="bi bi-arrow-bar-left"></i> Retour</a></span>
+  <% end %>
 
-<div class="my__modal__container" style={"visibility: #{ if @show_modal, do: "visible", else: "hidden" }; opacity: #{ if @show_modal, do: "1 !important", else: "0" };"}>
-  <div class="container my__modal__card archive__modal__card">
-  <a class="x__close" title="Fermer" phx-click="close_modal"><i class="bi bi-x"></i></a>
-    <div class="row">
-      <div class="column">
-        <h5 style="text-align: center;" class="bi bi-archive">Archiver ?</h5>
-        <p class="zoom-out" style="text-align: center;">Êtes-vous sûr(e) d'archiver la tâche <%= if not is_nil(@arch_id), do: PmLogin.Monitoring.get_task!(@arch_id).title %> ?</p>
+  <div class="my__modal__container" style={"visibility: #{ if @show_modal, do: "visible" , else: "hidden" }; opacity: #{
+    if @show_modal, do: "1 !important" , else: "0" };"}>
+    <div class="container my__modal__card archive__modal__card">
+      <a class="x__close" title="Fermer" phx-click="close_modal"><i class="bi bi-x"></i></a>
+      <div class="row">
+        <div class="column">
+          <h5 style="text-align: center;" class="bi bi-archive">Archiver ?</h5>
+          <p class="zoom-out" style="text-align: center;">
+            Êtes-vous sûr(e) d'archiver la tâche
+            <%= if not is_nil(@arch_id), do: PmLogin.Monitoring.get_task!(@arch_id).title %>
+            ?
+          </p>
 
-            <div class="modal-buttons" style="margin-bottom: 20px;">
-                <!-- Left Button -->
-                <a href="#" class="button button-outline" type="button" phx-click="close_modal">
-                  <div>NON</div>
-                </a>
-                <!-- Right Button -->
-                <a href="#" class="button right-button" type="button" phx-click="archive_task" phx-value-id={ @arch_id }>
-                  <div>OUI</div>
-                </a>
-            </div>
+          <div class="modal-buttons" style="margin-bottom: 20px;">
+            <!-- Left Button -->
+            <a href="#" class="button button-outline" type="button" phx-click="close_modal">
+              <div>NON</div>
+            </a>
+            <!-- Right Button -->
+            <a href="#" class="button right-button" type="button" phx-click="archive_task" phx-value-id={ @arch_id }>
+              <div>OUI</div>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="my__modal__container" style={"visibility: #{ if @show_hidden_modal, do: "visible", else: "hidden" }; opacity: #{ if @show_hidden_modal, do: "1 !important", else: "0" };"}>
-  <div class="container my__modal__card archive__modal__card" style="padding-bottom: 10px;">
-  <a class="x__close" title="Fermer" phx-click="close_hidden_modal"><i class="bi bi-x"></i></a>
-    <div class="row">
-      <div class="column" style="padding-bottom: -20px !important;">
-        <h5 style="text-align: center;"><i class="bi bi-archive-fill"></i> Tâches archivées</h5>
-        <div class="my_row">
-            <div class="my_col"><h5>Tâche</h5></div>
-            <div class="my_col" style="float:right;"><h5>Contributeur</h5></div>
-        </div>
-        <.form let={f} for={:oi} phx-submit="restore_tasks" style="margin-bottom: 0px;">
-        <div class="hidden__contents__container">
-        <%= for hidden_task <- @hidden_tasks do %>
-          <div class="simple_basecontents" style="margin-bottom: 10px;padding-bottom: 10px;">
-            <div class="my_row">
-                <div class="my_col">
-                    <b class="zoom-out" style="word-wrap: anywhere"><%= hidden_task.title %></b>
-                </div>
-                <div class="my_col" style="float:right;">
-                    <b class="zoom-out">
-                    <%= if not is_nil(hidden_task.contributor) do
-                      hidden_task.contributor.username
-                      else
-                      "-"
-                      end
-                    %>
-                    </b>
-                    <input name={"task_#{ hidden_task.id }"} type="checkbox" phx-value-id={ hidden_task.id } value={ hidden_task.id }>
-                </div>
-            </div>
-          </div>
-        <% end %>
-        </div>
-         <%= if @no_selected_hidden do %>
-          <p class="invalid-feedback" style="text-align: center;">Sélectionner tâche à restaurer</p>
-          <% end %>
-          <div class="my_row" style="text-align: center; margin-top: 20px;">
-          <%= if length(@hidden_tasks) != 0 do %>
-              <button class="button" type="submit">Restaurer</button>
-          <% end %>
-
-          </div>
-          </.form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="my__modal__container" style={"visibility: #{ if @show_planified, do: "visible", else: "hidden" }; opacity: #{ if @show_planified, do: "1 !important", else: "0" };"}>
-
-  <div class="container my__modal__card archive__modal__card">
-  <a class="x__close" title="Fermer" phx-click="close_planified_modal"><i class="bi bi-x"></i></a>
+  <div class="my__modal__container" style={"visibility: #{ if @show_hidden_modal, do: "visible" , else: "hidden" };
+    opacity: #{ if @show_hidden_modal, do: "1 !important" , else: "0" };"}>
+    <div class="container my__modal__card archive__modal__card" style="padding-bottom: 10px;">
+      <a class="x__close" title="Fermer" phx-click="close_hidden_modal"><i class="bi bi-x"></i></a>
       <div class="row">
         <div class="column" style="padding-bottom: -20px !important;">
-          <h3 style="text-align: center;"> <span class="material-icons">add_task</span> Planifier tâches</h3>
+          <h5 style="text-align: center;"><i class="bi bi-archive-fill"></i> Tâches archivées</h5>
+          <div class="my_row">
+            <div class="my_col">
+              <h5>Tâche</h5>
+            </div>
+            <div class="my_col" style="float:right;">
+              <h5>Contributeur</h5>
+            </div>
+          </div>
+          <.form let={f} for={:oi} phx-submit="restore_tasks" style="margin-bottom: 0px;">
+            <div class="hidden__contents__container">
+              <%= for hidden_task <- @hidden_tasks do %>
+              <div class="simple_basecontents" style="margin-bottom: 10px;padding-bottom: 10px;">
+                <div class="my_row">
+                  <div class="my_col">
+                    <b class="zoom-out" style="word-wrap: anywhere">
+                      <%= hidden_task.title %>
+                    </b>
+                  </div>
+                  <div class="my_col" style="float:right;">
+                    <b class="zoom-out">
+                      <%= if not is_nil(hidden_task.contributor) do hidden_task.contributor.username
+                                          else "-" end %>
+                    </b>
+                    <input name={"task_#{ hidden_task.id }"} type="checkbox" phx-value-id={ hidden_task.id } value={
+                      hidden_task.id }>
+                  </div>
+                </div>
+              </div>
+              <% end %>
+            </div>
+            <%= if @no_selected_hidden do %>
+            <p class="invalid-feedback" style="text-align: center;">Sélectionner tâche à restaurer</p>
+            <% end %>
+            <div class="my_row" style="text-align: center; margin-top: 20px;">
+              <%= if length(@hidden_tasks) !=0 do %>
+              <button class="button" type="submit">Restaurer</button>
+              <% end %>
+
+            </div>
+          </.form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="my__modal__container" style={"visibility: #{ if @show_planified, do: "visible" , else: "hidden" };
+    opacity: #{ if @show_planified, do: "1 !important" , else: "0" };"}>
+
+    <div class="container my__modal__card archive__modal__card">
+      <a class="x__close" title="Fermer" phx-click="close_planified_modal"><i class="bi bi-x"></i></a>
+      <div class="row">
+        <div class="column" style="padding-bottom: -20px !important;">
+          <h3 style="text-align: center;"> <span class="material-icons">add_task</span> Planifier tâches
+          </h3>
         </div>
       </div>
 
-       <div class="row">
-       <div class="column">
-        <.form let={f} for={@planified_changeset} phx-change="change_planified" phx-submit="submit_planified">
+      <div class="row">
+        <div class="column">
+          <.form let={f} for={@planified_changeset} phx-change="change_planified" phx-submit="submit_planified">
 
-          <%= hidden_input f, :attributor_id, value: @curr_user_id %>
-          <%= hidden_input f, :project_id, value: @board.project.id %>
-          <%= label f, :description, "Description de la tâche à planifier" %>
-          <%= text_input f, :description %>
-          <%= error_tag f, :description %>
+            <%= hidden_input f, :attributor_id, value: @curr_user_id %>
+            <%= hidden_input f, :project_id, value: @board.project.id %>
+            <%= label f, :description, "Description de la tâche à planifier" %>
+            <%= text_input f, :description %>
+            <%= error_tag f, :description %>
 
-          <%= label f, :dt_start, "Date de début" %>
-          <%= Utilities.my_datetime_select f, :dt_start %>
-          <%= error_tag f, :dt_start %>
+            <%= label f, :dt_start, "Date de début" %>
+            <%= Utilities.my_datetime_select f, :dt_start %>
+            <%= error_tag f, :dt_start %>
 
-          <div class="row">
-            <div class="column">
-              <%= label f, "Assigner intervenant : ", style: "font-size: 80%;" %>
-              <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:"%>
-            </div>
-            <div class="column">
-              <%= label f, "Durée estimée : ", style: "font-size: 80%;" %>
-              <%= number_input f, :estimated_duration %>
-            </div>
-             <div class="column">
-                <%= label f, "Sans contrôle", style: "font-size: 80%;" %>
+            <div class="row">
+              <div class="column">
+                <%= label f, "Assigner intervenant : " , style: "font-size: 80%;" %>
+                <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:"
+                                                    %>
+              </div>
+              <div class="column">
+                <%= label f, "Durée estimée : " , style: "font-size: 80%;" %>
+                <%= number_input f, :estimated_duration %>
+              </div>
+              <div class="column">
+                <%= label f, "Sans contrôle" , style: "font-size: 80%;" %>
                 <%= checkbox f, :without_control %>
+              </div>
             </div>
-          </div>
 
-          <%= error_tag f, :estimated_duration %>
+            <%= error_tag f, :estimated_duration %>
 
-          <%= label f, :period, "Période" %>
+            <%= label f, :period, "Période" %>
 
-          <div class="row" style="margin-bottom: 20px;">
-            <div class="column"><%= radio_button f, :period_type, "day", id: "day",checked: (if @day_period , do: true, else: false) %><label for="day" class="btn btn-lg btn-outline-dark period__link">PAR JOUR</label></div>
-            <div class="column"><%= radio_button f, :period_type, "week", id: "week", checked: (if @week_period , do: true, else: false) %><label for="week" class="btn btn-lg btn-outline-dark period__link">PAR SEMAINE</label></div>
-            <div class="column"><%= radio_button f, :period_type, "month", id: "month",checked: (if @month_period , do: true, else: false) %><label for="month" class="btn btn-lg btn-outline-dark period__link">PAR MOIS</label></div>
-          </div>
+            <div class="row" style="margin-bottom: 20px;">
+              <div class="column">
+                <%= radio_button f, :period_type, "day" , id: "day" ,checked: (if @day_period , do: true, else: false) %>
+                <label for="day" class="btn btn-lg btn-outline-dark period__link">PAR JOUR</label>
+              </div>
+              <div class="column">
+                <%= radio_button f, :period_type, "week" , id: "week" , checked: (if @week_period , do: true, else: false) %>
+                <label for="week" class="btn btn-lg btn-outline-dark period__link">PAR SEMAINE</label>
+              </div>
+              <div class="column">
+                <%= radio_button f, :period_type, "month" , id: "month" , checked: (if @month_period , do: true, else: false) %>
+                <label for="month" class="btn btn-lg btn-outline-dark period__link">PAR MOIS</label>
+              </div>
+            </div>
 
-          <%= error_tag f, :period %>
+            <%= error_tag f, :period %>
 
-          <div class="row" style="margin-bottom: 20px;">
+            <div class="row" style="margin-bottom: 20px;">
               <div class="column" style="text-align: center;">
-              <%= cond do %>
+                <%= cond do %>
                 <% @day_period -> %>
                 <%= number_input f, :period, style: "width: 50%;" %>
-                 jours
+                jours
                 <% @week_period -> %>
                 <%= number_input f, :period, style: "width: 50%;" %>
-                 semaines
+                semaines
                 <% @month_period -> %>
                 <%= number_input f, :period, style: "width: 50%;" %>
-                 mois
+                mois
                 <% true -> %>
                 <%= number_input f, :period, style: "width: 50%; display: none;" %>
-              <% end %>
+                <% end %>
               </div>
-         </div>
-          <button class="btn btn-lg btn-primary right-button" style="float: right;" type="submit"><i class="bi bi-clock-fill"></i> Planifier</button>
-        
-        </.form>
-       </div>
-
-      </div>
-
-  </div>
-
-</div>
-
-<div class="my__modal__container" style={"visibility: #{ if @show_planified_list, do: "visible", else: "hidden" }; opacity: #{ if @show_planified_list, do: "1 !important", else: "0" };"}>
-  <div class="container my__modal__card planified__modal__card">
-  <a class="x__close" title="Fermer" phx-click="close_planified_list"><i class="bi bi-x"></i></a>
-
-    <div class="row">
-      <div class="column" style="padding-bottom: -20px !important;">
-        <h3 style="text-align: center;"> <span class="material-icons">alarm</span> Tâches planifiées</h3>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="column">
-
-      <table id="planified_list">
-      <thead>
-          <th>Description</th>
-          <th>Première instanciation</th>
-          <th>Se répète chaque</th>
-          <th>Par</th>
-          <th>Pour</th>
-          <th>Durée estimée</th>
-          <th>Sans contrôle</th>
-          <th></th>
-        </thead>
-        <tbody>
-          <%= for task <- @planified_list do %>
-          <tr>
-            <td><%= task.description %></td>
-            <td><%= Utilities.letters_date_format_with_hours(task.dt_start) %></td>
-            <td><%= task.period %> jours</td>
-            <td>
-              <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/#{task.attributor.profile_picture}") } width="50" style="position: relative;"/>
-              <%= task.attributor.username %>
-            </td>
-            <td>
-              <%= if is_nil(task.contributor) do %>
-                -
-              <% else %>
-                <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/#{task.contributor.profile_picture}") } width="50" style="position: relative;"/>
-                task.contributor.username
-              <% end %>
-            </td>
-            <td><%= task.estimated_duration %> h</td>
-            <td>
-              <%= if task.without_control do %>
-                Oui
-              <% else %>
-              Non
-              <% end %>
-            </td>
-          <td>
-            <i class="bi bi-x btn btn-danger btn-lg archive__user" style="font-size: 15px;" phx-click="go_del_planified" phx-value-id={ task.id }></i>
-          </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<div class="my__modal__container" style={"visibility: #{ if @show_del_plan, do: "visible", else: "hidden" }; opacity: #{ if @show_del_plan, do: "1 !important", else: "0" };"}>
-  <div class="container my__modal__card archive__modal__card">
-  <a class="x__close" title="Fermer" phx-click="close_del_plan"><i class="bi bi-x"></i></a>
-    <div class="row">
-      <div class="column">
-        <h3 style="text-align: center;">Retirer?</h3>
-        <p style="text-align: center;">Êtes-vous sûr(e) de retirer la tâche planifiée <%= if not is_nil(@del_plan_id) do PmLogin.Monitoring.get_planified!(@del_plan_id).description end %> ?</p>
-
-            <div class="modal-buttons" style="margin-bottom: 20px;">
-                <!-- Left Button -->
-                <a href="#" class="btn btn-lg left-button" type="button" phx-click="close_del_plan">
-                  <div>NON</div>
-                </a>
-                <!-- Right Button -->
-                <a href="#" class="btn btn-lg btn-primary right-button" type="button" phx-click="del_planified" phx-value-id={ @del_plan_id }>
-                  <div>OUI</div>
-                </a>
             </div>
+            <button class="btn btn-lg btn-primary right-button" style="float: right;" type="submit"><i
+                class="bi bi-clock-fill"></i>
+              Planifier</button>
+
+          </.form>
+        </div>
+
       </div>
+
+    </div>
+
+  </div>
+
+  <div class="my__modal__container" style={"visibility: #{ if @show_planified_list, do: "visible" , else: "hidden" };
+    opacity: #{ if @show_planified_list, do: "1 !important" , else: "0" };"}>
+    <div class="container my__modal__card planified__modal__card">
+      <a class="x__close" title="Fermer" phx-click="close_planified_list"><i class="bi bi-x"></i></a>
+
+      <div class="row">
+        <div class="column" style="padding-bottom: -20px !important;">
+          <h3 style="text-align: center;"> <span class="material-icons">alarm</span> Tâches planifiées
+          </h3>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+
+          <table id="planified_list">
+            <thead>
+              <th>Description</th>
+              <th>Première instanciation</th>
+              <th>Se répète chaque</th>
+              <th>Par</th>
+              <th>Pour</th>
+              <th>Durée estimée</th>
+              <th>Sans contrôle</th>
+              <th></th>
+            </thead>
+            <tbody>
+              <%= for task <- @planified_list do %>
+              <tr>
+                <td>
+                  <%= task.description %>
+                </td>
+                <td>
+                  <%= Utilities.letters_date_format_with_hours(task.dt_start) %>
+                </td>
+                <td>
+                  <%= task.period %> jours
+                </td>
+                <td>
+                  <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/#{task.attributor.profile_picture}"
+                    ) } width="50" style="position: relative;" />
+                  <%= task.attributor.username %>
+                </td>
+                <td>
+                  <%= if is_nil(task.contributor) do %>
+                  -
+                  <% else %>
+                  <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/#{task.contributor.profile_picture}"
+                    ) } width="50" style="position: relative;" />
+                  task.contributor.username
+                  <% end %>
+                </td>
+                <td>
+                  <%= task.estimated_duration %> h
+                </td>
+                <td>
+                  <%= if task.without_control do %>
+                  Oui
+                  <% else %>
+                  Non
+                  <% end %>
+                </td>
+                <td>
+                  <i class="bi bi-x btn btn-danger btn-lg archive__user" style="font-size: 15px;"
+                    phx-click="go_del_planified" phx-value-id={ task.id }></i>
+                </td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  
-</div>
+  <div class="my__modal__container" style={"visibility: #{ if @show_del_plan, do: "visible" , else: "hidden" }; opacity:
+    #{ if @show_del_plan, do: "1 !important" , else: "0" };"}>
+    <div class="container my__modal__card archive__modal__card">
+      <a class="x__close" title="Fermer" phx-click="close_del_plan"><i class="bi bi-x"></i></a>
+      <div class="row">
+        <div class="column">
+          <h3 style="text-align: center;">Retirer?</h3>
+          <p style="text-align: center;">Êtes-vous sûr(e) de retirer la tâche planifiée
+            <%= if not
+                              is_nil(@del_plan_id) do PmLogin.Monitoring.get_planified!(@del_plan_id).description end %>
+            ?</p>
+
+          <div class="modal-buttons" style="margin-bottom: 20px;">
+            <!-- Left Button -->
+            <a href="#" class="btn btn-lg left-button" type="button" phx-click="close_del_plan">
+              <div>NON</div>
+            </a>
+            <!-- Right Button -->
+            <a href="#" class="btn btn-lg btn-primary right-button" type="button" phx-click="del_planified"
+              phx-value-id={ @del_plan_id }>
+              <div>OUI</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
 </div>
