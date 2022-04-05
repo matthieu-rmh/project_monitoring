@@ -21,6 +21,7 @@ COMMENTED ROUTES ARE NOT TO BE DELETED BUT JUST NOT USED AT THE TIME
 
     #contributor route
     get "/my_projects", ContributorController, :my_projects
+    get "/my_tasks", ContributorController, :my_tasks
 
     #Project LiveView
     get "/boards/:id", ProjectController, :board
