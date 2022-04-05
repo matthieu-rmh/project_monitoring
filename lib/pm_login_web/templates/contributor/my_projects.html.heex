@@ -1,11 +1,11 @@
-<h1><i class="bi bi-kanban"></i> Les projets à qui on m'a assigné des tâches</h1>
+<h3><i class="bi bi-kanban"></i> Les projets à qui on m'a assigné des tâches</h3>
 
 <div class="basecontents__without__radius" style="padding-top: 10px;padding-bottom: 10px;">
 
 
     <%= for project <- @projects do %>
-      <p><span class="material-icons-round arr__sorted">keyboard_arrow_right</span>
-      <%= link "#{project.title}", to: Routes.project_path(@socket, :board, project) %></p>
+      <div><span class="material-icons-round arr__sorted">keyboard_arrow_right</span>
+      <%= link "#{project.title}", to: Routes.project_path(@socket, :board, project) %></div>
     <% end %>
 
 
