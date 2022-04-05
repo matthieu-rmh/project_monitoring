@@ -1,0 +1,48 @@
+<h3 style="margin-left: -220px;"><i class="bi bi-list-task"></i> Les tâches qui m'ont été assigné </h3>
+<table id="tb-auth" style="width: 1200px; margin-left: -220px; margin-top: 10px; font-size: 13px;">
+  <thead>
+    <tr>
+      <th>Projet</th>
+      <th>Nom</th>
+      <th>Description</th>
+      <th>Statut</th>
+      <th>Priorité</th>
+      <th>Date de début</th>
+      <th>Date d'échéance</th>
+      <th>Progression</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for task <- @tasks do %>
+      <!-- Afficher les valeurs si son statut différent de Achevée(s) et que c'est pas archivé -->
+      <%= if task.status_id != 5 and task.hidden == false do %>
+        <tr>
+          <td> <%= task.project.title %> </td>
+          <td style="word-wrap: anywhere"><%= link "#{task.title}", to: Routes.project_path(@socket, :board, task.project_id) %></td>
+          <td style="word-wrap: anywhere"><%= task.description %></td>
+          <td>
+            <%= case task.status_id do %>
+              <% 1 -> %> A faire 
+              <% 2 -> %> En blocage
+              <% 3 -> %> En cours
+              <% 4 -> %> En contrôle
+              <% _ -> %>
+            <% end %>
+          </td>
+          <td>
+            <%= case task.priority_id do %>
+              <% 1 -> %> <div class="low__priority__point__table"> Faible</div>
+              <% 2 -> %> <div class="avg__priority__point__table"> Moyenne</div>
+              <% 3 -> %><div class="high__priority__point__table"> Importante</div>
+              <% 4 -> %><div class="urg__priority__point__table"> Urgente</div>
+              <% _ -> %><div class="priority__point__table"></div>
+            <% end %>
+          </td>
+          <td> <%= Calendar.strftime(task.date_start, "%d-%m-%Y") %> </td>
+          <td> <%= Calendar.strftime(task.deadline, "%d-%m-%Y") %> </td>
+          <td> <%= task.progression %> % </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
