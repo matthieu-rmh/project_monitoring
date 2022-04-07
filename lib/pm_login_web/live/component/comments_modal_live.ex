@@ -91,7 +91,7 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
                   <!-- MODAL BODY "DONE" START-->
                   <div class="modal-body">
 
-                      <div class="row">
+                      <div>
                         <div id="messageBody" class="comments-section" phx-hook="MessageBody">
 
                             <!-- start of one comment -->
@@ -106,14 +106,14 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
                                                 }"}>
 
                                   <%= if comment.poster_id == @curr_user_id do %>
-                                    <div class="row">
+                                    <div>
                                       <div style="display: flex;">
                                         <img class="pp__comment" src={Routes.static_path(@socket, "/#{current_user.profile_picture}")} />
                                         <div class="username__comment__you"> <%= current_username %> </div>
                                       </div>
                                     </div>
                                   <% else %>
-                                    <div class="row">
+                                    <div>
                                       <div style="display: flex;">
                                         <img class="pp__comment" src={Routes.static_path(@socket, "/#{comment.poster.profile_picture}")} />
                                         <div class="username__comment"><%= comment.poster.username %></div>
@@ -123,7 +123,7 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
 
                                   <%= if comment.poster_id == @curr_user_id do %>
 
-                                    <div class="row">
+                                    <div>
                                       <div>
                                           <div style="float: left; word-wrap: anywhere; font-size: 12px; margin-right: 20px; text-align: justify;"><%= comment.content %></div>
                                           <div class="column" style="padding: 0">
@@ -140,7 +140,7 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
                                     </div>
 
                                   <% else %>
-                                      <div class="row">
+                                      <div>
                                         <div>
                                           <div style="float: left; word-wrap: anywhere; font-size: 12px; margin-right: 20px; text-align: justify;"><%= comment.content %></div>
                                           <div class="column" style="padding: 0">
