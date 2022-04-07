@@ -58,6 +58,7 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
       </script>
 
       <% current_user = PmLogin.Login.get_user!(@curr_user_id) %>
+      <% current_username = PmLogin.Login.get_user!(@curr_user_id).username %>
       <!-- Modal Background -->
       <div id="comment_modal_container" class="modal-container" style={"visibility: #{ if @show_comments_modal, do: "visible", else: "hidden" }; opacity: #{if @show_comments_modal, do: "1 !important", else: "0" };"}
           phx-hook="ScrollLock">
@@ -70,7 +71,7 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
 
                   <!-- Title -->
                   <%= if @title != nil do %>
-                    <div class="row modal-title">
+                    <div class="row modal-title" style="width: auto; display: inline-block;">
                       <%= @title %>
                       <div class="load__icons">
                         <a href="#" style="font-size: 25px;" title="derniers commentaires" phx-click="scroll-bot"><i class="bi bi-arrow-bar-down"></i></a>
@@ -95,28 +96,27 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
 
                             <!-- start of one comment -->
                               <%= for comment <- Enum.reverse(@card.task.comments) do %>
-                                  <div class="basecontents__without__shadow__and__radius comment__div">
+                                  <div class="comment__div"
+                                       style={"#{
+                                                if comment.poster_id == @curr_user_id do
+                                                  "background-color: #3498db; float: right;"
+                                                else
+                                                  "margin-left: 20px; background-color: #95a5a6; float: left"
+                                                end
+                                                }"}>
 
                                   <%= if comment.poster_id == @curr_user_id do %>
-                                  <div class="row comment__header">
-                                    <div class="column column-80">
-                                    </div>
-                                    <div class="column column-20">
-                                      <div class="row">
-                                        <p class="username__comment__you">Vous</p>
+                                    <div class="row">
+                                      <div style="display: flex;">
                                         <img class="pp__comment" src={Routes.static_path(@socket, "/#{current_user.profile_picture}")} />
+                                        <div class="username__comment__you"> <%= current_username %> </div>
                                       </div>
                                     </div>
-                                  </div>
                                   <% else %>
-                                    <div class="row comment__header">
-                                      <div class="column column-20">
-                                        <div class="row">
-                                          <img class="pp__comment" src={Routes.static_path(@socket, "/#{comment.poster.profile_picture}")} />
-                                          <p class="username__comment"><%= comment.poster.username %></p>
-                                        </div>
-                                      </div>
-                                      <div class="column column-80">
+                                    <div class="row">
+                                      <div style="display: flex;">
+                                        <img class="pp__comment" src={Routes.static_path(@socket, "/#{comment.poster.profile_picture}")} />
+                                        <div class="username__comment"><%= comment.poster.username %></div>
                                       </div>
                                     </div>
                                   <% end %>
@@ -124,12 +124,12 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
                                   <%= if comment.poster_id == @curr_user_id do %>
 
                                     <div class="row">
-                                      <div class="comment__content">
-                                          <p class="textc__content_user"><%= comment.content %></p>
-                                          <div class="column" style="margin-bottom: 20px;">
+                                      <div>
+                                          <div style="float: left; word-wrap: anywhere; font-size: 12px; margin-right: 20px; text-align: justify;"><%= comment.content %></div>
+                                          <div class="column" style="padding: 0">
                                             <%= for url <- comment.file_urls do %>
                                               <%= if Path.extname(url)==".jpg" or Path.extname(url)==".png" or Path.extname(url)==".jpeg" do %>
-                                                  <a href={url} style="margin-bottom: 10px;"><img src={url} alt="" height="150"/></a>
+                                                  <a href={url} style="margin-bottom: 10px;"><img src={url} alt="" height="100"/></a>
                                                 <% else %>
                                                   <a href={url} download><%= Path.basename(url) %></a>
                                                   <br/>
@@ -137,18 +137,16 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
                                             <% end %>
                                           </div>
                                       </div>
-                                      <i class="bi bi-caret-left-fill"></i>
                                     </div>
 
                                   <% else %>
                                       <div class="row">
-                                        <i class="bi bi-caret-right-fill"></i>
-                                        <div class="comment__content">
-                                          <p class="textc__content"><%= comment.content %></p>
-                                          <div class="column" style="margin-bottom: 20px;">
+                                        <div>
+                                          <div style="float: left; word-wrap: anywhere; font-size: 12px; margin-right: 20px; text-align: justify;"><%= comment.content %></div>
+                                          <div class="column" style="padding: 0">
                                             <%= for url <- comment.file_urls do %>
                                               <%= if Path.extname(url)==".jpg" or Path.extname(url)==".png" or Path.extname(url)==".jpeg" do %>
-                                                <a href={url} style="margin-bottom: 10px;"><img src={url} alt="" height="150"/></a>
+                                                <a href={url} style="margin-bottom: 10px;"><img src={url} alt="" height="100"/></a>
                                                 <% else %>
                                                 <a href={url} download><%= Path.basename(url) %></a>
                                                 <br/>
@@ -159,19 +157,11 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
                                       </div>
                                   <% end %>
 
-                                    <div class="row comment__footer">
+                                    <div style="float: right;">
                                       <%= if @curr_user_id == comment.poster_id do %>
-                                          <div class="column column-30">
-                                            <i class="date__footer"><%= Utilities.simple_date_format_with_hours(comment.inserted_at) %></i>
-                                          </div>
-                                          <div class="column column-70">
-                                          </div>
+                                        <div class="date__footer" style="font-size: 8px;"><%= Utilities.simple_date_format_with_hours(comment.inserted_at) %></div>
                                       <% else %>
-                                          <div class="column column-70">
-                                          </div>
-                                          <div class="column column-30">
-                                            <i class="date__footer"><%= Utilities.simple_date_format_with_hours(comment.inserted_at) %></i>
-                                          </div>
+                                        <div class="date__footer" style="font-size: 8px;"><%= Utilities.simple_date_format_with_hours(comment.inserted_at) %></div>
                                       <% end %>
                                     </div>
 
@@ -206,21 +196,29 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
                           </div>
 
                           <.form let={f} for={@changeset} phx-submit="send-comment" phx-change="change-comment">
-                            <div class="form__wrapper">
-                                <%= text_input f, :content, size: "20" %>
-                                <%= hidden_input f, :poster_id, value: @curr_user_id %>
-                                <%= hidden_input f, :task_id, value: @card.task_id %>
+                            <div class="form__wrapper" style="margin-left: -20px;">
+                              <div style="margin-right: 15px;">
                                 <label title="Joindre fichier" class="upload__ico__label">
-                                <%=  live_file_input(@uploads.file, class: "file_inputs") %>
-                                <i class="bi bi-upload upload__com__icon"></i>
+                                  <%=  live_file_input(@uploads.file, class: "file_inputs") %>
+                                  <i class="bi bi-upload upload__com__icon"></i>
                                 </label>
                                 <%= for {_ref, msg} <- @uploads.file.errors do %>
-                                <%= if Phoenix.Naming.humanize(msg)=="Too many files" do %>
-                                <p class="alert alert-danger"><%= "Nombre de fichiers max : 5." %></p>
+                                  <%= if Phoenix.Naming.humanize(msg)=="Too many files" do %>
+                                    <p class="alert alert-danger"><%= "Nombre de fichiers max : 5." %></p>
+                                  <% end %>
                                 <% end %>
-                                <% end %>
-                              <button type="submit" class="bt__com__form"><span class="material-icons bt__com__form__ico">send</span>
-                              </button>
+                              </div>
+
+                              <div>
+                                <%= text_input f, :content, size: "20", placeholder: "Message" %>
+                                <%= hidden_input f, :poster_id, value: @curr_user_id %>
+                                <%= hidden_input f, :task_id, value: @card.task_id %>
+
+                                <button type="submit" class="bt__com__form">
+                                  <span class="material-icons bt__com__form__ico" style="margin-left: -15px;">send</span>
+                                </button>
+                              </div>
+
                             </div>
                             <%= error_tag f, :content %>
                             <!-- <button type="submit" style="background-color: transparent;"><i class="bi bi-symmetry-horizontal" style="font-size: 200%;color: gray;"></i></button> -->
