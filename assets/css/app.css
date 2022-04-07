@@ -25,6 +25,7 @@
 @import "./contributors.css";
 @import "./contributor_board.css";
 @import "./resizing.css";
+@import "./table.css";
 
 @font-face {
   font-family: "Axiforma";

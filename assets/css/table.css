@@ -1,0 +1,25 @@
+@media (max-width: 750px) {
+  .table-tasks {
+    display: table;
+  }
+
+  .table-tasks thead {
+    display: none;
+  }
+
+  .table-tasks tr {
+    display: block;
+    margin-bottom: 40px;
+  }
+
+  .table-tasks td {
+    display: block;
+    text-align: right;
+  }
+
+  .table-tasks td:before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+  }
+}
