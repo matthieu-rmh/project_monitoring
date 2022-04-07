@@ -1,16 +1,17 @@
 defmodule PmLoginWeb.Project.ContributorTasksLive do
   use Phoenix.LiveView
   alias PmLogin.Services
-
+  alias PmLogin.Monitoring
   def mount(_params, %{"curr_user_id"=>curr_user_id, "tasks" => tasks}, socket) do
+    Monitoring.subscribe()
     Services.subscribe()
 
     {:ok,
        socket
        |> assign(
                 tasks: tasks,
-                curr_user_id: curr_user_id, 
-                show_notif: false, 
+                curr_user_id: curr_user_id,
+                show_notif: false,
                 notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)
                 ),
           layout: {PmLoginWeb.LayoutView, "contributor_layout_live.html"}
@@ -41,6 +42,24 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
   def handle_event("cancel-notif", %{}, socket) do
     cancel = if socket.assigns.show_notif, do: false
     {:noreply, socket |> assign(show_notif: cancel)}
+  end
+
+  def handle_info({Monitoring, [_, _], _}, socket) do
+    curr_user_id = socket.assigns.curr_user_id
+    tasks = Monitoring.list_tasks_by_contributor_project(curr_user_id)
+
+    IO.puts("faaaaaaaaa")
+
+    {:noreply, socket |> assign(tasks: tasks)}
+  end
+
+  def handle_info({Monitoring, [:task, :updated], _}, socket) do
+    curr_user_id = socket.assigns.curr_user_id
+    tasks = Monitoring.list_tasks_by_contributor_project(curr_user_id)
+
+    IO.puts("faaaaaaaaa")
+
+    {:noreply, socket |> assign(tasks: tasks)}
   end
 
   def handle_info({Services, [:notifs, :sent], _}, socket) do

@@ -458,13 +458,12 @@ def validate_start_deadline(changeset) do
                                           project.tasks != [] end)
   end
 
-  '''
-  def list_tasks_by_contributor(con_id) do
-    query = from t in Task, where: t.contributor_id == ^con_id
 
-    Repo.all(query)
-  end
-  '''
+  #def list_tasks_by_contributor(con_id) do
+  #  query = from t in Task, where: t.contributor_id == ^con_id
+  #
+  #  Repo.all(query)
+  #end
 
   def list_tasks_by_contributor_project(con_id) do
     query = from t in Task,
