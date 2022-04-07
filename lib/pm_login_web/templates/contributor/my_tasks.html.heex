@@ -1,10 +1,10 @@
-<h3 style="margin-left: -220px;"><i class="bi bi-list-task"></i> Les tâches qui m'ont été assigné </h3>
-<table id="tb-auth" style="width: 1200px; margin-left: -220px; margin-top: 10px; font-size: 13px;">
+<h3><i class="bi bi-list-task"></i> Les tâches qui m'ont été assigné </h3>
+<table class="table-tasks" id="tb-auth" style="font-size: 12px;">
   <thead>
     <tr>
       <th>Projet</th>
       <th>Nom</th>
-      <th>Description</th>
+      <!-- <th>Description</th> -->
       <th>Statut</th>
       <th>Priorité</th>
       <th>Date de début</th>
@@ -17,10 +17,10 @@
       <!-- Afficher les valeurs si son statut différent de Achevée(s) et que c'est pas archivé -->
       <%= if task.status_id != 5 and task.hidden == false do %>
         <tr>
-          <td> <%= task.project.title %> </td>
-          <td style="word-wrap: anywhere"><%= link "#{task.title}", to: Routes.project_path(@socket, :board, task.project_id) %></td>
-          <td style="word-wrap: anywhere"><%= task.description %></td>
-          <td>
+          <td data-label="Projet" style="margin-left: 15px;"> <%= task.project.title %> </td>
+          <td data-label="Nom" style="word-wrap: anywhere"><%= link "#{task.title}", to: Routes.project_path(@socket, :board, task.project_id) %></td>
+          <!-- <td data-label="Description" style="word-wrap: anywhere"><%= task.description %></td> -->
+          <td data-label="Status">
             <%= case task.status_id do %>
               <% 1 -> %> A faire 
               <% 2 -> %> En blocage
@@ -29,7 +29,7 @@
               <% _ -> %>
             <% end %>
           </td>
-          <td>
+          <td data-label="Priorité">
             <%= case task.priority_id do %>
               <% 1 -> %> <div class="low__priority__point__table"> Faible</div>
               <% 2 -> %> <div class="avg__priority__point__table"> Moyenne</div>
@@ -38,9 +38,9 @@
               <% _ -> %><div class="priority__point__table"></div>
             <% end %>
           </td>
-          <td> <%= Calendar.strftime(task.date_start, "%d-%m-%Y") %> </td>
-          <td> <%= Calendar.strftime(task.deadline, "%d-%m-%Y") %> </td>
-          <td> <%= task.progression %> % </td>
+          <td data-label="Date de début"> <%= Calendar.strftime(task.date_start, "%d-%m-%Y") %> </td>
+          <td data-label="Date d'échéance"> <%= Calendar.strftime(task.deadline, "%d-%m-%Y") %> </td>
+          <td data-label="Progression" style="margin-right: 15px;"> <%= task.progression %> % </td>
         </tr>
       <% end %>
     <% end %>
