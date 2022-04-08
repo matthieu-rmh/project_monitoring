@@ -23,3 +23,30 @@
     font-weight: bold;
   }
 }
+
+.table-tasks-mobile {
+  display: table;
+}
+
+.table-tasks-mobile thead {
+  display: none;
+}
+
+.table-tasks-mobile tr {
+  display: block;
+}
+
+.table-tasks-mobile td {
+  display: block;
+  text-align: right;
+}
+
+.table-tasks-mobile td, .table-tasks-mobile th {
+  padding: 6px;
+}
+
+.table-tasks-mobile td:before {
+  content: attr(data-label);
+  float: left;
+  font-weight: bold;
+}
