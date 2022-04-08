@@ -24,7 +24,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
         <%= if not is_nil(@card) do %>
         <div class="modal-inner-container">
           <div class="modal-card-task">
-            <div class="modal-inner-card">
+            <div class="modal-inner-card" style="width: 500px;">
               <!-- Title -->
               <%= if @title != nil do %>
               <div class="modal-title" style="margin-top: 5px; margin-bottom: 10px;">
