@@ -18,9 +18,9 @@
       <%= if task.status_id != 5 and task.hidden == false do %>
         <tr>
           <td data-label="Projet" style="margin-left: 15px;"> <%= task.project.title %> </td>
-          <td data-label="Nom" style="word-wrap: anywhere"><%= link "#{task.title}", to: Routes.project_path(@socket, :board, task.project_id) %></td>
+          <td data-label="Nom" style="word-wrap: anywhere; min-width: 250px;"><%= link "#{task.title}", to: Routes.project_path(@socket, :board, task.project_id) %></td>
           <!-- <td data-label="Description" style="word-wrap: anywhere"><%= task.description %></td> -->
-          <td data-label="Status">
+          <td data-label="Status" style="min-width: 75px">
             <%= case task.status_id do %>
               <% 1 -> %> A faire 
               <% 2 -> %> En blocage

@@ -1,6 +1,11 @@
-@media (max-width: 750px) {
+.table-tasks {
+  margin-left: -86px;
+}
+
+@media (max-width: 950px) {
   .table-tasks {
     display: table;
+    margin: 0;
   }
 
   .table-tasks thead {
