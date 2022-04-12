@@ -1,4 +1,4 @@
-defmodule PmLoginWeb.LiveComponent.ModifModalLive do
+defmodule PmLoginWeb.LiveComponent.ModifModalMenu do
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
   import PmLoginWeb.ErrorHelpers
@@ -20,7 +20,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
     ~H"""
     <div id={"modal-#{@id}"}>
       <!-- Modal Background -->
-      <div id="modif_modal_container" class="modal-container" style={"visibility: #{ if @show_modif_modal, do: "visible", else: "hidden" }; opacity: #{ if @show_modif_modal, do: "1 !important", else: "0" };"}
+      <div id="modif_modal_container" class="modal-container-menu" style={"visibility: #{ if @show_modif_menu, do: "visible", else: "hidden" }; opacity: #{ if @show_modif_menu, do: "1 !important", else: "0" };"}
           phx-hook="ScrollLock">
         <%= if not is_nil(@card) do %>
         <div class="modal-inner-container">
@@ -43,6 +43,32 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
 
               <!-- MY FORM -->
               <div class="modal-body">
+
+                <div style="display: flex;">
+                  <ul class="navbar nav-tabs">
+                    <li class="nav-item">
+                      <a title="Afficher" style={"display: #{ if @card.task.hidden, do: "none !important" };"}
+                         class="nav-link bi bi-plus" phx-click="show_plus_modal" phx-value-id={@card.id}>
+                      Détails
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link bi bi-chat-dots"
+                          title="Commenter"
+                          style={"display: #{ if @card.task.hidden, do: "none !important" }; padding: 8px;"}
+                          phx-click="show_comments_menu"
+                          phx-value-id={@card.id}
+                      >
+                      Commenter
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active bi bi-pencil" title="Modifier">
+                        Modifier
+                      </a>
+                    </li>
+                  </ul>
+                </div>
 
               <.form let={f} for={@modif_changeset} phx-submit="update_task" novalidate>
                 <%= hidden_input f, :task_id,value: @card.task.id %>

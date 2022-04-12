@@ -1,4 +1,4 @@
-defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
+defmodule PmLoginWeb.LiveComponent.CommentsModalMenu do
   alias PmLoginWeb.Router.Helpers, as: Routes
   alias PmLogin.Utilities
 
@@ -60,7 +60,7 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
 
 
       <!-- Modal Background -->
-      <div id="comment_modal_container" class="modal-container" style={"visibility: #{ if @show_comments_modal, do: "visible", else: "hidden" }; opacity: #{if @show_comments_modal, do: "1 !important", else: "0" };"}
+      <div id="comment_modal_container" class="modal-container-menu" style={"visibility: #{ if @show_comments_menu, do: "visible", else: "hidden" }; opacity: #{if @show_comments_menu, do: "1 !important", else: "0" };"}
           phx-hook="ScrollLock">
         <%= if not is_nil(@card) do %>
           <div class="modal-inner-container">
@@ -90,6 +90,36 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
 
                   <!-- MODAL BODY "DONE" START-->
                     <div class="modal-body">
+
+                    <div style="display: flex;">
+                      <ul class="navbar nav-tabs">
+                        <li class="nav-item">
+                          <a title="Afficher" style={"display: #{ if @card.task.hidden, do: "none !important" };"}
+                            class="nav-link bi bi-plus" phx-click="show_plus_modal" phx-value-id={@card.id}>
+                          Détails
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link active bi bi-chat-dots"
+                              title="Commenter"
+                          >
+                          Commenter
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link bi bi-pencil"
+                              title="Modifier"
+                              style={"display: #{ if @card.task.hidden, do: "none !important" }; padding: 8px;"}
+                              type="button"
+                              phx-click="show_modif_menu"
+                              phx-value-id={@card.id}
+                          >
+                          Modifier
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+
                     <% current_user = PmLogin.Login.get_user!(@curr_user_id) %>
                     <% current_username = PmLogin.Login.get_user!(@curr_user_id).username %>
                     <div>

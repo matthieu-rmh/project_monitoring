@@ -159,11 +159,10 @@
             margin-bottom: 50px;"}>
 
             <%= case card.task.priority_id do %>
-            <% 1 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
-              class="low__priority__point"> Faible</div>
-            <% 2 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="avg__priority__point"> Moyenne</div>
-            <% 3 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="high__priority__point"> Importante</div>
-            <% 4 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="urg__priority__point"> Urgente</div>
+            <% 1 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="low__priority__point"> Faible </div>
+            <% 2 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="avg__priority__point"> Moyenne </div>
+            <% 3 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="high__priority__point"> Importante </div>
+            <% 4 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="urg__priority__point"> Urgente </div>
             <% _ -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="priority__point"></div>
             <% end %>
 
@@ -252,11 +251,11 @@
             </a>
 
             <a title="Commenter" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
-              class="bi bi-chat-dots comment__icon" phx-click="show_comments_modal" phx-value-id={ card.id }>
+              class="bi bi-chat-dots comment__icon" phx-click="show_comments_modal" phx-value-id={card.id}>
             </a>
 
             <a title="Modifier" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
-              class="bi bi-pencil modif__icon" phx-click="show_modif_modal" phx-value-id={ card.id }>
+              class="bi bi-pencil modif__icon" phx-click="show_modif_modal" phx-value-id={card.id}>
             </a>
 
             <%= if @is_admin or @is_attributor do %>
@@ -298,7 +297,12 @@
         task_changeset: @task_changeset, pro_id: @pro_id, curr_user_id: @curr_user_id, show_plus_modal:
         @show_plus_modal, card: @card) %>
 
-
+        <%= live_component(@socket, ModifModalMenu, id: "confirm-arch" , title: "Modifier tâche" , body: nil,
+        right_button: nil, right_button_action: nil, right_button_param: nil, left_button: "Retour" ,
+        left_button_action: "cancel-modif" , task_changeset: @task_changeset, pro_id: @pro_id, curr_user_id:
+        @curr_user_id, modif_changeset: @modif_changeset, priorities: @priorities, contributors: @contributors,
+        is_admin: @is_admin, is_contributor: @is_contributor, is_attributor: @is_attributor, show_modif_menu:
+        @show_modif_menu, card: @card) %>
 
   <%= live_component(@socket, ModifModalLive, id: "confirm-arch" , title: "Modifier tâche" , body: nil,
           right_button: nil, right_button_action: nil, right_button_param: nil, left_button: "Retour" ,
@@ -307,12 +311,19 @@
           is_admin: @is_admin, is_contributor: @is_contributor, is_attributor: @is_attributor, show_modif_modal:
           @show_modif_modal, card: @card) %>
 
+          <%= live_component(@socket, CommentsModalMenu, id: "confirm-arch" , title: "Commentaires" , body: nil,
+            right_button: "Oui" , right_button_action: "arch" , right_button_param: "" , #@arch_id
+            left_button: "Annuler" , left_button_action: "cancel-comments" , curr_user_id: @curr_user_id, changeset:
+            @comment_changeset, show_comments_menu: @show_comments_menu, uploads: @uploads, card: @card_with_comments)
+          %>
 
-  <%= live_component(@socket, CommentsModalLive, id: "confirm-arch" , title: "Commentaires" , body: nil,
+          <%= live_component(@socket, CommentsModalLive, id: "confirm-arch" , title: "Commentaires" , body: nil,
             right_button: "Oui" , right_button_action: "arch" , right_button_param: "" , #@arch_id
             left_button: "Annuler" , left_button_action: "cancel-comments" , curr_user_id: @curr_user_id, changeset:
             @comment_changeset, show_comments_modal: @show_comments_modal, uploads: @uploads, card: @card_with_comments)
-            %>
+          %>
+  
+  
 
 
 
