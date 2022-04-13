@@ -184,15 +184,15 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalLive do
 
                         <div class="file_preview_container">
                           <%= for entry <- @uploads.file.entries do %>
-                                <div class="comment__preview">
-                                  <%= if Path.extname(entry.client_name)==".jpg" or Path.extname(entry.client_name)==".png" or Path.extname(entry.client_name)==".jpeg" do %>
-                                  <%= live_img_preview entry, height: 50 %>
-                                  <% else %>
-                                  <p class="file__name__upload"><%= entry.client_name %></p>
-                                  <% end %>
-                                  <progress class="progress__comment" value={entry.progress} max="100"></progress>
-                                  <a href="#" phx-click="cancel-entry" phx-value-ref={entry.ref}>annuler</a>
-                                </div>
+                            <div class="comment__preview">
+                              <%= if Path.extname(entry.client_name)==".jpg" or Path.extname(entry.client_name)==".png" or Path.extname(entry.client_name)==".jpeg" do %>
+                              <%= live_img_preview entry, height: 50 %>
+                              <% else %>
+                              <p class="file__name__upload"><%= entry.client_name %></p>
+                              <% end %>
+                              <progress class="progress__comment" value={entry.progress} max="100"></progress>
+                              <a href="#" phx-click="cancel-entry" phx-value-ref={entry.ref}>annuler</a>
+                            </div>
                           <% end %>
                         </div>
 

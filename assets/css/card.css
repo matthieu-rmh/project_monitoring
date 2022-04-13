@@ -1,0 +1,18 @@
+.card-style {
+    position: relative;
+    background: #155370;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    width: auto;
+    height: 250px;
+    margin: 0 1em 1em;
+    border-radius: 7px;
+    color: #fff;
+    text-decoration: none;
+    overflow: hidden;
+    transition: all 50ms ease-in-out;
+    align-items: center;
+    text-align: center;
+}
+.card-style:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}

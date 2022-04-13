@@ -24,7 +24,6 @@
 
 
 #adm:hover{
-  font-size: 30px;
   border-bottom: 1px solid rgba(192, 192, 192, 1);
 }
 
@@ -33,12 +32,10 @@
 }
 
 #space__adm:hover{
-  font-size: 25px;
   border-bottom: 1px solid rgba(192, 192, 192, 1);
 }
 
 #adm:hover>span{
-  font-size: 30px;
 }
 
 #esp__adm__row{
@@ -81,7 +78,5 @@
   transition: height 0.5s ease;
 } */
 .esp__adm__col:hover{
-  width: 200%;
-  height: 170px;
   background-color: lightsteelblue;
 }
