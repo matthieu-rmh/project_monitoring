@@ -36,3 +36,6 @@ npm-debug.log
 /assets/cypress
 cypress.json
 
+to_do.md
+bootstrap.min.css
+
