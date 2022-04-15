@@ -25,7 +25,7 @@
         <%= label f, "Droit:" %>
       </div>
       <div id="right-select" class="col-6 col40">
-        <%= select f, :right_id, @str_rights , selected: [@user.right_id] %>
+        <%= select f, :right_id, @str_rights , selected: [@user.right_id], style: "width: -moz-available;" %>
       </div>
       <% else %>
       <div class="col-6 col60">

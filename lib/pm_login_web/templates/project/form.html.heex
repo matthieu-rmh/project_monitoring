@@ -12,14 +12,9 @@
   <%= textarea f, :description %>
   <%= error_tag f, :description %>
 
- 
-
   <div class="row">
-
-
-
     <div class="column" style="margin-bottom: 10px;">
-      <a id="show__task__modal__btn" href="#" class="btn btn-lg btn-primary" phx-click="show-form"><i class="bi bi-plus-circle"></i> Nouveau client</a>
+      <a id="show__task__modal__btn" class="btn btn-lg btn-primary" phx-click="show-form"><i class="bi bi-plus-circle"></i> Nouveau client</a>
     </div>
 
   </div>
@@ -41,7 +36,7 @@
     </div>
     <div class="column">
       <%= label f, "Client attitré" %>
-      <%= select f, :active_client_id, @ac_ids %>
+      <%= select f, :active_client_id, @ac_ids, style: "width: -moz-available;" %>
       <%= error_tag f, :active_client_id %>
     </div>
   </div>

@@ -68,7 +68,7 @@ defmodule PmLogin.Monitoring.Task do
   def changeset(task, attrs) do
     task
     |> cast(attrs, [:title, :description, :attributor_id, :progression, :date_start, :date_end, :estimated_duration, :performed_duration, :deadline])
-    |> validate_required([:title, :description, :progression, :date_start, :date_end, :estimated_duration, :performed_duration, :deadline])
+    |> validate_required([:title, :progression, :date_start, :date_end, :estimated_duration, :performed_duration, :deadline])
   end
 
   def update_changeset(task, attrs) do
@@ -76,11 +76,10 @@ defmodule PmLogin.Monitoring.Task do
     |> cast(attrs, [:title, :description, :progression, :deadline,:date_start, :date_end, :estimated_duration, :performed_duration, :contributor_id, :priority_id, :status_id])
     # |> Monitoring.validate_dates_without_deadline
     |> validate_required(:title, message: "Nom de tâche ne doit pas être vide!")
-    |> validate_required(:description, message: "La description ne doit pas être vide!")
     |> validate_length(:title, min: 5, message: "Nom de tâche trop court !")
-    |> validate_length(:title, max: 50, message: "Nom de tâche trop long !")
+    |> validate_length(:title, max: 300, message: "Nom de tâche trop long !")
     |> validate_length(:description, min: 5, message: "Description trop courte !")
-    |> validate_length(:description, max: 500, message: "Description trop longue !")
+    |> validate_length(:description, max: 800, message: "Description trop longue !")
     |> Monitoring.validate_start_end
     |> Monitoring.validate_positive_estimated
     |> Monitoring.validate_start_deadline
@@ -105,11 +104,10 @@ defmodule PmLogin.Monitoring.Task do
     |> validate_required(:attributor_id,message: "La tâche n'a pas d'Attributeur")
     |> validate_required(:title, message: "Entrez tâche")
     |> unique_constraint(:title, message: "Tâche déjà existante")
-    |> validate_required(:description, message: "La description ne doit pas être vide!")
     |> validate_length(:title, min: 5, message: "Nom de tâche trop court !")
-    |> validate_length(:title, max: 50, message: "Nom de tâche trop long !")
+    |> validate_length(:title, max: 300, message: "Nom de tâche trop long !")
     |> validate_length(:description, min: 5, message: "Description trop courte !")
-    |> validate_length(:description, max: 500, message: "Description trop longue !")
+    |> validate_length(:description, max: 800, message: "Description trop longue !")
     |> validate_required(:estimated_duration, message: "Entrez estimation")
     # |> validate_required(:date_start, message: "Entrez date de début")
     # |> validate_required(:date_end, message: "Entrez date de fin")
@@ -140,11 +138,10 @@ defmodule PmLogin.Monitoring.Task do
         |> cast(attrs, [:title, :description, :without_control,:attributor_id, :contributor_id, :project_id, :date_start, :estimated_duration, :deadline])
         |> validate_required(:title, message: "Entrez tâche")
         |> unique_constraint(:title, message: "Tâche déjà existante")
-        |> validate_required(:description, message: "La description ne doit pas être vide!")
         |> validate_length(:title, min: 5, message: "Nom de tâche trop court !")
-        |> validate_length(:title, max: 50, message: "Nom de tâche trop long !")
+        |> validate_length(:title, max: 300, message: "Nom de tâche trop long !")
         |> validate_length(:description, min: 5, message: "Description trop courte !")
-        |> validate_length(:description, max: 500, message: "Description trop longue !")
+        |> validate_length(:description, max: 800, message: "Description trop longue !")
         |> validate_required(:estimated_duration, message: "Entrez estimation")
         # |> validate_required(:date_start, message: "Entrez date de début")
         |> validate_required(:deadline, message: "Entrez date d'échéance")

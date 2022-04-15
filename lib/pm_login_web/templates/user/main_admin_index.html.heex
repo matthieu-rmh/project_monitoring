@@ -3,14 +3,35 @@
 
   <div class="container">
     <div class="row">
-        <a href={Routes.company_path(@socket, :services)}  class="column basecontents__without__radius esp__adm__col hover__growing">
-        <h3 class="header__link__title"><p id="adm">Services <br/><span class="material-icons mat__ico">miscellaneous_services</span></p></h3>
+
+        <a href={Routes.company_path(@socket, :services)}  class="column">
+          <div class="card-style">
+            <img src={ Routes.static_path(@socket, "/images/6.jpg" )} style="width: 208;height: 160;"/>
+            <div style="padding: 20px;">
+              <span class="material-icons mat__ico">miscellaneous_services</span>
+              <p>Services</p>
+            </div>
+          </div>
         </a>
-        <a href={Routes.user_path(@socket, :admin_space)} class="column basecontents__without__radius esp__adm__col">
-        <h3 class="header__link__title"><p id="space__adm">Espace administrateur <br/><span class="material-icons mat__ico">admin_panel_settings</span></p></h3>
+
+        <a href={Routes.user_path(@socket, :admin_space)} class="column">
+          <div class="card-style">
+            <img src={ Routes.static_path(@socket, "/images/3.jpg" )} style="width: 208;height: 160;"/>
+            <div style="padding: 7px;">
+              <span class="material-icons mat__ico">admin_panel_settings</span>
+              <p>Espace administrateur</p>
+            </div>
+          </div>
         </a>
-        <a href={Routes.project_path(@socket, :recaps)} class="column basecontents__without__radius esp__adm__col">
-        <h3 class="header__link__title"><p id="adm">Récapitulatifs <br/><span class="material-icons mat__ico">stacked_line_chart</span></p></h3>
+
+        <a href={Routes.project_path(@socket, :recaps)} class="column">
+          <div class="card-style">
+            <img src={ Routes.static_path(@socket, "/images/12.jpg" )} style="width: 208;height: 160;"/>
+            <div style="padding: 20px;">
+              <span class="material-icons mat__ico">stacked_line_chart</span>
+              <p>Récapitulatifs</p>
+            </div>
+          </div>
         </a>
     </div>
   </div>

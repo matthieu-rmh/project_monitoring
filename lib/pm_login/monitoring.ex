@@ -273,6 +273,13 @@ def validate_start_deadline(changeset) do
     Repo.all(query)
   end
 
+  def list_statuses_for_task do
+    query = from s in Status,
+            where: s.id != 5,
+            order_by: [asc: :id]
+    Repo.all(query)
+  end
+
   @doc """
   Gets a single status.
 
@@ -456,6 +463,20 @@ def validate_start_deadline(changeset) do
     Repo.all(query)
     |> Enum.filter(fn %PmLogin.Monitoring.Project{} = project ->
                                           project.tasks != [] end)
+  end
+
+
+  #def list_tasks_by_contributor(con_id) do
+  #  query = from t in Task, where: t.contributor_id == ^con_id
+  #
+  #  Repo.all(query)
+  #end
+
+  def list_tasks_by_contributor_project(con_id) do
+    query = from t in Task,
+                      where: t.contributor_id == ^con_id,
+                      preload: [:project, :status]
+    Repo.all(query)
   end
 
   def add_progression_to_project(%Project{} = p) do

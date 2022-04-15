@@ -1,6 +1,6 @@
 /* This file is for your main application CSS */
 @import "./phoenix.css";
-
+@import "./navigation.css";
 @import "./header-1.css";
 @import "./my_bootstrap.css";
 @import "./modal.css";
@@ -25,6 +25,8 @@
 @import "./contributors.css";
 @import "./contributor_board.css";
 @import "./resizing.css";
+@import "./table.css";
+@import "./card.css";
 
 @font-face {
   font-family: "Axiforma";

@@ -151,3 +151,33 @@ header nav a {
   word-wrap: anywhere;
 }
 
+.priority__point__table{
+  background-color: black;
+}
+
+.urg__priority__point__table{
+  background-color: #e74c3c;
+}
+
+.high__priority__point__table{
+  background-color: #e67e22;
+}
+
+.avg__priority__point__table{
+  background-color: #3498db;;
+}
+
+.low__priority__point__table{
+  background-color: #2ecc71;
+}
+
+.priority__point__table, .low__priority__point__table, .avg__priority__point__table, .high__priority__point__table, .urg__priority__point__table {
+  width: 30px;
+  height: 5px;
+  border-radius: 999px;
+  display: inline-table; 
+  color: #fff; 
+  font-size: 10px; 
+  padding: 3px;
+  margin-top: -3px;
+}

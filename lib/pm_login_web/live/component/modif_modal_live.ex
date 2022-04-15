@@ -4,6 +4,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
   import PmLoginWeb.ErrorHelpers
   alias PmLoginWeb.Router.Helpers, as: Routes
   alias PmLogin.Utilities
+
   @defaults %{
     left_button: "Cancel",
     left_button_action: nil,
@@ -24,7 +25,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
         <%= if not is_nil(@card) do %>
         <div class="modal-inner-container">
           <div class="modal-card-task">
-            <div class="modal-inner-card">
+            <div class="modal-inner-card" style="width: 500px;">
               <!-- Title -->
               <%= if @title != nil do %>
               <div class="modal-title" style="margin-top: 5px; margin-bottom: 10px;">
@@ -42,6 +43,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
 
               <!-- MY FORM -->
               <div class="modal-body">
+
               <.form let={f} for={@modif_changeset} phx-submit="update_task" novalidate>
                 <%= hidden_input f, :task_id,value: @card.task.id %>
 
@@ -98,7 +100,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                         <div class="column">
                             <%= if @is_admin or @is_attributor do %>
                               <label class="zoom-out">Assigner contributeur</label>
-                              <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", selected: @card.task.contributor_id %>
+                              <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", selected: @card.task.contributor_id, style: "width: -moz-available;" %>
                               <%= error_tag f, :contributor_id %>
                             <% else %>
                               <label class="zoom-out">Contributeur</label>
@@ -116,7 +118,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <%= if @is_contributor and is_nil(@card.task.parent_id) do %>
                             <p class="zoom-out"><%= @card.task.priority.title %></p>
                           <% else %>
-                            <%= select f, :priority_id, @priorities, value: @card.task.priority_id %>
+                            <%= select f, :priority_id, @priorities, value: @card.task.priority_id, style: "width: -moz-available;" %>
                           <% end %>
                         </div>
                       </div>

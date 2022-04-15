@@ -49,20 +49,20 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
                       <%= error_tag f, :title %>
                     </div>
                     <%= hidden_input f, :project_id, value: @pro_id %>
-                  </div>  
+                  </div>
                 </div>
 
                 <div class="row">
                   <div class="column">
                     <label class="zoom-out">Durée estimée (en heure)</label>
                     <%= number_input f, :estimated_duration %>
-                    <div class="zoom-out"> 
+                    <div class="zoom-out">
                       <%= error_tag f, :estimated_duration %>
                       <%= error_tag f, :negative_estimated %>
                     </div>
                   </div>
                 </div>
-                  
+
                   <div class="row">
                     <div class="column">
                       <label class="zoom-out">Date d'échéance</label>
@@ -76,10 +76,10 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
 
                     <div class="column">
                       <label class="zoom-out">Assigner intervenant</label>
-                      <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:" %>
+                      <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", style: "width: -moz-available;"%>
                       <div class="zoom-out">
                         <%= error_tag f, :contributor_id %>
-                      </div>  
+                      </div>
                     </div>
 
                   </div>
@@ -88,7 +88,7 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
                     <div class="column">
                       <label class="zoom-out">Tâche mère</label>
                       <div class="text-wrap">
-                        <%= select f, :parent_id, @primaries %>
+                        <%= select f, :parent_id, @primaries, style: "width: -moz-available;"%>
                       </div>
                       <div class="zoom-out">
                         <%= error_tag f, :parent_id %>
@@ -107,7 +107,7 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
                   <!-- Buttons -->
                   <div class="modal-buttons">
                       <!-- Left Button -->
-                      <a 
+                      <a
                         href="#" class="button button-outline"
                         type="button"
                         phx-click="left-button-click"
@@ -120,7 +120,7 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
                       <div class="right-button">
                         <%= submit "Créer sous-tâche" %>
                       </div>
-                      
+
                   </div>
 
 
