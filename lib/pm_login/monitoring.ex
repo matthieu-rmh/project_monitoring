@@ -273,7 +273,7 @@ def validate_start_deadline(changeset) do
     Repo.all(query)
   end
 
-  def list_statuses_for_task do
+  def list_statuses_for_tasks_table do
     query = from s in Status,
             where: s.id != 5,
             order_by: [asc: :id]
@@ -473,9 +473,12 @@ def validate_start_deadline(changeset) do
   #end
 
   def list_tasks_by_contributor_project(con_id) do
+    card_query = from c in Card,
+                        select: c.id
     query = from t in Task,
                       where: t.contributor_id == ^con_id,
-                      preload: [:project, :status]
+                      preload: [:project, :status, :priority, card: ^card_query],
+                      order_by: [desc: t.priority_id]
     Repo.all(query)
   end
 
@@ -567,7 +570,6 @@ def validate_start_deadline(changeset) do
     if is_task_mother?(task) do
       achieve_children_tasks(task, curr_user_id)
     end
-
 
     Services.send_notifs_to_admins_and_attributors(curr_user_id, "La tâche #{task.title} a été achevée.")
   end
@@ -1160,6 +1162,12 @@ def validate_start_deadline(changeset) do
     task
     |> Task.update_status_changeset(attrs)
     |> Repo.update()
+  end
+
+  def update_task_progression(%Task{} = task, attrs) do
+    task
+    |> Task.update_progression_changeset(attrs)
+    |> Repo.update()
 
   end
 
@@ -1169,6 +1177,8 @@ def validate_start_deadline(changeset) do
   end
 
   def broadcast_updated_task(tuple),do: tuple |> broadcast_change([:task, :updated])
+
+  def broadcast_progression_change(tuple), do: tuple |> broadcast_change([:progression, :updated])
 
 
 
@@ -1350,7 +1360,8 @@ def validate_start_deadline(changeset) do
     project_query = from p in Project
     query = from t in Task,
             preload: [project: ^project_query],
-            where: t.contributor_id == ^my_id and is_nil(t.achieved_at)
+            where: t.contributor_id == ^my_id and is_nil(t.achieved_at),
+            order_by: [desc: :priority_id]
 
     Repo.all(query)
   end
