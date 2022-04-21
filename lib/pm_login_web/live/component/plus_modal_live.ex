@@ -22,7 +22,7 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
         <!-- Modal Background -->
         <div id="plus_modal_container" class="modal-container-menu" style={"visibility: #{if @show_plus_modal, do: "visible", else: "hidden" }; opacity: #{ if @show_plus_modal, do: "1 !important", else: "0" };"}
             phx-hook="ScrollLock">
-            <%= if not is_nil(@card) do %>
+          <%= if not is_nil(@card) do %>
           <div class="modal-inner-container">
             <div class="modal-card-task">
               <div class="modal-inner-card">
@@ -143,10 +143,10 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                           <%= Utilities.letters_date_format(@card.task.deadline) %>
                         </td>
                         <td data-label="Description" style="word-wrap: anywhere;">
-                          <%= if @card.task.description != nil do %>
-                            <%= @card.task.description %>
-                          <% else %>
+                          <%= if @card.task.description == nil or @card.task.description == "" do %>
                             Aucune description
+                          <% else %>
+                            <%= @card.task.description %>
                           <% end %>
                         </td>
                       </tr>

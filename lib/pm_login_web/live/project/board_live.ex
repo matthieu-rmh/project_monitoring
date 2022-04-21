@@ -14,7 +14,7 @@ defmodule PmLoginWeb.Project.BoardLive do
   alias PmLoginWeb.ProjectView
   alias PmLogin.Monitoring
   alias PmLogin.Kanban
-  alias PmLogin.Monitoring.{Task, Priority, Planified, Status}
+  alias PmLogin.Monitoring.{Task, Priority, Planified}
   alias PmLogin.Login
   alias PmLogin.Login.User
   alias PmLogin.Services
@@ -66,8 +66,6 @@ defmodule PmLoginWeb.Project.BoardLive do
 
     planified_list = Monitoring.list_planified_by_project(project.id)
 
-    status = Monitoring.list_statuses()
-
     {:ok,
      socket
      |> assign(
@@ -76,7 +74,6 @@ defmodule PmLoginWeb.Project.BoardLive do
        show_plus_modal: false,
        curr_user_id: curr_user_id,
        pro_id: pro_id,
-       status: status,
        show_secondary: false,
        showing_primaries: true,
        contributors: list_contributors,
@@ -1155,6 +1152,20 @@ defmodule PmLoginWeb.Project.BoardLive do
     new_board = struct(board, stages: new_stages)
 
     {:noreply, assign(socket, board: new_board)}
+  end
+
+  def handle_info({Monitoring, [:progression, :updated], _}, socket) do
+    if socket.assigns.card != nil do
+      card_id = socket.assigns.card.id
+
+      card = Kanban.get_card_from_modal!(card_id)
+
+      IO.inspect(card.task)
+
+      {:noreply, socket |> assign(card: card)}
+    else
+      {:noreply, socket}
+    end
   end
 
   def handle_info({Kanban, [_, :updated], _}, socket) do
