@@ -4,7 +4,7 @@
   <a href={Routes.project_path(@socket, :index)}
     class="column">
     <div class="card-style">
-      <img src={ Routes.static_path(@socket, "/images/1.jpg" )} style="width: 208;height: 160;"/>
+      <img src={ Routes.static_path(@socket, "/images/1.jpg" )} />
       <div style="padding: 20px;">
         <span class="material-icons mat__ico">insert_chart</span>
         <p>Mes projets</p>
@@ -13,7 +13,7 @@
   </a>
   <a href={Routes.user_path(@socket, :show, @curr_user_id)} class="column">
     <div class="card-style">
-      <img src={ Routes.static_path(@socket, "/images/4.jpg" )} style="width: 208;height: 160;"/>
+      <img src={ Routes.static_path(@socket, "/images/4.jpg" )} />
       <div style="padding: 20px;">
         <span class="material-icons mat__ico">account_circle</span>
         <p>Mon profil</p>
