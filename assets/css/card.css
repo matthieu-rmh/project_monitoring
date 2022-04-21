@@ -1,9 +1,9 @@
 .card-style {
     position: relative;
-    background: #155370;
+    background: #0284C7;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     width: auto;
-    height: 250px;
+    height: auto;
     margin: 0 1em 1em;
     border-radius: 7px;
     color: #fff;
@@ -15,4 +15,12 @@
 }
 .card-style:hover {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 650px) {
+    .card-style {
+        width: auto;
+        height: auto;
+        margin-bottom: 15px;
+    }
 }

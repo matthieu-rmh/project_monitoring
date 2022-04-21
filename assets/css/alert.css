@@ -1,0 +1,14 @@
+.alert-primary {
+    display: flex;
+    margin-top: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    color: #fff;
+    background-color:#0284C7;
+    padding: 15px;
+    font-size: 15px;
+}
+
+.alert-text {
+    margin-left: 9px;
+}

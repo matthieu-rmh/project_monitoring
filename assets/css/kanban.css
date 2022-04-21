@@ -168,7 +168,8 @@
   list-style: none;
   /* border: 1px solid rgb(181, 181, 181); */
   border-radius: 3px;
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
+  background-color: #1F2937;
   padding: 1em;
   cursor: move;
   width: 98%;

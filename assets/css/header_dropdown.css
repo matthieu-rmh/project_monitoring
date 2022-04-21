@@ -188,14 +188,19 @@
 
 .admin__links{
   display: inline-block;
-  text-align: center;
+  text-align: left;
   transition: font-size 0.5s ease;
 }
 
 .admin__links:hover{
+  background: #E2E8F0;
+}
+
+/* .admin__links:hover{
   font-size: 20px;
 }
 
 .admin__links:hover>span{
   font-size: 30px;
 }
+*/

@@ -27,6 +27,8 @@
 @import "./resizing.css";
 @import "./table.css";
 @import "./card.css";
+@import "./body.css";
+@import "./alert.css";
 
 @font-face {
   font-family: "Axiforma";
@@ -480,10 +482,10 @@ body {
   }
   
   .profile-pic-header{
-    width: 33px;
-    height: 33px;
-    max-width: 33px;
-    max-height: 33px;
+    width: 25px;
+    height: 25px;
+    max-width: 25px;
+    max-height: 25px;
     border: 1px solid gray;
     border-style: solid;
     border-radius: 60%;
