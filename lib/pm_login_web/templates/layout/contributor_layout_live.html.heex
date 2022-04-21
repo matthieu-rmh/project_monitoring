@@ -9,7 +9,7 @@
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@socket, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@socket, "/assets/app.js")}></script>
   </head>
-  <body>
+  <body class="body-bg" style="background: #111827;">
     <header class="site-header">
       <script>0</script>
 
@@ -21,15 +21,21 @@
           <a  class="menu-btn nav__toggle"><div class="menu-btn__burger"></div></a>
           <ul class="nav__wrapper">
             <li class="nav__item">
-              <a href={ Routes.contributor_path(@socket, :my_projects) } class="nav__item__link"><span class="material-icons mat__ico">insert_chart</span><p>Mes projets</p> 
+              <a href={ Routes.user_path(@socket, :index) } class="nav__item__link">
+                <span class="material-icons mat__ico">home</span>
+                <p>Accueil</p>
               </a>
             </li>
             <li class="nav__item">
-              <a href={ Routes.contributor_path(@socket, :my_tasks) } class="nav__item__link"><span class="material-icons mat__ico">format_list_bulleted</span><p>Mes tâches</p> 
+              <a href={ Routes.contributor_path(@socket, :my_projects) } class="nav__item__link">
+                <span class="material-icons mat__ico">insert_chart</span>
+                <p>Mes projets</p> 
               </a>
             </li>
             <li class="nav__item">
-              <a href={ Routes.user_path(@socket, :index) } class="nav__item__link"><span class="material-icons mat__ico">home</span><p>Accueil</p>
+              <a href={ Routes.contributor_path(@socket, :my_tasks) } class="nav__item__link">
+                <span class="material-icons mat__ico">format_list_bulleted</span>
+                <p>Mes tâches</p> 
               </a>
             </li>
 
@@ -37,8 +43,8 @@
               <div class="dropdown">
                 <% unseens = PmLogin.Services.list_my_notifications(@curr_user_id)
                 |> Enum.count(fn(x) -> !(x.seen) end) %>
-                <a href="#" title="Notifications" phx-click="switch-notif"><span class="material-icons mat__ico header__ico">notifications</span><span class="notification-span" style={"background-color: #{ if unseens == 0 do "transparent" end } !important;"}><b class="notification-nb" style={"position: relative; left: #{ if unseens > 9 do "0px !important" end };"}><%=
-                  if unseens < 10 do
+                <a href="#" title="Notifications" phx-click="switch-notif"><span class="material-icons mat__ico header__ico">notifications</span><span class="notification-span" style={"background-color: #{ if unseens == 0 do "transparent" end } !important;"}><b class="notification-nb" style={"position: relative; left: #{ if unseens > 9 do "0px !important" end };"}>
+                  <%= if unseens < 10 do
                     unseens
                   else
                     "9+"

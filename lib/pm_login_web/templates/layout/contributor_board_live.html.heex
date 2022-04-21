@@ -9,7 +9,7 @@
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@socket, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@socket, "/assets/app.js")}></script>
   </head>
-  <body>
+  <body class="body-bg">
     <script>0</script>
 
     <header class="site-header">
@@ -22,19 +22,21 @@
           <a  class="menu-btn nav__toggle"><div class="menu-btn__burger"></div></a>
           <ul class="nav__wrapper">
             <li class="nav__item">
+              <a href={ Routes.user_path(@socket, :index) } class="nav__item__link">
+                <span class="material-icons mat__ico">home</span>
+                <p>Accueil</p>
+              </a>
+            </li>
+            <li class="nav__item">
               <a href={ Routes.contributor_path(@socket, :my_projects) } class="nav__item__link">
                 <span class="material-icons mat__ico">insert_chart</span>
                 <p>Mes projets</p>
               </a>
             </li>
             <li class="nav__item">
-              <a href={ Routes.contributor_path(@socket, :my_tasks) } class="nav__item__link"><span class="material-icons mat__ico">format_list_bulleted</span><p>Mes tâches</p> 
-              </a>
-            </li>
-            <li class="nav__item">
-              <a href={ Routes.user_path(@socket, :index) } class="nav__item__link">
-                <span class="material-icons mat__ico">home</span>
-                <p>Accueil</p>
+              <a href={ Routes.contributor_path(@socket, :my_tasks) } class="nav__item__link">
+                <span class="material-icons mat__ico">format_list_bulleted</span>
+                <p>Mes tâches</p> 
               </a>
             </li>
             <li class="nav__item old__notif">

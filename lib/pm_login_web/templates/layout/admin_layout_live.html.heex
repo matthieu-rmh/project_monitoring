@@ -9,7 +9,7 @@
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@socket, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@socket, "/assets/app.js")}></script>
   </head>
-  <body>
+  <body class="body-bg">
     <script>0</script>
 
     <header class="site-header">
@@ -25,12 +25,27 @@
             <li class="nav__item">
               <div class="dropdown">
                 <a href={Routes.user_path(@socket, :admin_space)} class="nav__item__link"><span class="material-icons mat__ico" style="display: inline;">admin_panel_settings</span> <p class="header_link_text">Espace administrateur</p></a>
-                <div class="dropdown-content basecontents__without__radius">
-                  <a href={Routes.project_path(@socket, :index)} class="admin__links">Projets | <span class="material-icons mat__ico">insert_chart</span></a>
-                  <a href={Routes.company_path(@socket, :index)} class="admin__links">Sociétés | <span class="material-icons mat__ico">maps_home_work</span></a>
-                  <a href={Routes.user_path(@socket, :list)} class="admin__links">Utilisateurs | <span class="material-icons mat__ico">supervisor_account</span></a>
-                  <a href={Routes.right_path(@socket, :index)} class="admin__links">Droits/Statuts | <span class="material-icons mat__ico">shield</span></a>
-                  <a href={Routes.active_client_path(@socket, :index)} class="admin__links">Clients | <span class="material-icons mat__ico">person</span></a>
+                <div class="dropdown-content">
+                  <a href={Routes.project_path(@socket, :index)} class="admin__links">
+                    <span class="material-icons mat__ico">insert_chart</span>
+                    Projets
+                  </a>
+                  <a href={Routes.company_path(@socket, :index)} class="admin__links"> 
+                    <span class="material-icons mat__ico">maps_home_work</span>
+                    Sociétés 
+                  </a>
+                  <a href={Routes.user_path(@socket, :list)} class="admin__links"> 
+                    <span class="material-icons mat__ico">supervisor_account</span>
+                    Utilisateurs
+                  </a>
+                  <a href={Routes.right_path(@socket, :index)} class="admin__links">
+                    <span class="material-icons mat__ico">shield</span>
+                    Droits/Statuts
+                  </a>
+                  <a href={Routes.active_client_path(@socket, :index)} class="admin__links">
+                    <span class="material-icons mat__ico">person</span>
+                    Clients
+                  </a>
                 </div>
               </div>
             </li>
