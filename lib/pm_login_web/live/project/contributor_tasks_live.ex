@@ -148,7 +148,7 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
 
       <%= if @tasks == [] do %>
         <div class="alert-primary" role="alert">
-          <i title="Se déconnecter" class="bi bi-info-circle" style="font-size: 20px"></i>
+          <i class="bi bi-info-circle" style="font-size: 20px"></i>
           <div class="alert-text"> Aucune tâche n'a été assignée pour le moment... </div>
         </div>
       <% else %>
