@@ -72,130 +72,118 @@ defmodule PmLoginWeb.LiveComponent.ModifModalMenu do
 
               <.form let={f} for={@modif_changeset} phx-submit="update_task" novalidate>
                 <%= hidden_input f, :task_id,value: @card.task.id %>
+                 <table class="table-tasks-mobile" style="font-size: 11px;">
+                    <thead>
+                      <tr>
+                        <th>Nom</th>
+                        <th>Attributeur</th>
+                        <th>Contributeur</th>
+                        <th>Priorité</th>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Durée estimée</th>
+                        <th>Progression</th>
+                        <th>Date d'échéance</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td data-label="Nom">
+                          <input id="task_title" name="task[title]" type="text" value={@card.name} style="width: 350px; margin-bottom: 0;" placeholder="Nom de la tâche"/>
+                          <!-- <%= text_input f, :title, [value: @card.name] %> -->
+                          <span class="invalid-feedback" phx-feedback-for="task_title" style="margin: 5 0 0 0;">Nom de tâche ne doit pas être vide!</span>
+                        </td>
+                        <td data-label="Description">
+                          <input id="task_description" name="task[description]" value={@card.task.description} style="width: 350px; margin-bottom: 0;" placeholder="Description"/>
+                          <%= error_tag f, :description %>
+                        </td>
+                        <td data-label="Attributeur">
+                          <div style="display: inline-flex;">
+                            <img class="profile-pic-mini" style="width: 20px; height: 20px;"
+                                src={Routes.static_path(@socket, "/#{@card.task.attributor.profile_picture}")}/>
 
-                    <div id="form">
-                        <div class="row">
-                          <div class="column">
-                            <label class="zoom-out">Nom</label>
-                            <div class="zoom-out">
-                              <%= text_input f, :title, [value: @card.name] %>
-                              <%= error_tag f, :title %>
-                            </div>
-
-                            <label class="zoom-out">Description</label>
-                            <div class="zoom-out">
-                              <%= textarea f, :description, [value: @card.task.description] %>
-                              <%= error_tag f, :description %>
-                            </div>
-                          </div>
-
-                          <div class="column">
-                            <label class="zoom-out">Attributeur</label>
-                            <div>
-                              <img class="profile-pic-mini" src={Routes.static_path(@socket, "/#{@card.task.attributor.profile_picture}")} width="36"/>
-                            </div>
-                            <div class="zoom-out">
+                            <div style="margin-top: 2px; margin-left: 5px;">
                               <%= @card.task.attributor.username %>
                             </div>
                           </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="column">
-                          <label class="zoom-out"> Durée estimée (en heure) </label>
-                            <%= if @is_admin or @is_attributor do %>
-                                <b class="zoom-out"><%= number_input f, :estimated_duration, style: "width: 70px", value: @card.task.estimated_duration %> h</b>
-                                <b class="zoom-out"> <%= error_tag f, :negative_estimated %> </b>
-                            <% else %>
-                                <b class="zoom-out"><%= @card.task.estimated_duration %></b>
-                            <% end %>
-                        </div>
-
-                        <div class="column">
-                          <label class="zoom-out">Durée effectuée</label>
-                          <%= if @is_contributor do %>
-                            <b class="zoom-out"><%= number_input f, :performed_duration, style: "width: 70px", value: @card.task.performed_duration %> h</b>
-                            <p class="zoom-out"> <%= error_tag f, :negative_performed%> </p>
+                        </td>
+                        <td data-label="Contributeur">
+                          <%= if @is_admin or @is_attributor do %>
+                            <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", selected: @card.task.contributor_id, style: "width: 200px; margin-bottom: 0;" %>
+                            <%= error_tag f, :contributor_id %>
                           <% else %>
-                            <b class="zoom-out"><%= @card.task.performed_duration %> h</b>
-                          <% end %>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="column">
-                            <%= if @is_admin or @is_attributor do %>
-                              <label class="zoom-out">Assigner contributeur</label>
-                              <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", selected: @card.task.contributor_id, style: "width: -moz-available;" %>
-                              <%= error_tag f, :contributor_id %>
+                            <%= if !is_nil(@card.task.contributor_id) do %>
+                              <%= @card.task.contributor.username %>
                             <% else %>
-                              <label class="zoom-out">Contributeur</label>
-
-                              <%= if !is_nil(@card.task.contributor_id) do %>
-                                <p class="zoom-out"> <%= @card.task.contributor.username %> </p>
-                                <% else %>
-                                <p class="zoom-out"> <%= "Pas d'intervenant" %> </p>
-                              <% end %>
+                              class="zoom-out"> <%= "Pas d'intervenant" %>
                             <% end %>
-                        </div>
-
-                        <div class="column">
-                          <label class="zoom-out">Priorité</label>
+                          <% end %>
+                        </td>
+                        <td data-label="Priorité">
                           <%= if @is_contributor and is_nil(@card.task.parent_id) do %>
-                            <p class="zoom-out"><%= @card.task.priority.title %></p>
+                            <%= @card.task.priority.title %>
                           <% else %>
-                            <%= select f, :priority_id, @priorities, value: @card.task.priority_id, style: "width: -moz-available;" %>
+                            <%= select f, :priority_id, @priorities, value: @card.task.priority_id, style: "width: 150px; margin-bottom: 0;" %>
                           <% end %>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="column">
-                        <label class="zoom-out">Date de début</label>
+                        </td>
+                        <td data-label="Date de début">
                           <%= if (@is_admin or @is_attributor)do %>
-                            <%= date_input f, :date_start, value: @card.task.date_start %>
+                            <%= date_input f, :date_start, value: @card.task.date_start, style: "width: 150px; margin-bottom: 0;"%>
                           <% else %>
-                            <p class="zoom-out"><%= Utilities.letters_date_format(@card.task.date_start) %></p>
+                            <%= Utilities.letters_date_format(@card.task.date_start) %>
                           <% end %>
-                        </div>
-
-                        <div class="column">
-                        <label class="zoom-out">Date de fin</label>
+                        </td>
+                        <td data-label="Date d'échéance">
+                        <%= if (@is_admin or @is_attributor) do %>
+                          <%= date_input f, :deadline, value: @card.task.deadline, style: "width: 150px; margin-bottom: 0;" %>
+                          <div class="zoom-out">
+                            <%= error_tag f, :deadline %>
+                            <%= error_tag f, :deadline_lt %>
+                            <%= error_tag f, :deadline_before_dtstart %>
+                          </div>
+                        <% else %>
+                          <%= Utilities.letters_date_format(@card.task.deadline) %>
+                        <% end %>
+                      </td>
+                        <td data-label="Date de fin">
                           <%= if @is_contributor and @card.task.status_id == 4 do %>
-                            <%= date_input f, :date_end, value: @card.task.date_end %>
+                            <%= date_input f, :date_end, value: @card.task.date_end, style: "width: 150px; margin-bottom: 0;" %>
                             <%= error_tag f, :dt_end_lt_start %>
                           <% else %>
                               <%= if !is_nil(@card.task.date_end) do %>
-                                <p class="zoom-out"> <%= Utilities.letters_date_format(@card.task.date_end) %></p>
+                                <%= Utilities.letters_date_format(@card.task.date_end) %>
                               <% else %>
-                                <p class="zoom-out">En attente</p>
+                                En attente
                               <% end %>
                           <% end %>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="column">
-                        <label class="zoom-out">Progression</label>
-                          <b><%= number_input f, :progression, value: @card.task.progression, style: "width: 70px; margin-left: 20px;" %> %</b>
+                        </td>
+                        <td data-label="Durée estimée">
+                          <%= if @is_admin or @is_attributor do %>
+                            <%= number_input f, :estimated_duration, style: "width: 70px; margin-bottom: 0;", value: @card.task.estimated_duration %> h
+                            <%= error_tag f, :negative_estimated %>
+                          <% else %>
+                            <%= @card.task.estimated_duration %> h
+                          <% end %>
+                        </td>
+                        <td data-label="Durée effectuée">
+                          <%= if @is_contributor do %>
+                            <input id="task_performed_duration" name="task[performed_duration]" style="width: 70px; margin-bottom: 0;" type="number" value={@card.task.performed_duration} /> h
+                            <%= error_tag f, :negative_performed%>
+                          <% else %>
+                            <%= @card.task.performed_duration %> h
+                          <% end %>
+                        </td>
+                        <td data-label="Progression">
+                          <b><%= number_input f, :progression, value: @card.task.progression, style: "width: 70px; margin-bottom: 0;" %> %</b>
                           <div class="zoom-out">
                             <%= error_tag f, :invalid_progression %>
                             <%= error_tag f, :progression_not_int %>
                           </div>
-                        </div>
-
-                        <div class="column">
-                          <%= if (@is_admin or @is_attributor) do %>
-                            <label class="zoom-out">Date d'écheance</label>
-                            <%= date_input f, :deadline, value: @card.task.deadline %>
-                            <div class="zoom-out">
-                              <%= error_tag f, :deadline %>
-                              <%= error_tag f, :deadline_lt %>
-                              <%= error_tag f, :deadline_before_dtstart %>
-                            </div>
-                          <% end %>
-                        </div>
-                      </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
 
                       <%= if @card.task.without_control and @is_contributor and @card.task.status_id != 5 do %>
                         <button type="button" class="btn btn-lg btn-success" phx-click="achieve" phx-value-id={@card.task.id}>Achever</button>
@@ -215,8 +203,6 @@ defmodule PmLoginWeb.LiveComponent.ModifModalMenu do
                             <%= submit "Valider", class: "button right-button" %>
                           </div>
                       </div>
-
-                    </div>
               </.form>
               </div>
 

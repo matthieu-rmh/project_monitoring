@@ -1154,6 +1154,8 @@ defmodule PmLoginWeb.Project.BoardLive do
     {:noreply, assign(socket, board: new_board)}
   end
 
+  # Handle Info for progression update
+  # With broadcast_progression_change in monitoring.ex
   def handle_info({Monitoring, [:progression, :updated], _}, socket) do
     if socket.assigns.card != nil do
       card_id = socket.assigns.card.id
