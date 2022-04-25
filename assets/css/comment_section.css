@@ -1,5 +1,5 @@
 .comments-section{
-  overflow: scroll;
+  overflow-y: scroll;
   height: 400px;
   width: 425px;
   padding: 20px;

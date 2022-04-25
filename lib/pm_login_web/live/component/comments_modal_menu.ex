@@ -137,12 +137,12 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalMenu do
                                               }"}>
 
                                 <%= if comment.poster_id == @curr_user_id do %>
-                                  <div>
+                                  <!-- <div>
                                     <div style="display: flex;">
                                       <img class="pp__comment" src={Routes.static_path(@socket, "/#{current_user.profile_picture}")} />
                                       <div class="username__comment__you"> <%= current_username %> </div>
                                     </div>
-                                  </div>
+                                  </div> -->
                                 <% else %>
                                   <div>
                                     <div style="display: flex;">
