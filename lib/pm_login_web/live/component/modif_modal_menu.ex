@@ -110,7 +110,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalMenu do
                         </td>
                         <td data-label="Contributeur">
                           <%= if @is_admin or @is_attributor do %>
-                            <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", selected: @card.task.contributor_id, style: "width: 200px; margin-bottom: 0;" %>
+                            <%= select f, :contributor_id, @attributors ++ @contributors, prompt: "Intervenant : ", selected: @card.task.contributor_id, style: "width: 200px; margin-bottom: 0;" %>
                             <%= error_tag_modif f, :contributor_id %>
                           <% else %>
                             <%= if !is_nil(@card.task.contributor_id) do %>

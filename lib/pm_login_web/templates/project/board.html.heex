@@ -279,7 +279,7 @@
 
   <%= live_component(@socket, TaskModalLive, id: "confirm-arch" , title: "Créer tâche" , body: nil, right_button: nil,
     right_button_action: nil, right_button_param: nil, left_button: "Annuler" , left_button_action: "cancel" ,
-    task_changeset: @task_changeset, contributors: @contributors, pro_id: @pro_id, show_task_modal: @show_task_modal,
+    task_changeset: @task_changeset, contributors: @contributors, attributors: @attributors, pro_id: @pro_id, show_task_modal: @show_task_modal,
     is_contributor: @is_contributor, curr_user_id: @curr_user_id) %>
 
 
@@ -300,14 +300,14 @@
         <%= live_component(@socket, ModifModalMenu, id: "confirm-arch" , title: "Modifier tâche" , body: nil,
         right_button: nil, right_button_action: nil, right_button_param: nil, left_button: "Retour" ,
         left_button_action: "cancel-modif" , task_changeset: @task_changeset, pro_id: @pro_id, curr_user_id:
-        @curr_user_id, modif_changeset: @modif_changeset, priorities: @priorities, contributors: @contributors,
+        @curr_user_id, modif_changeset: @modif_changeset, priorities: @priorities, contributors: @contributors, attributors: @attributors,
         is_admin: @is_admin, is_contributor: @is_contributor, is_attributor: @is_attributor, show_modif_menu:
         @show_modif_menu, card: @card) %>
 
   <%= live_component(@socket, ModifModalLive, id: "confirm-arch" , title: "Modifier tâche" , body: nil,
           right_button: nil, right_button_action: nil, right_button_param: nil, left_button: "Retour" ,
           left_button_action: "cancel-modif" , task_changeset: @task_changeset, pro_id: @pro_id, curr_user_id:
-          @curr_user_id, modif_changeset: @modif_changeset, priorities: @priorities, contributors: @contributors,
+          @curr_user_id, modif_changeset: @modif_changeset, priorities: @priorities, contributors: @contributors, attributors: @attributors,
           is_admin: @is_admin, is_contributor: @is_contributor, is_attributor: @is_attributor, show_modif_modal:
           @show_modif_modal, card: @card) %>
 

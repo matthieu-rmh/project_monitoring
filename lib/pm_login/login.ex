@@ -166,6 +166,12 @@ defmodule PmLogin.Login do
     |> redirect(to: Routes.user_path(conn, :index))
   end
 
+  def not_attributor_redirection(conn) do
+    conn
+    |> put_flash(:error, "Désolé, vous n'êtes pas attributeur de MGBI!")
+    |> redirect(to: Routes.user_path(conn, :index))
+  end
+
   def not_admin_redirection(conn) do
     conn
     |> put_flash(:error, "Désolé, vous n'êtes pas administrateur!")
@@ -293,6 +299,12 @@ defmodule PmLogin.Login do
     Repo.all(query)
     |> Enum.map(fn x -> x.id end)
     |> Enum.filter(&(&1!=current_user_id))
+  end
+
+  def list_attributors do
+    attrib_query = from u in User,
+                   where: u.right_id == 2
+    Repo.all(attrib_query)
   end
 
   def list_contributors do

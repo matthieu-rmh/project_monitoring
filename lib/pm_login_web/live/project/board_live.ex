@@ -35,6 +35,8 @@ defmodule PmLoginWeb.Project.BoardLive do
         _ -> {}
       end
 
+
+
     project = Monitoring.get_project!(pro_id)
 
     task_changeset = Monitoring.change_task(%Task{})
@@ -42,6 +44,9 @@ defmodule PmLoginWeb.Project.BoardLive do
 
     priorities = Monitoring.list_priorities()
     list_priorities = Enum.map(priorities, fn %Priority{} = p -> {p.title, p.id} end)
+
+    attributors = Login.list_attributors()
+    list_attributors = Enum.map(attributors, fn %User{} = a -> {a.username, a.id} end)
 
     contributors = Login.list_contributors()
     list_contributors = Enum.map(contributors, fn %User{} = p -> {p.username, p.id} end)
@@ -77,6 +82,7 @@ defmodule PmLoginWeb.Project.BoardLive do
        show_secondary: false,
        showing_primaries: true,
        contributors: list_contributors,
+       attributors: list_attributors,
        priorities: list_priorities,
        board: primary_board,
        show_task_modal: false,
