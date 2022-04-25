@@ -65,11 +65,12 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                       <tr>
                         <td data-label="Nom">
                           <input id="task_title" name="task[title]" type="text" value={@card.name} style="width: 350px; margin-bottom: 0;" placeholder="Nom de la tâche"/>
-                          <span class="invalid-feedback" phx-feedback-for="task_title" style="margin: 5 0 0 0;">Nom de tâche ne doit pas être vide!</span>
+
+                          <%= error_tag_modif f, :title %>
                         </td>
                         <td data-label="Description">
                           <input id="task_description" name="task[description]" value={@card.task.description} style="width: 350px; margin-bottom: 0;" placeholder="Description"/>
-                          <%= error_tag f, :description %>
+                          <%= error_tag_modif f, :description %>
                         </td>
                         <td data-label="Attributeur">
                           <div style="display: inline-flex;">
@@ -84,12 +85,12 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                         <td data-label="Contributeur">
                           <%= if @is_admin or @is_attributor do %>
                             <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", selected: @card.task.contributor_id, style: "width: 200px; margin-bottom: 0;" %>
-                            <%= error_tag f, :contributor_id %>
+                            <%= error_tag_modif f, :contributor_id %>
                           <% else %>
                             <%= if !is_nil(@card.task.contributor_id) do %>
                               <%= @card.task.contributor.username %>
                             <% else %>
-                              class="zoom-out"> <%= "Pas d'intervenant" %>
+                              <div class="zoom-out"> <%= "Pas d'intervenant" %> </div>
                             <% end %>
                           <% end %>
                         </td>
@@ -110,11 +111,10 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                         <td data-label="Date d'échéance">
                         <%= if (@is_admin or @is_attributor) do %>
                           <%= date_input f, :deadline, value: @card.task.deadline, style: "width: 150px; margin-bottom: 0;" %>
-                          <div class="zoom-out">
-                            <%= error_tag f, :deadline %>
-                            <%= error_tag f, :deadline_lt %>
-                            <%= error_tag f, :deadline_before_dtstart %>
-                          </div>
+
+                          <%= error_tag_modif f, :deadline %>
+                          <%= error_tag_modif f, :deadline_lt %>
+                          <%= error_tag_modif f, :deadline_before_dtstart %>
                         <% else %>
                           <%= Utilities.letters_date_format(@card.task.deadline) %>
                         <% end %>
@@ -122,7 +122,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                         <td data-label="Date de fin">
                           <%= if @is_contributor and @card.task.status_id == 4 do %>
                             <%= date_input f, :date_end, value: @card.task.date_end, style: "width: 150px; margin-bottom: 0;" %>
-                            <%= error_tag f, :dt_end_lt_start %>
+                            <%= error_tag_modif f, :dt_end_lt_start %>
                           <% else %>
                               <%= if !is_nil(@card.task.date_end) do %>
                                 <%= Utilities.letters_date_format(@card.task.date_end) %>
@@ -134,7 +134,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                         <td data-label="Durée estimée">
                           <%= if @is_admin or @is_attributor do %>
                             <%= number_input f, :estimated_duration, style: "width: 70px; margin-bottom: 0;", value: @card.task.estimated_duration %> h
-                            <%= error_tag f, :negative_estimated %>
+                            <%= error_tag_modif f, :negative_estimated %>
                           <% else %>
                             <%= @card.task.estimated_duration %> h
                           <% end %>
@@ -142,17 +142,16 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                         <td data-label="Durée effectuée">
                           <%= if @is_contributor do %>
                             <input id="task_performed_duration" name="task[performed_duration]" style="width: 70px; margin-bottom: 0;" type="number" value={@card.task.performed_duration} /> h
-                            <%= error_tag f, :negative_performed%>
+                            <%= error_tag_modif f, :negative_performed%>
                           <% else %>
                             <%= @card.task.performed_duration %> h
                           <% end %>
                         </td>
                         <td data-label="Progression">
                           <b><%= number_input f, :progression, value: @card.task.progression, style: "width: 70px; margin-bottom: 0;" %> %</b>
-                          <div class="zoom-out">
-                            <%= error_tag f, :invalid_progression %>
-                            <%= error_tag f, :progression_not_int %>
-                          </div>
+
+                          <%= error_tag_modif f, :invalid_progression %>
+                          <%= error_tag_modif f, :progression_not_int %>
                         </td>
                       </tr>
                     </tbody>

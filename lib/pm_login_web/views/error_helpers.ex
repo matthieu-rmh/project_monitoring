@@ -17,6 +17,16 @@ defmodule PmLoginWeb.ErrorHelpers do
     end)
   end
 
+  def error_tag_modif(form, field) do
+    Enum.map(Keyword.get_values(form.errors, field), fn error ->
+      content_tag(:span, translate_error(error),
+        class: "invalid-feedback",
+        style: "margin: 5 0 0 0",
+        phx_feedback_for: input_id(form, field)
+      )
+    end)
+  end
+
   @doc """
   Translates an error message using gettext.
   """
