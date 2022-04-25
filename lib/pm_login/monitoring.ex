@@ -482,6 +482,16 @@ def validate_start_deadline(changeset) do
     Repo.all(query)
   end
 
+  def list_tasks_by_attributor_project(con_id) do
+    card_query = from c in Card,
+                        select: c.id
+    query = from t in Task,
+                      where: t.attributor_id == ^con_id,
+                      preload: [:project, :status, :priority, card: ^card_query],
+                      order_by: [desc: t.priority_id]
+    Repo.all(query)
+  end
+
   def add_progression_to_project(%Project{} = p) do
     primary_len = count_primaries(p)
     up_rate = (1/primary_len) * 100

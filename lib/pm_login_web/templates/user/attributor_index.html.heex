@@ -1,31 +1,36 @@
-<h1>Bienvenue attributeur <%= @current_user.username %>!</h1>
 
-<div class="row">
+<div class="row" style="margin-top: 50px; padding: 0">
   <a href={Routes.project_path(@socket, :index)}
-    class="column">
+    class="column" style="padding: 0">
     <div class="card-style">
       <img src={ Routes.static_path(@socket, "/images/1.jpg" )} />
       <div style="padding: 20px;">
-        <span class="material-icons mat__ico">insert_chart</span>
-        <p>Mes projets</p>
+        <p style="margin: 0 0 0 0">Mes projets</p>
       </div>
     </div>
   </a>
-  <a href={Routes.user_path(@socket, :show, @curr_user_id)} class="column">
+  <a href={Routes.project_path(@socket, :tasks)} class="column" style="padding: 0">
+    <div class="card-style">
+      <img src={ Routes.static_path(@socket, "/images/9.jpg" )} />
+      <div style="padding: 20px;">
+        <p style="margin: 0 0 0 0">Mes tâches</p>
+      </div>
+    </div>
+  </a>
+  <a href={Routes.project_path(@socket, :contributors)} class="column" style="padding: 0">
+    <div class="card-style">
+      <img src={ Routes.static_path(@socket, "/images/8.jpg" )} />
+      <div style="padding: 20px;">
+        <p style="margin: 0 0 0 0">Listes des Contributeurs</p>
+      </div>
+    </div>
+  </a>
+  <a href={Routes.user_path(@socket, :show, @curr_user_id)} class="column" style="padding: 0">
     <div class="card-style">
       <img src={ Routes.static_path(@socket, "/images/4.jpg" )} />
       <div style="padding: 20px;">
-        <span class="material-icons mat__ico">account_circle</span>
-        <p>Mon profil</p>
+        <p style="margin: 0 0 0 0">Mon profil</p>
       </div>
     </div>
-  </a>
-</div>
-
-<div class="row">
-  <a href={Routes.project_path(@socket, :contributors)} class="column">
-    <h3 class="header__link__title">
-      <p id="adm">Contributeurs</p>
-    </h3>
   </a>
 </div>

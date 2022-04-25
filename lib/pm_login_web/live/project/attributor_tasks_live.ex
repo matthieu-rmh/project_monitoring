@@ -1,13 +1,13 @@
-defmodule PmLoginWeb.Project.ContributorTasksLive do
+defmodule PmLoginWeb.Project.AttributorTasksLive do
   use Phoenix.LiveView
 
   import Phoenix.HTML.Link
-  # import Phoenix.HTML.Form
 
   alias PmLogin.Services
   alias PmLogin.Monitoring
   alias PmLogin.Kanban
   alias PmLoginWeb.Router.Helpers, as: Routes
+
 
   def mount(_params, %{"curr_user_id" => curr_user_id, "tasks" => tasks}, socket) do
     Monitoring.subscribe()
@@ -16,14 +16,16 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
     statuses = Monitoring.list_statuses_for_tasks_table()
 
     {:ok,
-     socket
-     |> assign(
-       tasks: tasks,
-       curr_user_id: curr_user_id,
-       statuses: statuses,
-       show_notif: false,
-       notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)
-     ), layout: {PmLoginWeb.LayoutView, "contributor_layout_live.html"}}
+      socket
+      |> assign(
+        tasks: tasks,
+        statuses: statuses,
+        curr_user_id: curr_user_id,
+        show_notif: false,
+        notifs: Services.
+        list_my_notifications_with_limit(curr_user_id, 4)
+      ), layout: {PmLoginWeb.LayoutView, "attributor_layout_live.html"}
+    }
   end
 
   def handle_event("status_and_progression_changed", params, socket) do
@@ -114,21 +116,12 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
 
   def handle_info({Monitoring, [_, _], _}, socket) do
     curr_user_id = socket.assigns.curr_user_id
-    tasks = Monitoring.list_tasks_by_contributor_project(curr_user_id)
+    tasks = Monitoring.list_tasks_by_attributor_project(curr_user_id)
 
-    IO.puts("handle_info...")
+    # IO.puts("handle_info...")
 
     {:noreply, socket |> assign(tasks: tasks)}
   end
-
-  # def handle_info({Monitoring, [:task, :updated], _}, socket) do
-  #   curr_user_id = socket.assigns.curr_user_id
-  #   tasks = Monitoring.list_tasks_by_contributor_project(curr_user_id)
-
-  #   IO.puts("faaaaaaaaa")
-
-  #   {:noreply, socket |> assign(tasks: tasks)}
-  # end
 
   def handle_info({Services, [:notifs, :sent], _}, socket) do
     curr_user_id = socket.assigns.curr_user_id
@@ -137,6 +130,7 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
     {:noreply,
      socket |> assign(notifs: Services.list_my_notifications_with_limit(curr_user_id, length))}
   end
+
 
   def render(assigns) do
     ~H"""
@@ -176,10 +170,10 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
                   </td>
                   <!-- <td data-label="Description" style="word-wrap: anywhere"><%= task.description %></td> -->
                   <form phx-change="status_and_progression_changed" style="margin-top: 23px;">
-                    <td data-label="Status" style="min-width: 100px;">
+                    <td data-label="Status">
                       <input type="hidden" value={task.id} name="task_id"/>
                       <input type="hidden" value={task.card} name="card_id" />
-                      <select name="status_id" id="status_change_id" style="color: #fff;">
+                      <select name="status_id" id="status_change_id" style="color: #fff; min-width: 115px">
                           <%= for status <- @statuses do %>
                             <%= if status.id == task.status.id do %>
                               <option value={status.id} style="background: #1F2937; color: #fff;" selected>
@@ -235,5 +229,7 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
       <% end %>
     </div>
     """
+
   end
+
 end
