@@ -499,6 +499,11 @@ def validate_start_deadline(changeset) do
     tasks |> Enum.filter(fn task -> task.status_id != 5 end)
   end
 
+  def list_tasks_not_achieved_for_contributor(con_id) do
+    tasks = list_tasks_by_contributor_project(con_id)
+    tasks |> Enum.filter(fn task -> task.status_id != 5 end)
+  end
+
   def add_progression_to_project(%Project{} = p) do
     primary_len = count_primaries(p)
     up_rate = (1/primary_len) * 100
