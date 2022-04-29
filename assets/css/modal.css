@@ -48,6 +48,16 @@
   }
 }
 
+/* Ajouter un scroll auto pour les modals (archive, comments, modif, détail */
+@media (max-width: 1400px) {
+  .modal-inner-container {
+    width: 500px;
+    height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
 .modal-card {
   height: auto;
   width: 28rem;
@@ -64,7 +74,7 @@
 
 .modal-card-comments {
   background-color: #fff;
-  border-radius: 18px;
+  /* border-radius: 18px; */
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, .15);
   display: flex;
   flex-direction: column;
@@ -81,10 +91,10 @@
   height: auto;
   width: auto;
   max-width: 50rem;
-  margin: 0.5rem;
+  /* margin: 0.5rem;
   /* border-radius: 0.4rem; */
 
-  border-radius: 6px;
+  /* border-radius: 6px; */
   background-color: #fff;
   /* background-color: red; */
 }
