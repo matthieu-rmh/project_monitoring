@@ -143,7 +143,7 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                           <%= Utilities.letters_date_format(@card.task.deadline) %>
                         </td>
                         <td data-label="Description" style="word-wrap: anywhere;">
-                          <%= if @card.task.description != nil or @card.task.description != "" or @card.task.description != [] do %>
+                          <%= if @card.task.description == nil or @card.task.description == " " or @card.task.description == [] do %>
                             Aucune description
                           <% else %>
                             <%= @card.task.description %>
