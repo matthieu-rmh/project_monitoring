@@ -49,9 +49,9 @@
 }
 
 /* Ajouter un scroll auto pour les modals (archive, comments, modif, détail */
-@media (max-width: 1400px) {
+@media (max-width: 1366px) {
   .modal-inner-container {
-    width: 500px;
+    width: auto;
     height: 600px;
     overflow-y: auto;
     overflow-x: hidden;

@@ -1,8 +1,12 @@
 .table-tasks {
-  margin-left: -110px;
+  margin-left: -170px;
   margin-bottom: 1rem;
   border-spacing: 0 20px;
   border-collapse: separate;
+}
+
+.table-button {
+  margin-top: 10px;
 }
 
 .tt-actions {
