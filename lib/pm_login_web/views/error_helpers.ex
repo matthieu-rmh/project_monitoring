@@ -21,7 +21,7 @@ defmodule PmLoginWeb.ErrorHelpers do
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
       content_tag(:span, translate_error(error),
         class: "invalid-feedback",
-        style: "margin: 5 0 0 0",
+        style: "margin-top: 1rem; margin-bottom: 0;",
         phx_feedback_for: input_id(form, field)
       )
     end)
