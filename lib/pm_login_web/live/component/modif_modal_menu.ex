@@ -20,12 +20,15 @@ defmodule PmLoginWeb.LiveComponent.ModifModalMenu do
     ~H"""
     <div id={"modal-#{@id}"}>
       <!-- Modal Background -->
-      <div id="modif_modal_container" class="modal-container-menu" style={"visibility: #{ if @show_modif_menu, do: "visible", else: "hidden" }; opacity: #{ if @show_modif_menu, do: "1 !important", else: "0" };"}
-          phx-hook="ScrollLock">
+      <div
+        id="modif_modal_container"
+        class="modal-container-menu"
+        style={"visibility: #{ if @show_modif_menu, do: "visible", else: "hidden" }; opacity: #{ if @show_modif_menu, do: "1 !important", else: "0" };"}
+        phx-hook="ScrollLock">
         <%= if not is_nil(@card) do %>
         <div class="modal-inner-container">
           <div class="modal-card-task">
-            <div class="modal-inner-card" style="width: 500px;">
+            <div class="modal-inner-card" style="width: 450px">
               <!-- Title -->
               <%= if @title != nil do %>
               <div class="modal-title" style="margin-top: 5px; margin-bottom: 10px;">
@@ -90,12 +93,12 @@ defmodule PmLoginWeb.LiveComponent.ModifModalMenu do
                     <tbody>
                       <tr>
                         <td data-label="Nom">
-                          <input id="task_title" name="task[title]" type="text" value={@card.name} style="width: 350px; margin-bottom: 0;" placeholder="Nom de la tâche"/>
+                          <input id="task_title" name="task[title]" type="text" value={@card.name} style="width: 300px; margin-bottom: 0;" placeholder="Nom de la tâche"/>
                           <!-- <%= text_input f, :title, [value: @card.name] %> -->
                           <%= error_tag_modif f, :title %>
                         </td>
                         <td data-label="Description">
-                          <input id="task_description" name="task[description]" value={@card.task.description} style="width: 350px; margin-bottom: 0;" placeholder="Description"/>
+                          <input id="task_description" name="task[description]" value={@card.task.description} style="width: 300px; margin-bottom: 0;" placeholder="Description"/>
                           <%= error_tag_modif f, :description %>
                         </td>
                         <td data-label="Attributeur">

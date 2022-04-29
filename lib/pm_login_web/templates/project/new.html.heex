@@ -13,30 +13,30 @@
       <h2><i class="bi bi-plus-circle"></i> Nouveau client</h2>
       <div class="request__form__content">
         <.form let={f} for={@user_changeset} phx-submit="save-user">
-        <label for="username">Nom d'utilisateur</label>
+        <label for="username" class="zoom-out">Nom d'utilisateur</label>
         <%= text_input f, :username %>
         <%= error_tag f, :req_uname_error %>
         <%= error_tag f, :username %>
 
-        <label for="email">Adresse éléctronique</label>
+        <label for="email" class="zoom-out">Adresse éléctronique</label>
         <%= text_input f, :email %>
         <%= error_tag f, :email %>
         <%= error_tag f, :req_email_error %>
 
-        <label for="email_confirmation">Confirmer adresse e-mail</label>
+        <label for="email_confirmation" class="zoom-out">Confirmer adresse e-mail</label>
         <%= text_input f, :email_confirmation %>
         <%= error_tag f, :email_confirmation %>
 
-        <label for="password">Mot de passe</label>
+        <label for="password" class="zoom-out">Mot de passe</label>
         <%= password_input f, :password %>
         <%= error_tag f, :password %>
         <%= error_tag f, :req_pass_error %>
 
-        <label for="password_confirmation">Confirmer mot de passe</label>
+        <label for="password_confirmation" class="zoom-out">Confirmer mot de passe</label>
         <%= password_input f, :password_confirmation %>
         <%= error_tag f, :password_confirmation %>
 
-        <label for="company_id">Pour société: </label>
+        <label for="company_id" class="zoom-out">Pour société: </label>
         <%= select f, :company_id, @companies_ids, style: "width: -moz-available;" %>
         <%= error_tag f, :company_id %>
 
