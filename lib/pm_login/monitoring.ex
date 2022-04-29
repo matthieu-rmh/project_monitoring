@@ -486,10 +486,17 @@ def validate_start_deadline(changeset) do
     card_query = from c in Card,
                         select: c.id
     query = from t in Task,
-                      where: t.attributor_id == ^con_id,
+                      # Récupérer les tâches en étant un contributeur
+                      where: t.contributor_id == ^con_id,
                       preload: [:project, :status, :priority, card: ^card_query],
                       order_by: [desc: t.priority_id]
     Repo.all(query)
+  end
+
+  # Récupérer les tâches qui sont pas encore terminées ou achevées
+  def list_tasks_not_achieved(con_id) do
+    tasks = list_tasks_by_attributor_project(con_id)
+    tasks |> Enum.filter(fn task -> task.status_id != 5 end)
   end
 
   def add_progression_to_project(%Project{} = p) do
