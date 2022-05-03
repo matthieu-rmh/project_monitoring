@@ -74,14 +74,16 @@ defmodule PmLoginWeb.Project.NewLive do
   end
 
   def handle_event("save-user", params, socket) do
-    IO.inspect(params["user"])
+    # IO.inspect(params["user"])
 
     case Login.create_user_from_project(params["user"]) do
       {:ok, user} ->
         Login.broadcast_user_creation({:ok, user})
         ac_params = %{"user_id" => user.id, "company_id" => params["user"]["company_id"]}
         Services.create_active_client(ac_params)
-        {:noreply, socket |> assign(form: false)}
+
+        params = params["user"]
+        {:noreply, socket |> put_flash(:info, "Le client #{params["username"]} a été créé!") |> assign(form: false)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> assign(user_changeset: changeset)}

@@ -1,3 +1,9 @@
+<div class="row">
+  <div class="column" style="margin-bottom: 10px;">
+    <a id="show__task__modal__btn" class="btn btn-lg btn-primary" phx-click="show-form"><i class="bi bi-plus-circle"></i> Nouveau client</a>
+  </div>
+</div>
+
 <%= form_for @changeset, @action, fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
@@ -12,12 +18,7 @@
   <%= textarea f, :description %>
   <%= error_tag f, :description %>
 
-  <div class="row">
-    <div class="column" style="margin-bottom: 10px;">
-      <a id="show__task__modal__btn" class="btn btn-lg btn-primary" phx-click="show-form"><i class="bi bi-plus-circle"></i> Nouveau client</a>
-    </div>
 
-  </div>
 
 
   <%= label f, "Durée estimée (en heure(s))" %>
