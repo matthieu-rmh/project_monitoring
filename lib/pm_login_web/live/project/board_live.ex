@@ -772,6 +772,10 @@ defmodule PmLoginWeb.Project.BoardLive do
      )}
   end
 
+  def handle_event("key_cancel", %{}, socket) do
+    {:noreply, socket}
+  end
+
   def handle_event("show_alert_test", _params, socket) do
     {:noreply, socket |> put_flash(:info, "oiii")}
   end

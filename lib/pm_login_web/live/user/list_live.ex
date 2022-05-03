@@ -52,6 +52,11 @@ defmodule PmLoginWeb.User.ListLive do
     end
   end
 
+  # Pour fixer l'erreur qui remet la page à se recharger
+  def handle_event("cancel-form", %{}, socket) do
+    {:noreply, socket}
+  end
+
   def handle_event("switch-notif", %{}, socket) do
     notifs_length = socket.assigns.notifs |> length
     curr_user_id = socket.assigns.curr_user_id
