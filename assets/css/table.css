@@ -5,6 +5,13 @@
   border-collapse: separate;
 }
 
+.table-list-users {
+ margin-left: -30px;
+ margin-bottom: 1rem;
+ border-spacing: 0 10px;
+ border-collapse: separate; 
+}
+
 .table-button {
   margin-top: 10px;
 }
@@ -18,28 +25,28 @@
   color: #0284C7;
 }
 
-.table-tasks th {
+.table-tasks, .table-list-users th {
   font-size: 14px;
   padding: 15px;
   text-transform: uppercase;
   color: #fff;
 }
 
-.table-tasks tbody tr {
+.table-tasks, .table-list-users tbody tr {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
   background-color: #1F2937;
   color: #fff;
 }
 
-.table-tasks td {
+.table-tasks, .table-list-users td {
   padding: 15px;
 }
 
 
 
-.table-tasks select,
-.table-tasks input {
+.table-tasks, .table-list-users select,
+.table-tasks, .table-list-users input {
   margin-bottom: 0;
 }
 
@@ -68,7 +75,7 @@
   margin-top: 0px;
 }
 
-.table-tasks td,
+.table-tasks, .table-list-users td,
 th,
 .table-head-past-unachieved td,
 th,
@@ -79,7 +86,7 @@ th {
 
 @media (max-width: 1050px) {
 
-  .table-tasks td,
+  .table-tasks, .table-list-users td,
   th,
   .table-head-past-unachieved td,
   th,
@@ -89,6 +96,7 @@ th {
   }
 
   .table-tasks,
+  .table-list-users,
   .table-tasks-unachieved {
     display: table;
     margin: 0;
@@ -102,26 +110,26 @@ th {
     background-color: #E74C3C;
   }
 
-  .table-tasks thead,
+  .table-tasks, .table-list-users thead,
   .table-tasks-unachieved thead,
   .table-head-unachieved thead,
   .table-head-past-unachieved thead {
     display: none;
   }
 
-  .table-tasks tr,
+  .table-tasks, .table-list-users tr,
   .table-tasks-unachieved tr {
     display: block;
     margin-bottom: 40px;
   }
 
-  .table-tasks td,
+  .table-tasks, .table-list-users td,
   .table-tasks-unachieved td {
     display: block;
     text-align: right;
   }
 
-  .table-tasks td:before,
+  .table-tasks, .table-list-users td:before,
   .table-tasks-unachieved td:before {
     content: attr(data-label);
     float: left;

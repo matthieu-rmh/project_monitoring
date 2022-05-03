@@ -1,19 +1,16 @@
 <div class="row">
   <div class="column column-60">
-    <h1><span class="material-icons" style="font-size: 40px;">supervisor_account</span> Liste des utilisateurs</h1>
-  </div>
-  <div class="column column-40">
-    <h3 id="adm" style="float: right;"><a href="#" phx-click="show-form"><i class="bi bi-plus-circle"></i> Créer utilisateur</a></h3>
+    <h1 style="color: #fff;"><span class="material-icons" style="font-size: 40px;">supervisor_account</span> Liste des utilisateurs</h1>
   </div>
 </div>
 
   <div class="my_row">
     <div class="my_col">
       <!-- <b style="position: relative; top: 8px;">Filtre :</b> -->
-      <span class="material-icons-round filter__icon filt__and__sort__ico">filter_list</span>
+      <span class="material-icons-round filter__icon filt__and__sort__ico" style=" color: #fff;">filter_list</span>
       <form phx-change="right_selected">
 
-        <select id="right_filter" name="right_select">
+        <select id="right_filter" name="right_select" style="background-color: #111827; color: #fff;">
         <option value="" selected disabled hidden>par statut</option>
         <option value="9000">Tout</option>
           <%= for right <- @rights do %>
@@ -26,10 +23,10 @@
 
     <div class="my_col">
       <!-- <b style="position: relative; top: 8px;"></b> -->
-      <span class="material-icons-round sort__icon filt__and__sort__ico">sort_by_alpha</span>
+      <span class="material-icons-round sort__icon filt__and__sort__ico" style=" color: #fff;">sort_by_alpha</span>
       <form phx-change="sort_users">
 
-        <select id="sort_auth" name="sort_select">
+        <select id="sort_auth" name="sort_select" style="background-color: #111827; color: #fff;">
         <option value="" selected disabled hidden>alphabétique</option>
         <option value="asc">A - Z</option>
         <option value="desc">Z - A</option>
@@ -39,23 +36,27 @@
     </div>
 
     <div class="my_col">
-      <form phx-change="search-user">
-          <input type="text" name="search-a" style="width: 150px;">
+      <form phx-change="search-user" style="color: #fff;">
+          <input type="text" name="search-a" style="width: 150px; color:#fff;">
       </form>
-      <span class="material-icons-round filt__and__sort__ico">search</span>
+      <span class="material-icons-round filt__and__sort__ico" style=" color: #fff;">search</span>
     </div>
+
+    <div phx-click="show-form" class="button">
+      <i class="bi bi-plus-circle"></i> Créer utilisateur
+    </div>
+    
 
 
 
   </div>
-
-  <table id="tb-auth" style="width: 105%;">
+  <table class="table-list-users">
     <thead>
       <tr>
-        <th style="width: 10px;"></th>
-        <th><span><span class="material-icons-round arr__sorted" phx-click="sorted_by_username"><%= if not @sorted_by_username do "keyboard_arrow_down" else "keyboard_arrow_right" end %></span></span> Nom d'utilisateur</th>
-        <th><span><span class="material-icons-round arr__sorted" phx-click="sorted_by_email"><%= if not @sorted_by_email do "keyboard_arrow_down" else "keyboard_arrow_right" end %></span></span> Email</th>
-        <th><span><span class="material-icons-round arr__sorted" phx-click="sorted_by_status"><%= if not @sorted_by_status do "keyboard_arrow_down" else "keyboard_arrow_right" end %></span></span> Statut</th>
+        <th></th>
+        <th><span class="material-icons-round arr__sorted" phx-click="sorted_by_username"><%= if not @sorted_by_username do "keyboard_arrow_down" else "keyboard_arrow_right" end %></span>Nom d'utilisateur</th>
+        <th><span class="material-icons-round arr__sorted" phx-click="sorted_by_email"><%= if not @sorted_by_email do "keyboard_arrow_down" else "keyboard_arrow_right" end %></span> Email</th>
+        <th><span class="material-icons-round arr__sorted" phx-click="sorted_by_status"><%= if not @sorted_by_status do "keyboard_arrow_down" else "keyboard_arrow_right" end %></span> Statut</th>
 
         <th>Actions</th>
       </tr>
@@ -63,22 +64,21 @@
     <tbody>
       <%= for user <- @users do %>
       <tr>
-
-        <td style="width: 10px;">
+        <td data-label="">
             <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/#{user.profile_picture}") } width="50"/>
         </td>
 
-        <td><%= user.username %></td>
-        <td><%= user.email %></td>
-        <td><%= user.title %></td>
+        <td data-label="Nom"><%= user.username %></td>
+        <td data-label="Email"><%= user.email %></td>
+        <td data-label="Statut"><%= user.title %></td>
 
-        <td>
+        <td data-label="Actions">
           <%= if user.id != @curr_user_id do %>
               <a href={Routes.user_path(@socket, :edit, user)} class=""><i class="bi bi-info-circle info__user btn btn-info btn-lg"></i></a>
               <%= if user.right_id != 100 do %>
-              <i class="bi bi-archive btn btn-danger btn-lg archive__user" phx-click="go-arch" phx-value-id={user.id}></i>
+                <i class="bi bi-archive btn btn-danger btn-lg archive__user" phx-click="go-arch" phx-value-id={user.id}></i>
               <% else %>
-              <i class="bi bi-archive btn btn-dark btn-lg"></i>
+                <i class="bi bi-archive btn btn-dark btn-lg"></i>
             <% end %>
 
           <% end %>
