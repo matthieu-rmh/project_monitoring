@@ -81,6 +81,7 @@ defmodule PmLoginWeb.Project.BoardLive do
        pro_id: pro_id,
        show_secondary: false,
        showing_primaries: true,
+       showing_secondaries: false,
        contributors: list_contributors,
        attributors: list_attributors,
        priorities: list_priorities,
@@ -352,7 +353,14 @@ defmodule PmLoginWeb.Project.BoardLive do
         _ -> false
       end
 
-    {:noreply, socket |> assign(board: board, showing_primaries: showing_primaries)}
+    showing_secondaries =
+      case radio_value do
+        "task" -> false
+        "subtask" -> true
+        _ -> false
+      end
+
+    {:noreply, socket |> assign(board: board, showing_primaries: showing_primaries, showing_secondaries: showing_secondaries)}
   end
 
   def handle_event("distinct_task", %{"_target" => ["task_view"]}, socket) do
