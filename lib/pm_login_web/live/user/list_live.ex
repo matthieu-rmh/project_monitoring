@@ -21,10 +21,11 @@ defmodule PmLoginWeb.User.ListLive do
   end
 
   def handle_event("save-user", %{"user" => params}, socket) do
+    # IO.inspect(params)
     case Login.create_user(params) do
       {:ok, user} ->
         Login.broadcast_user_creation({:ok, user})
-        {:noreply, socket |> assign(form: false)}
+        {:noreply, socket |> put_flash(:info, "L'utilisateur #{params["username"]} a été créé") |> assign(form: false)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> assign(changeset: changeset)}

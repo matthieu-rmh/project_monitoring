@@ -11,7 +11,7 @@
       <form phx-change="right_selected">
 
         <select id="right_filter" name="right_select" style="background-color: #111827; color: #fff;">
-        <option value="" selected disabled hidden>par statut</option>
+        <option value="" selected disabled hidden>Par statut</option>
         <option value="9000">Tout</option>
           <%= for right <- @rights do %>
         <option value={right.id}><%= right.title %></option>
@@ -27,7 +27,7 @@
       <form phx-change="sort_users">
 
         <select id="sort_auth" name="sort_select" style="background-color: #111827; color: #fff;">
-        <option value="" selected disabled hidden>alphabétique</option>
+        <option value="" selected disabled hidden>Alphabétique</option>
         <option value="asc">A - Z</option>
         <option value="desc">Z - A</option>
         </select>
@@ -37,7 +37,7 @@
 
     <div class="my_col">
       <form phx-change="search-user" style="color: #fff;">
-          <input type="text" name="search-a" style="width: 150px; color:#fff;">
+          <input type="text" name="search-a" placeholder="Rechercher par nom" style="width: 150px; color:#fff;">
       </form>
       <span class="material-icons-round filt__and__sort__ico" style=" color: #fff;">search</span>
     </div>
