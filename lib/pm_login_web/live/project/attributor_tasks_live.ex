@@ -7,7 +7,7 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
   alias PmLoginWeb.LiveComponent.{
     PlusModalLive,
     ModifModalMenu,
-    CommentsModalMenu,
+    CommentsModalMenu
   }
 
   alias PmLogin.Monitoring
@@ -80,18 +80,16 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
 
   # Appliquer les changements du statut et de la progression
   def handle_event("status_and_progression_changed", params, socket) do
-
     progression = params["progression_change"] |> Float.parse() |> elem(0) |> trunc
+
     if progression < 0 or progression > 100 do
-      {:noreply, socket
-                 |> clear_flash()
-                 |> put_flash(:error, "La progression doit être comprise entre 0 à 100")
-                 |> push_event("AnimateAlert", %{})
-      }
+      {:noreply,
+       socket
+       |> clear_flash()
+       |> put_flash(:error, "La progression doit être comprise entre 0 à 100")
+       |> push_event("AnimateAlert", %{})}
     else
       task = Monitoring.get_task_with_card!(params["task_id"])
-
-
 
       # Récupérer l'id de la dernière stage
       stage_end_id = Monitoring.get_achieved_stage_id_from_project_id!(task.project_id)
@@ -137,11 +135,10 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
       end
 
       {:noreply,
-        socket
-        |> clear_flash()
-        |> put_flash(:info, "#{task.card.name} mise à jour.")
-        |> push_event("AnimateAlert", %{})
-      }
+       socket
+       |> clear_flash()
+       |> put_flash(:info, "#{task.card.name} mise à jour.")
+       |> push_event("AnimateAlert", %{})}
     end
   end
 
@@ -319,8 +316,7 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
          |> put_flash(:info, "Tâche #{updated_task.title} mise à jour")
          |> assign(show_modif_modal: false)
          |> assign(show_modif_menu: false)
-         |> push_event("AnimateAlert", %{})
-        }
+         |> push_event("AnimateAlert", %{})}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> assign(modif_changeset: changeset)}
@@ -454,7 +450,7 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
               <!-- Afficher les tâches si son statut est différent de Achevée(s) et que c'est pas archivé -->
               <%= if task.status_id != 5 and task.hidden == false do %>
                 <tr>
-                  <td data-label="Projet">
+                  <td data-label="Projet" style="word-wrap: anywhere; min-width: 125px;">
                     <%= link "#{task.project.title}", to: Routes.project_path(@socket, :board, task.project_id) %>
                   </td>
                   <td data-label="Nom" style="word-wrap: anywhere; min-width: 150px;">
@@ -517,15 +513,34 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
                         style="width: 75px; color: #fff;"
                       />
                     </td>
-                    <td>
+                    <td class="btn-table">
                       <button
                         title="Mettre à jour"
                         type="submit"
                         class="bi bi-arrow-repeat plus__icon table-button"
                       />
                     </td>
+                    <td data-label="Actions" class="d-action">
+                      <div>
+                        <input
+                          title="Mettre à jour"
+                          value="Mettre à jour"
+                          type="submit"
+                          class="table-button btn-mobile"
+                        />
+                        <div
+                          title="Afficher"
+                          class="table-button btn-mobile"
+                          phx-click="show_plus_modal"
+                          phx-value-id={task.card}
+                          style="margin-top: -40px"
+                        >
+                          Afficher
+                        </div>
+                      </div>
+                    </td>
                   </form>
-                    <td>
+                    <td class="btn-table">
                       <button
                         title="Afficher"
                         class="bi bi-plus-circle plus__icon table-button"

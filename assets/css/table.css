@@ -90,7 +90,49 @@ th {
   border-bottom: none;
 }
 
+.btn-mobile {
+  display: none;
+}
+
+.table-tasks .d-action {
+  display: none;
+}
+
 @media (max-width: 1050px) {
+
+  .table-tasks .btn-table {
+    display: none;
+  }
+
+  .table-tasks .d-action {
+    display: block;
+  }
+
+  .btn-mobile {
+    display: block;
+    background-color: #0069d9;
+    border: 0.1rem solid #0069d9;
+    border-radius: .4rem;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    height: 3.8rem;
+    margin: 0;
+    letter-spacing: .1rem;
+    line-height: 3.8rem;
+    padding: 0 3.0rem;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap
+  }
+
+  .btn-mobile:hover {
+    background-color: #606c76;
+    border-color: #606c76;
+  }
 
   .table-tasks td, th,
   .table-list-users td,
