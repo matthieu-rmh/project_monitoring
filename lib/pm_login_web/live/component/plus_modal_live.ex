@@ -28,7 +28,7 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
               <div class="modal-inner-card">
                 <!-- Title -->
                 <%= if @title != nil do %>
-                <div class="modal-title" style="margin-top: 5px; margin-bottom: 15px;">
+                <div class="modal-title">
                   <%= @title %>
                   <a href="#" class="x__close" style="position: relative; left: 0; margin-top: -5px;" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
                 </div>
@@ -73,7 +73,7 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                     </ul>
                   </div>
 
-                  <table class="table-tasks-mobile" style="font-size: 11px;">
+                  <table class="table-tasks-mobile" style="font-size: 11px; margin-bottom: 5px;">
                     <thead>
                       <tr>
                         <th>Nom</th>

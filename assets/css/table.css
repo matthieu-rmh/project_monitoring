@@ -1,15 +1,15 @@
 .table-tasks {
-  margin-left: -170px;
+  margin-left: -200px;
   margin-bottom: 1rem;
   border-spacing: 0 20px;
   border-collapse: separate;
 }
 
 .table-list-users {
- margin-left: -30px;
- margin-bottom: 1rem;
- border-spacing: 0 10px;
- border-collapse: separate; 
+  margin-left: -30px;
+  margin-bottom: 1rem;
+  border-spacing: 0 10px;
+  border-collapse: separate;
 }
 
 .table-button {
@@ -17,7 +17,7 @@
 }
 
 .tt-actions {
-  font-size: 25px; 
+  font-size: 25px;
   color: #fff;
 }
 
@@ -25,28 +25,33 @@
   color: #0284C7;
 }
 
-.table-tasks, .table-list-users th {
+.table-tasks th,
+.table-list-users th {
   font-size: 14px;
   padding: 15px;
   text-transform: uppercase;
   color: #fff;
 }
 
-.table-tasks, .table-list-users tbody tr {
+.table-tasks tbody tr,
+.table-list-users tbody tr {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
   background-color: #1F2937;
   color: #fff;
 }
 
-.table-tasks, .table-list-users td {
+.table-tasks td, 
+.table-list-users td {
   padding: 15px;
 }
 
 
 
-.table-tasks, .table-list-users select,
-.table-tasks, .table-list-users input {
+.table-tasks select,
+.table-tasks input,
+.table-list-users select,
+.table-list-users input {
   margin-bottom: 0;
 }
 
@@ -75,7 +80,8 @@
   margin-top: 0px;
 }
 
-.table-tasks, .table-list-users td,
+.table-tasks td, th,
+.table-list-users td,
 th,
 .table-head-past-unachieved td,
 th,
@@ -86,7 +92,8 @@ th {
 
 @media (max-width: 1050px) {
 
-  .table-tasks, .table-list-users td,
+  .table-tasks td, th,
+  .table-list-users td,
   th,
   .table-head-past-unachieved td,
   th,
@@ -110,26 +117,30 @@ th {
     background-color: #E74C3C;
   }
 
-  .table-tasks, .table-list-users thead,
+  .table-tasks thead,
+  .table-list-users thead,
   .table-tasks-unachieved thead,
   .table-head-unachieved thead,
   .table-head-past-unachieved thead {
     display: none;
   }
 
-  .table-tasks, .table-list-users tr,
+  .table-tasks tr,
+  .table-list-users tr,
   .table-tasks-unachieved tr {
     display: block;
     margin-bottom: 40px;
   }
 
-  .table-tasks, .table-list-users td,
+  .table-tasks td,
+  .table-list-users td,
   .table-tasks-unachieved td {
     display: block;
     text-align: right;
   }
 
-  .table-tasks, .table-list-users td:before,
+  .table-tasks td:before,
+  .table-list-users td:before,
   .table-tasks-unachieved td:before {
     content: attr(data-label);
     float: left;
@@ -162,6 +173,11 @@ th {
 .table-tasks-mobile td,
 .table-tasks-mobile th {
   padding: 6px;
+}
+
+.table-tasks-mobile tr>td>input,
+select {
+  height: auto;
 }
 
 .table-tasks-mobile td:before {

@@ -462,9 +462,11 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
               <!-- Afficher les tâches si son statut est différent de Achevée(s) et que c'est pas archivé -->
               <%= if task.status_id != 5 and task.hidden == false do %>
                 <tr>
-                  <td data-label="Projet"> <%= task.project.title %> </td>
+                  <td data-label="Projet">
+                    <%= link "#{task.project.title}", to: Routes.project_path(@socket, :board, task.project_id) %>
+                  </td>
                   <td data-label="Nom" style="word-wrap: anywhere; min-width: 150px;">
-                    <%= link task.title, to: Routes.project_path(@socket, :board, task.project_id) %>
+                    <%= task.title %>
                   </td>
                   <!-- <td data-label="Description" style="word-wrap: anywhere"><%= task.description %></td> -->
                   <form phx-submit="status_and_progression_changed" style="margin-top: 23px;">

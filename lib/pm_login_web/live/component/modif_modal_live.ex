@@ -28,7 +28,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
             <div class="modal-inner-card" style="width: 450px">
               <!-- Title -->
               <%= if @title != nil do %>
-              <div class="modal-title" style="margin-top: 5px; margin-bottom: 10px;">
+              <div class="modal-title">
                 <%= @title %>
                 <a href="#" class="x__close" style="position: relative; left: 0; margin-top: -5px;" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
               </div>
@@ -44,7 +44,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
               <!-- MY FORM -->
               <div class="modal-body">
 
-              <.form let={f} for={@modif_changeset} phx-submit="update_task" novalidate>
+              <.form let={f} for={@modif_changeset} phx-submit="update_task" style="margin: 0" novalidate>
                 <%= hidden_input f, :task_id,value: @card.task.id %>
                  <table class="table-tasks-mobile" style="font-size: 11px;">
                     <thead>
@@ -148,7 +148,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <% end %>
                         </td>
                         <td data-label="Progression">
-                          <b><%= number_input f, :progression, value: @card.task.progression, style: "width: 70px; margin-bottom: 0;" %> %</b>
+                          <%= number_input f, :progression, value: @card.task.progression, style: "width: 70px; margin-bottom: 0;" %> %
 
                           <%= error_tag_modif f, :invalid_progression %>
                           <%= error_tag_modif f, :progression_not_int %>
@@ -161,7 +161,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                         <button type="button" class="btn btn-lg btn-success" phx-click="achieve" phx-value-id={@card.task.id}>Achever</button>
                       <% end %>
 
-                      <div class="modal-buttons">
+                      <div class="modal-buttons" style="margin-top: -5;margin-bottom: -5;">
                         <!-- Left Button -->
                         <button class="button button-outline"
                                 type="button"
