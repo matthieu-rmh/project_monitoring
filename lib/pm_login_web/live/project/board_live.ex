@@ -9,6 +9,7 @@ defmodule PmLoginWeb.Project.BoardLive do
     CommentsModalLive,
     CommentsModalMenu,
     SecondaryModalLive,
+    DeleteTaskModal
   }
 
   alias PmLoginWeb.ProjectView
@@ -37,7 +38,7 @@ defmodule PmLoginWeb.Project.BoardLive do
 
 
 
-    project = Monitoring.get_project!(pro_id)
+
 
     task_changeset = Monitoring.change_task(%Task{})
     modif_changeset = Monitoring.change_task(%Task{})
@@ -55,9 +56,8 @@ defmodule PmLoginWeb.Project.BoardLive do
     my_primary_tasks = Monitoring.list_primary_tasks(pro_id)
     list_primaries = my_primary_tasks |> Enum.map(fn %Task{} = p -> {p.title, p.id} end)
 
+    project = Monitoring.get_project!(pro_id)
     board = Kanban.get_board!(project.board_id)
-
-    # IO.inspect board.stages
 
     primary_stages =
       board.stages
@@ -89,6 +89,7 @@ defmodule PmLoginWeb.Project.BoardLive do
        show_task_modal: false,
        show_modif_modal: false,
        show_modif_menu: false,
+       delete_task_modal: false,
        card: nil,
        show_planified: false,
        planified_changeset: planified_changeset,
@@ -181,8 +182,12 @@ defmodule PmLoginWeb.Project.BoardLive do
     {:noreply, socket |> assign(show_modal: true, arch_id: id)}
   end
 
+  def handle_event("delete_task", %{"id" => id}, socket) do
+    {:noreply, socket |> assign(delete_task_modal: true, arch_id: id)}
+  end
+
   def handle_event("close_modal", _params, socket) do
-    {:noreply, socket |> assign(show_modal: false)}
+    {:noreply, socket |> assign(show_modal: false, delete_task_modal: false)}
   end
 
   def handle_event("archive_task", %{"id" => id}, socket) do
@@ -212,6 +217,29 @@ defmodule PmLoginWeb.Project.BoardLive do
      |> assign(show_modal: false)
      |> put_flash(:info, "Tâche #{task.title} archivée.")
      |> push_event("AnimateAlert", %{})}
+  end
+
+  def handle_event("delete_card", %{"id" => id}, socket) do
+    task = Monitoring.get_task_with_card!(id)
+    card = Kanban.get_card!(task.card.id)
+
+    Monitoring.remove_card(card.task_id)
+    # Monitoring.remove_task(card.task_id)
+
+    curr_user_id = socket.assigns.curr_user_id
+    content = "Tâche #{task.title} supprimé par #{Login.get_user!(curr_user_id).username}."
+    Services.send_notifs_to_admins_and_attributors(curr_user_id, content)
+
+    Monitoring.broadcast_deleted_task({:ok, :deleted})
+
+    {:noreply, socket
+              |> clear_flash()
+              |> assign(delete_task_modal: false)
+              |> put_flash(:info, "Tâche #{task.title} supprimé.")
+              |> push_event("AnimateAlert", %{})
+    }
+
+
   end
 
   def handle_event(
@@ -620,6 +648,26 @@ defmodule PmLoginWeb.Project.BoardLive do
     {:noreply, socket |> assign(planified_list: planified_list)}
   end
 
+  def handle_info({PmLogin.Monitoring, [:task, :deleted], _}, socket) do
+    # IO.puts("handle_infooooooooooooooooooooo")
+
+    pro_id = socket.assigns.pro_id
+
+    project = Monitoring.get_project!(pro_id)
+    board = Kanban.get_board!(project.board_id)
+
+    primary_stages =
+      board.stages
+      |> Enum.map(fn %Kanban.Stage{} = stage ->
+        struct(stage, cards: cards_list_primary_tasks(stage.cards))
+      end)
+
+    primary_board = struct(board, stages: primary_stages)
+
+    {:noreply,
+     socket |> assign(board: primary_board, hidden_tasks: Monitoring.list_hidden_tasks(pro_id))}
+  end
+
   def handle_info({"hidden_subscription", [:task, :hidden], _}, socket) do
     board_id = socket.assigns.board.id
     pro_id = socket.assigns.board.project.id
@@ -725,6 +773,7 @@ defmodule PmLoginWeb.Project.BoardLive do
     show_comments_modal = socket.assigns.show_comments_modal
     show_comments_menu = socket.assigns.show_comments_menu
     show_modal = socket.assigns.show_modal
+    delete_task_modal = socket.assigns.delete_task_modal
     show_hidden_modal = socket.assigns.show_hidden_modal
     show_planified = socket.assigns.show_planified
     show_planified_list = socket.assigns.show_planified_list
@@ -752,6 +801,7 @@ defmodule PmLoginWeb.Project.BoardLive do
 
     s_modal = if key == "Escape" and show_modal == true, do: false, else: show_modal
 
+    s_delete = if key == "Escape" and delete_task_modal == true, do: false, else: delete_task_modal
     s_hidden_modal =
       if key == "Escape" and show_hidden_modal == true, do: false, else: show_hidden_modal
 
@@ -773,6 +823,7 @@ defmodule PmLoginWeb.Project.BoardLive do
        show_comments_modal: s_comments_modal,
        show_comments_menu: s_comments_menu,
        show_modal: s_modal,
+       delete_task_modal: s_delete,
        show_hidden_modal: s_hidden_modal,
        show_planified: s_planified,
        show_planified_list: s_planified_list,
@@ -1266,7 +1317,7 @@ defmodule PmLoginWeb.Project.BoardLive do
     card_menu = Kanban.get_card_from_modal!(id)
     # IO.puts id
     # IO.puts "com modal showed"
-    IO.puts(id)
+    # IO.puts(id)
     com_nb = 5
     card = Kanban.get_card_for_comment_limit!(id, com_nb)
     # card = ordered |> Enum.reverse
@@ -1352,7 +1403,7 @@ defmodule PmLoginWeb.Project.BoardLive do
   end
 
   def handle_event("submit_secondary", %{"task" => params}, socket) do
-    IO.puts("input")
+    # IO.puts("input")
     # IO.inspect params
 
     parent_task = Monitoring.get_task!(params["parent_id"])

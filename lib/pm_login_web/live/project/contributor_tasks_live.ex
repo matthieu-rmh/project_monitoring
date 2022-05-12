@@ -444,7 +444,7 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
           <div class="alert-text"> Aucune tâche n'a été assignée pour le moment... </div>
         </div>
       <% else %>
-        <table class="table-tasks" id="" style="font-size: 12px;">
+        <table class="table-tasks" id="" style="font-size: 11px;">
           <thead>
             <tr>
               <th>Projet</th>
@@ -520,20 +520,41 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
                     <td data-label="Progression">
                       <input name="progression_change" type="number" value={task.progression} style="width: 75px; color: #fff;"/>
                     </td>
-                    <td>
-                    <button
-                      title="Mettre à jour"
-                      type="submit"
-                      class="bi bi-arrow-repeat plus__icon table-button"
-                    />
-                  </td>
+                    <td class="btn-table" style="padding: 0;">
+                      <button
+                        title="Mettre à jour"
+                        type="submit"
+                        class="bi bi-arrow-repeat plus__icon table-button"
+                        style="border-radius: 50%;"
+                      />
+                    </td>
+                    <td data-label="Actions" class="d-action">
+                      <div  style="display: inline-block">
+                        <input
+                          title="Mettre à jour"
+                          value="Mettre à jour"
+                          type="submit"
+                          class="table-button btn-mobile"
+                        />
+                        <div
+                          title="Afficher"
+                          class="table-button btn-mobile"
+                          phx-click="show_plus_modal"
+                          phx-value-id={task.card}
+                          style="margin-top: -40px; background-color: #27ae60; border-color: #27ae60;"
+                        >
+                          Afficher
+                        </div>
+                      </div>
+                    </td>
                 </form>
-                  <td>
+                  <td class="btn-table">
                     <button
                       title="Afficher"
                       class="bi bi-plus-circle plus__icon table-button"
                       phx-click="show_plus_modal"
                       phx-value-id={task.card}
+                      style="background-color: #27ae60; border-color: #2ecc71; border-radius: 50%;"
                     />
                   </td>
                 </tr>

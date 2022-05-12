@@ -144,6 +144,23 @@ defmodule PmLogin.Kanban do
     Repo.get(Card, id)
   end
 
+  def get_all_card() do
+    contributor_query = from c in User
+    priority_query = from p in Priority
+    status_query = from s in Status
+    attributor_query = from u in User
+
+    task_query = from t in Task,
+                preload: [attributor: ^attributor_query, status: ^status_query,
+                priority: ^priority_query, contributor: ^contributor_query]
+
+    query = from c in Card,
+            preload: [task: ^task_query],
+            select: c
+
+    Repo.all(query)
+  end
+
   def get_card_for_comment_limit!(id, number) do
     poster_query = from p in User
 

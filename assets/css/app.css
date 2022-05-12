@@ -29,6 +29,7 @@
 @import "./card.css";
 @import "./body.css";
 @import "./alert.css";
+@import "./dropdown.css";
 
 @font-face {
   font-family: "Axiforma";

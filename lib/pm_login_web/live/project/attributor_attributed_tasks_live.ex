@@ -1,4 +1,4 @@
-defmodule PmLoginWeb.Project.AttributorTasksLive do
+defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
   use Phoenix.LiveView
 
   import Phoenix.HTML.Link
@@ -47,7 +47,7 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
      socket
      |> assign(
        tasks: tasks,
-       tasks_not_achieved: Monitoring.list_tasks_not_achieved(curr_user_id),
+       tasks_not_achieved: Monitoring.list_tasks_attributed_not_achieved(curr_user_id),
        is_attributor: Monitoring.is_attributor?(curr_user_id),
        is_admin: Monitoring.is_admin?(curr_user_id),
        contributors: list_contributors,
@@ -69,6 +69,8 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
        show_plus_modal: false,
        card_with_comments: nil,
        card: nil,
+       showing_my_attributes: false,
+       showing_my_tasks: true,
        notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)
      )
      |> allow_upload(:file,
@@ -80,6 +82,10 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
 
   # Appliquer les changements du statut et de la progression
   def handle_event("status_and_progression_changed", params, socket) do
+    IO.inspect("fziuehfiuezhfiuzehufihzeuifhuizhfuihuzie")
+
+    IO.inspect(params)
+
     progression = params["progression_change"] |> Float.parse() |> elem(0) |> trunc
 
     if progression < 0 or progression > 100 do
@@ -185,18 +191,32 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
   # Appliquer les changements lorsqu'une tâche est mise à jour
   def handle_info({Monitoring, [_, _], _}, socket) do
     curr_user_id = socket.assigns.curr_user_id
-    tasks = Monitoring.list_tasks_by_attributor_project(curr_user_id)
-    tasks_not_achieved = Monitoring.list_tasks_not_achieved(curr_user_id)
 
-    {:noreply, socket |> assign(tasks: tasks, tasks_not_achieved: tasks_not_achieved)}
+    tasks = Monitoring.list_attributes_tasks_by_attributor_project(curr_user_id)
+    tasks_not_achieved = Monitoring.list_tasks_attributed_not_achieved(curr_user_id)
+
+    {:noreply,
+     socket
+     |> assign(
+       tasks: tasks,
+       tasks_not_achieved: tasks_not_achieved
+     )}
   end
 
   def handle_info({Services, [:notifs, :sent], _}, socket) do
     curr_user_id = socket.assigns.curr_user_id
     length = socket.assigns.notifs |> length
 
+    tasks = Monitoring.list_attributes_tasks_by_attributor_project(curr_user_id)
+    tasks_not_achieved = Monitoring.list_tasks_attributed_not_achieved(curr_user_id)
+
     {:noreply,
-     socket |> assign(notifs: Services.list_my_notifications_with_limit(curr_user_id, length))}
+     socket
+     |> assign(
+       notifs: Services.list_my_notifications_with_limit(curr_user_id, length),
+       tasks: tasks,
+       tasks_not_achieved: tasks_not_achieved
+     )}
   end
 
   # Afficher le modal détails du tâche
@@ -425,7 +445,7 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
         <i class="bi bi-list-task"></i>
         Les tâches qui m'ont été assigné
       </h3> -->
-      <h3 style="color: #fff;  margin-bottom: 0px;"><i class="bi bi-person-lines-fill"></i> Mes propres tâches</h3>
+      <h3 style="color: #fff; margin-bottom: 0px;"><i class="bi bi-person-plus"></i>Les tâches attribuées</h3>
 
       <%= if @tasks_not_achieved == [] do %>
         <div class="alert-primary" role="alert">
@@ -523,7 +543,7 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
                       />
                     </td>
                     <td data-label="Actions" class="d-action">
-                      <div  style="display: inline-block">
+                      <div style="display: inline-block">
                         <input
                           title="Mettre à jour"
                           value="Mettre à jour"

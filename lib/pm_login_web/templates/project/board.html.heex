@@ -259,9 +259,15 @@
             </a>
 
             <%= if @is_admin or @is_attributor do %>
-            <a title="Archiver" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
-              class="bi bi-trash3 delete__icon" phx-click="go_archive" phx-value-id={card.task.id}>
-            </a>
+              <a title="Archiver" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
+                class="bi bi-archive delete__icon" phx-click="go_archive" phx-value-id={card.task.id}>
+              </a>
+            <% end %>
+
+            <%= if @is_admin or @is_attributor do %>
+              <a title="Supprimer" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
+                class="bi bi-trash3 delete__icon" phx-click="delete_task" phx-value-id={card.task.id}>
+              </a>
             <% end %>
           </div>
 
@@ -357,6 +363,34 @@
             </a>
             <!-- Right Button -->
             <a href="#" class="button right-button" type="button" phx-click="archive_task" phx-value-id={ @arch_id }>
+              <div>OUI</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="my__modal__container" style={"visibility: #{ if @delete_task_modal, do: "visible" , else: "hidden" }; opacity: #{
+    if @delete_task_modal, do: "1 !important" , else: "0" };"}>
+    <div class="container my__modal__card archive__modal__card">
+      <a class="x__close" title="Fermer" phx-click="close_modal"><i class="bi bi-x"></i></a>
+      <div class="row">
+        <div class="column">
+          <h5 style="text-align: center;" class="bi bi-trash3">Supprimer ?</h5>
+          <p class="zoom-out" style="text-align: center;">
+            Êtes-vous sûr(e) de supprimer la tâche
+            <%= if not is_nil(@arch_id), do: PmLogin.Monitoring.get_task!(@arch_id).title %>
+            ?
+          </p>
+
+          <div class="modal-buttons" style="margin-bottom: 20px;">
+            <!-- Left Button -->
+            <a href="#" class="button button-outline" type="button" phx-click="close_modal">
+              <div>NON</div>
+            </a>
+            <!-- Right Button -->
+            <a href="#" class="button right-button" type="button" phx-click="delete_card" phx-value-id={@arch_id}>
               <div>OUI</div>
             </a>
           </div>

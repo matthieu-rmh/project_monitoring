@@ -1,7 +1,7 @@
 .table-tasks {
   margin-left: -200px;
   margin-bottom: 1rem;
-  border-spacing: 0 20px;
+  border-spacing: 0 10px;
   border-collapse: separate;
 }
 
@@ -98,7 +98,7 @@ th {
   display: none;
 }
 
-@media (max-width: 1050px) {
+@media (max-width: 1200px) {
 
   .table-tasks .btn-table {
     display: none;

@@ -29,6 +29,7 @@ COMMENTED ROUTES ARE NOT TO BE DELETED BUT JUST NOT USED AT THE TIME
     #Monitoring context
     # resources "/statuses", StatusController
     get "tasks", ProjectController, :tasks
+    get "attributed_tasks", ProjectController, :attributed_tasks
     resources "/projects", ProjectController
     get "/contributors", ProjectController, :contributors
     get "/contributors/:id", ProjectController, :show_contributor

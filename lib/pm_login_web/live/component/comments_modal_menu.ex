@@ -156,7 +156,7 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalMenu do
 
                                   <div>
                                     <div>
-                                        <div style="float: left; word-wrap: anywhere; font-size: 12px; margin-right: 20px; text-align: justify;"><%= comment.content %></div>
+                                        <div style="float: left; word-wrap: anywhere; font-size: 11px; text-align: justify;"><%= comment.content %></div>
                                         <div class="column" style="padding: 0">
                                           <%= for url <- comment.file_urls do %>
                                             <%= if Path.extname(url)==".jpg" or Path.extname(url)==".png" or Path.extname(url)==".jpeg" do %>

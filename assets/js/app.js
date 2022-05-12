@@ -118,7 +118,10 @@ Hooks.Board = {
    reset_opacity(){
      var alert = document.querySelector("#alert_anim");
      alert.style.opacity = 1;
-     window.setTimeout(function(){alert.style.opacity = 0;}, 2000);
+     window.setTimeout(function(){
+       /* alert.style.opacity = 0; */
+       alert.style.display = "none";
+     }, 2000);
    },
    anim_onload(){
      var alerts = document.querySelectorAll(".alert");

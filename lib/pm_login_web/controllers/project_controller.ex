@@ -238,4 +238,25 @@ end
     end
   end
 
+  def attributed_tasks(conn, _params) do
+    if Login.is_connected?(conn) do
+      cond do
+        Login.is_attributor?(conn) ->
+          LiveView.Controller.live_render(conn, PmLoginWeb.Project.AttributorAttributedTasksLive, session: %{
+            "tasks" => get_session(conn, :curr_user_id)
+            |> Monitoring.list_attributes_tasks_by_attributor_project,
+            "curr_user_id" => Login.get_curr_user(conn).id
+          },
+          router: PmLoginWeb.Router
+        )
+      true ->
+        conn
+        |> Login.not_attributor_redirection
+      end
+    else
+      conn
+      |> Login.not_connected_redirection
+    end
+  end
+
 end
