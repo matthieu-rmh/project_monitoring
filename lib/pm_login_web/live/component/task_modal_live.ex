@@ -44,7 +44,7 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
 
                   <div class="column">
                     <label class="zoom-out">Tâche</label>
-                    <%= text_input f, :title %>
+                    <%= text_input f, :title, placeholder: "Ajouter le nom du tâche" %>
                     <div class="zoom-out">
                       <%= error_tag f, :title %>
                     </div>
@@ -55,14 +55,14 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
                   <div class="column">
                     <label class="zoom-out">Description</label>
                     <div class="zoom-out">
-                      <%= textarea f, :description%>
+                      <input id="task_description" name="task[description]" placeholder="Ajouter une description"/>
                       <%= error_tag f, :description %>
                     </div>
                   </div>
 
                   <div class="column">
                     <label class="zoom-out">Durée estimée (en heure)</label>
-                    <%= number_input f, :estimated_duration %>
+                    <%= number_input f, :estimated_duration, placeholder: "Ajouter la durée estimée" %>
                     <div class="zoom-out">
                       <%= error_tag f, :estimated_duration %>
                       <%= error_tag f, :negative_estimated %>
@@ -85,7 +85,7 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
                   <%= if not @is_contributor do %>
                     <div class="column">
                       <label class="zoom-out">Assigner intervenant</label>
-                      <%= select f, :contributor_id, @attributors ++ @contributors, prompt: "Intervenant : ", style: "width: -moz-available;" %>
+                      <%= select f, :contributor_id, @attributors ++ @contributors, style: "width: -moz-available;" %>
                       <div class="zoom-out">
                         <%= error_tag f, :contributor_id %>
                       </div>

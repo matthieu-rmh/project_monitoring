@@ -2,6 +2,8 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
   import PmLoginWeb.ErrorHelpers
+  alias PmLogin.Login
+  alias PmLogin.Login.User
 
   @defaults %{
     left_button: "Cancel",
@@ -76,7 +78,7 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
 
                     <div class="column">
                       <label class="zoom-out">Assigner intervenant</label>
-                      <%= select f, :contributor_id, @contributors, prompt: "Contributeurs:", style: "width: -moz-available;"%>
+                      <%= select f, :contributor_id, @attributors ++ @contributors, style: "width: -moz-available;"%>
                       <div class="zoom-out">
                         <%= error_tag f, :contributor_id %>
                       </div>
@@ -139,7 +141,10 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
   end
 
   def mount(socket) do
-    {:ok, socket}
+    attributors = Login.list_attributors()
+    list_attributors = Enum.map(attributors, fn %User{} = a -> {a.username, a.id} end)
+
+    {:ok, socket |> assign(attributors: list_attributors)}
   end
 
   def update(%{id: _id} = assigns, socket) do
