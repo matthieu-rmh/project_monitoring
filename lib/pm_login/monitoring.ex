@@ -1402,6 +1402,10 @@ defmodule PmLogin.Monitoring do
 
   def broadcast_deleted_task({:ok, :deleted}), do: {:ok, :deleted} |> broadcast_change([:task, :deleted])
 
+  def broadcast_archived_task({:ok, :archived}), do: {:ok, :archived} |> broadcast_change([:task, :archived])
+
+  def broadcast_restored_task({:ok, :restored}), do: {:ok, :restored} |> broadcast_change([:task, :restored])
+
   @doc """
   Deletes a task.
 

@@ -212,6 +212,8 @@ defmodule PmLoginWeb.Project.BoardLive do
     content = "Tâche #{task.title} archivée par #{Login.get_user!(curr_user_id).username}."
     Services.send_notifs_to_admins_and_attributors(curr_user_id, content)
 
+    Monitoring.broadcast_archived_task({:ok, :archived})
+
     {:noreply,
      socket
      |> assign(show_modal: false)
@@ -441,6 +443,8 @@ defmodule PmLoginWeb.Project.BoardLive do
     list_ids = params |> Map.drop(["_csrf_token"]) |> Map.values()
     Monitoring.restore_archived_tasks(list_ids)
 
+    Monitoring.broadcast_restored_task({:ok, :restored})
+
     case length(list_ids) do
       0 ->
         {:noreply, socket |> assign(no_selected_hidden: true)}
@@ -666,6 +670,14 @@ defmodule PmLoginWeb.Project.BoardLive do
 
     {:noreply,
      socket |> assign(board: primary_board, hidden_tasks: Monitoring.list_hidden_tasks(pro_id))}
+  end
+
+  def handle_info({Monitoring, [:task, :archived], :archived}, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_info({Monitoring, [:task, :restored], :restored}, socket) do
+    {:noreply, socket}
   end
 
   def handle_info({"hidden_subscription", [:task, :hidden], _}, socket) do
