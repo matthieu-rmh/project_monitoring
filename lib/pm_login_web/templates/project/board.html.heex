@@ -1,117 +1,159 @@
 <div class="boardcontainer" style="margin-top: 25px; overflow: clip;">
   <div class="boardheader">
     <div class="row">
+      <div class="board-menu-button" style="margin-bottom: 15px;">
+        <div class="column">
+          <%= cond do %>
+            <% @is_admin or @is_attributor or @is_contributor -> %>
+            <div class="row">
+              <%= if @is_admin or @is_attributor do %>
+                <h2 style="margin: 0; font-size: 12px; display: flex;">
+                  <span class="material-icons" style="font-size: 20px;">checklist_rtl</span>
+                  <div style="margin-top: 5px;">
+                    <%= @board.project.title %>
+                  </div>
+                </h2>
+              <% end %>
+              
+              <%= if @is_contributor do %>
+                <h2 style="margin: 0; font-size: 12px; display: flex;">
+                  <i class="bi bi-list-task" style="font-size: 20px"></i> 
+                  <div style="margin: 4 0 0 8">
+                    Mes tâches sur "<%= @board.project.title %>"
+                  </div>
+                </h2>
+              <% end %>
+
+
+              <!-- <i style="margin-left: 20px; font-size: 13px;">
+                    <%= @board.project.description %>
+              </i> -->
+
+              <div style="margin-left: 20px;">
+                <%= if @is_admin or @is_attributor or @is_contributor do %>
+                  <button 
+                     title="Nouvelle tâche"
+                     href="#"
+                     class="rounded-circle"
+                     phx-click="show_task_modal">
+                     <i class="bi bi-plus-circle" style="font-size: 16px; color: #fff;"></i>
+                  </button>
+                  <button 
+                     title="Création sous-tâche"
+                     href="#"
+                     class="rounded-circle-gray"
+                     phx-click="show-secondary">
+                     <i class="bi bi-plus-circle" style="font-size: 16px; color: #fff;"></i> 
+                  </button>
+                  
+                  <%= if @is_admin or @is_attributor do %>
+                    <button 
+                      title="Restaurer les tâches archivées"
+                      href="#"
+                      class="rounded-circle-green"
+                      phx-click="show_hidden_tasks"> 
+                      <i class="bi bi-archive" style="font-size: 16px; color: #fff;"></i>
+                    </button>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <div style="margin-top: -4px;">
+                <%= if @is_admin or @is_attributor do %>
+
+                <span class="material-icons-round filter__icon filt__and__sort__ico filter__icon__resized">person</span>
+                <form class="form_under_fieldset" phx-change="attributor_selected">
+    
+                  <select class="field_under_form_under_fieldset select__resized" id="task_filter" name="attributor_select">
+                    <option value="" selected disabled hidden>Attributeur</option>
+                    <option value="9000">Tout</option>
+                    <%= for attributor <- @project_attributors do %>
+                    <option value={attributor.id}>
+                      <%= attributor.username %>
+                    </option>
+                    <% end %>
+                  </select>
+    
+                </form>
+    
+                <span
+                  class="material-icons-round filter__icon filt__and__sort__ico filter__icon__resized">supervisor_account</span>
+                <form class="form_under_fieldset" phx-change="contributor_selected">
+    
+                  <select class="field_under_form_under_fieldset select__resized" id="task_filter"
+                    name="contributor_select">
+                    <option value="" selected disabled hidden>Contributeur</option>
+                    <option value="9000">Tout</option>
+                    <%= for contributor <- @project_contributors do %>
+                    <option value={contributor.id}>
+                      <%= contributor.username %>
+                    </option>
+                    <% end %>
+                    <option value="-1">Sans contributeur</option>
+                  </select>
+    
+                </form>
+    
+                <% end %>
+                
+                <%= if @is_admin or @is_attributor do %>
+                  <span class="material-icons-round filt__and__sort__ico filter__icon__resized">search</span>
+                <% end %>
+
+                <form class="form_under_fieldset" phx-change="search_task">
+                  <input class="field_under_form_under_fieldset select__resized" autocomplete="off" type="text"
+                    name="search-a" style="max-width: 100px; line-height: 10px;" placeholder="Rechercher ici">
+                </form>
+
+                <%= if @is_contributor do %>
+                  <span class="material-icons-round filt__and__sort__ico filter__icon__resized">search</span>
+                <% end %>
+              </div>
+
+              <div class="form-check form-switch" style="margin-top: 3px;">
+                <form class="vue__form__resized" phx-change="distinct_task">
+                  <div class="row" style="margin-left: 0px;">
+                    <label class="vues__fs__content" for="primary" style="font-size: 11px">Tâches</label>
+                    <input class="vues__fs__content" type="radio" id="primary" name="task_view" value="task"
+                      checked={@showing_primaries}>
+                    <label class="vues__fs__content" for="secondary" style="font-size: 11px">Sous-tâches</label>
+                    <input class="vues__fs__content" type="radio" id="secondary" name="task_view" value="subtask"
+                      checked={@showing_secondaries}>
+                  </div>
+                </form>
+              </div>
+
+              <div class=" " style="margin-left: 20px;">
+                <p style="font-size: 10px;margin-top: -10px;"><!-- pour <b>
+                    <%= @board.project.active_client.company.name %> 
+                  </b>--><img class="profile-pic-header" src={
+                    Routes.static_path(@socket, "/#{@board.project.active_client.company.logo}" ) } width="50"
+                    style="position: relative; top: 10px; margin-left: 10px;" />
+                  <%= "#{@board.project.active_client.user.username}" %>
+                </p>
+              </div>
+
+            </div>
+
+          <% true -> %><h2></h2>
+
+          <% end %>
+
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <div class="row">
       <div class="column">
         <div class="key__cancel" phx-window-keydown="key_cancel">
 
         </div>
-        <%= cond do %>
-        <% @is_admin or @is_attributor-> %>
-        <div class="row">
-          <h2 style="margin: 0; font-size: 20px;"><span class="material-icons">checklist_rtl</span>
-            <%= @board.project.title %>
-          </h2>
-          <i style="margin-left: 20px; font-size: 13px;">
-            <%= @board.project.description %>
-          </i>
-
-          <div class="basecontents__without__radius pro__company__card" style="margin-left: 300px;">
-            <p style="font-size: 10px;margin-top: -20px;">pour <b>
-                <%= @board.project.active_client.company.name %>
-              </b><img class="profile-pic-header" src={
-                Routes.static_path(@socket, "/#{@board.project.active_client.company.logo}" ) } width="50"
-                style="position: relative; top: 10px; margin-left: 10px;" />
-              <%= "(#{@board.project.active_client.user.username})" %>
-            </p>
-
-          </div>
-
-        </div>
-        <% @is_contributor -> %>
-        <h2 style="margin: 0; font-size: 20px;"><i class="bi bi-list-task"></i> Mes tâches sur "<%=
-                  @board.project.title %>"</h2>
-        <% true -> %><h2></h2>
-        <% end %>
-
-        <div class="my_row">
-          <%= if @is_admin or @is_attributor or @is_contributor do%>
-          <fieldset class="generic_fieldset">
-            <legend class="fs_legend_resized">Boutons</legend>
-            <a id="show__task__modal__btn" href="#" class="btn btn-lg btn-primary btn__resized"
-              phx-click="show_task_modal"><i class="bi bi-plus-circle"></i> Nouvelle tâche</a>
-            <a href="#" class="btn btn-lg btn-secondary btn__resized" phx-click="show-secondary"><i
-                class="bi bi-plus-circle"></i> Créer sous-tâche</a>
-            <a href="#" class="btn btn-lg btn-info btn__resized" phx-click="show_hidden_tasks">Restaurer
-              tâches archivées <i class="bi bi-plus-circle"></i></a>
-          </fieldset>
-          <% end %>
-
-
-          <fieldset class="generic_fieldset">
-            <legend class="fs_legend_resized">Filtres et recherche</legend>
-            <%= if @is_admin or @is_attributor do%>
-
-            <span class="material-icons-round filter__icon filt__and__sort__ico filter__icon__resized">person</span>
-            <form class="form_under_fieldset" phx-change="attributor_selected">
-
-              <select class="field_under_form_under_fieldset select__resized" id="task_filter" name="attributor_select">
-                <option value="" selected disabled hidden>Attributeur</option>
-                <option value="9000">Tout</option>
-                <%= for attributor <- @project_attributors do %>
-                <option value={attributor.id}>
-                  <%= attributor.username %>
-                </option>
-                <% end %>
-              </select>
-
-            </form>
-
-            <span
-              class="material-icons-round filter__icon filt__and__sort__ico filter__icon__resized">supervisor_account</span>
-            <form class="form_under_fieldset" phx-change="contributor_selected">
-
-              <select class="field_under_form_under_fieldset select__resized" id="task_filter"
-                name="contributor_select">
-                <option value="" selected disabled hidden>Contributeur</option>
-                <option value="9000">Tout</option>
-                <%= for contributor <- @project_contributors do %>
-                <option value={contributor.id}>
-                  <%= contributor.username %>
-                </option>
-                <% end %>
-                <option value="-1">Sans contributeur</option>
-              </select>
-
-            </form>
-
-            <% end %>
-            <span class="material-icons-round filt__and__sort__ico filter__icon__resized">search</span>
-            <form class="form_under_fieldset" phx-change="search_task">
-              <input class="field_under_form_under_fieldset select__resized" autocomplete="off" type="text"
-                name="search-a" style="width: 125px; line-height: 10px;">
-            </form>
-          </fieldset>
-
-
-          <div class="my_col">
-            <fieldset class="generic_fieldset">
-              <legend class="fs_legend_resized">Vues</legend>
-              <form class="vue__form__resized" phx-change="distinct_task">
-                <div class="row" style="margin-left: 0px;">
-                  <label class="vues__fs__content" for="primary" style="font-size: 12px;">Tâches</label>
-                  <input class="vues__fs__content" type="radio" id="primary" name="task_view" value="task"
-                    checked={@showing_primaries}>
-                  <label class="vues__fs__content" for="secondary" style="font-size: 12px;">Sous-tâches</label>
-                  <input class="vues__fs__content" type="radio" id="secondary" name="task_view" value="subtask"
-                    checked={@showing_secondaries}>
-                </div>
-              </form>
-
-            </fieldset>
-          </div>
-
-        </div>
-
       </div>
 
     </div>
@@ -155,15 +197,19 @@
 
         <div>
           <div data-card-id={ card.id } class={"card basecontents__without__radius #{if is_nil(card.task.parent_id)
-            do "" end}"} style={"display: #{ if card.task.hidden, do: "none !important" };
-            margin-bottom: 50px;"}>
+            do "" end}"} style={"display: #{ if card.task.hidden, do: "none !important" }; margin-bottom: 50px;"}>
 
             <%= case card.task.priority_id do %>
-            <% 1 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="low__priority__point"> Faible </div>
-            <% 2 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="avg__priority__point"> Moyenne </div>
-            <% 3 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="high__priority__point"> Importante </div>
-            <% 4 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="urg__priority__point"> Urgente </div>
-            <% _ -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;" class="priority__point"></div>
+            <% 1 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+              class="low__priority__point"> Faible </div>
+            <% 2 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+              class="avg__priority__point"> Moyenne </div>
+            <% 3 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+              class="high__priority__point"> Importante </div>
+            <% 4 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+              class="urg__priority__point"> Urgente </div>
+            <% _ -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+              class="priority__point"></div>
             <% end %>
 
             <div class="card__name" style="margin-top: 10px; margin-bottom: 5px;">
@@ -259,15 +305,15 @@
             </a>
 
             <%= if @is_admin or @is_attributor do %>
-              <a title="Archiver" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
-                class="bi bi-archive delete__icon" phx-click="go_archive" phx-value-id={card.task.id}>
-              </a>
+            <a title="Archiver" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
+              class="bi bi-archive delete__icon" phx-click="go_archive" phx-value-id={card.task.id}>
+            </a>
             <% end %>
 
             <%= if @is_admin or @is_attributor do %>
-              <a title="Supprimer" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
-                class="bi bi-trash3 delete__icon" phx-click="delete_task" phx-value-id={card.task.id}>
-              </a>
+            <a title="Supprimer" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
+              class="bi bi-trash3 delete__icon" phx-click="delete_task" phx-value-id={card.task.id}>
+            </a>
             <% end %>
           </div>
 
@@ -303,7 +349,7 @@
         task_changeset: @task_changeset, pro_id: @pro_id, curr_user_id: @curr_user_id, show_plus_modal:
         @show_plus_modal, card: @card) %>
 
-        <%= live_component(@socket, ModifModalMenu, id: "confirm-arch" , title: "Modifier tâche" , body: nil,
+  <%= live_component(@socket, ModifModalMenu, id: "confirm-arch" , title: "Modifier tâche" , body: nil,
         right_button: nil, right_button_action: nil, right_button_param: nil, left_button: "Retour" ,
         left_button_action: "cancel-modif" , task_changeset: @task_changeset, pro_id: @pro_id, curr_user_id:
         @curr_user_id, modif_changeset: @modif_changeset, priorities: @priorities, contributors: @contributors, attributors: @attributors,
@@ -317,19 +363,19 @@
           is_admin: @is_admin, is_contributor: @is_contributor, is_attributor: @is_attributor, show_modif_modal:
           @show_modif_modal, card: @card) %>
 
-          <%= live_component(@socket, CommentsModalMenu, id: "confirm-arch" , title: "Commentaires" , body: nil,
+  <%= live_component(@socket, CommentsModalMenu, id: "confirm-arch" , title: "Commentaires" , body: nil,
             right_button: "Oui" , right_button_action: "arch" , right_button_param: "" , #@arch_id
             left_button: "Annuler" , left_button_action: "cancel-comments" , curr_user_id: @curr_user_id, changeset:
             @comment_changeset, show_comments_menu: @show_comments_menu, uploads: @uploads, card: @card_with_comments)
           %>
 
-          <%= live_component(@socket, CommentsModalLive, id: "confirm-arch" , title: "Commentaires" , body: nil,
+  <%= live_component(@socket, CommentsModalLive, id: "confirm-arch" , title: "Commentaires" , body: nil,
             right_button: "Oui" , right_button_action: "arch" , right_button_param: "" , #@arch_id
             left_button: "Annuler" , left_button_action: "cancel-comments" , curr_user_id: @curr_user_id, changeset:
             @comment_changeset, show_comments_modal: @show_comments_modal, uploads: @uploads, card: @card_with_comments)
           %>
-  
-  
+
+
 
 
 
@@ -371,8 +417,8 @@
     </div>
   </div>
 
-  <div class="my__modal__container" style={"visibility: #{ if @delete_task_modal, do: "visible" , else: "hidden" }; opacity: #{
-    if @delete_task_modal, do: "1 !important" , else: "0" };"}>
+  <div class="my__modal__container" style={"visibility: #{ if @delete_task_modal, do: "visible" , else: "hidden" };
+    opacity: #{ if @delete_task_modal, do: "1 !important" , else: "0" };"}>
     <div class="container my__modal__card archive__modal__card">
       <a class="x__close" title="Fermer" phx-click="close_modal"><i class="bi bi-x"></i></a>
       <div class="row">
