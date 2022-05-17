@@ -78,62 +78,70 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
   end
 
   def handle_event("status_and_progression_changed", params, socket) do
-    progression = params["progression_change"] |> Float.parse() |> elem(0) |> trunc
-    if progression < 0 or progression > 100 do
-      {:noreply, socket
-                 |> clear_flash()
-                 |> put_flash(:error, "La progression doit être comprise entre 0 à 100")
-                 |> push_event("AnimateAlert", %{})
-      }
-    else
-      task = Monitoring.get_task_with_card!(params["task_id"])
-
-      # Récupérer l'id de la dernière stage
-      stage_end_id = Monitoring.get_achieved_stage_id_from_project_id!(task.project_id)
-
-      curr_user_id = socket.assigns.curr_user_id
-
-      status_id = params["status_id"]
-
-      project = Monitoring.get_project_with_tasks!(task.project_id)
-
-      Kanban.put_card_to_achieve(
-        task.card,
-        %{
-          "stage_id" =>
-            case status_id do
-              "1" -> stage_end_id - 4
-              "2" -> stage_end_id - 3
-              "3" -> stage_end_id - 2
-              "4" -> stage_end_id - 1
-              _ -> nil
-            end
-        }
-      )
-
-      Monitoring.update_task(task, %{"status_id" => status_id})
-      Monitoring.update_task_progression(task, %{"progression" => params["progression_change"]})
-
-      Monitoring.broadcast_progression_change({:ok, task})
-
-      if Monitoring.is_a_child?(task) do
-        Monitoring.update_mother_task_progression(task, curr_user_id)
-      end
-
-      if Monitoring.is_task_primary?(task) do
-        Monitoring.add_progression_to_project(project)
-      end
-
-      if Monitoring.is_task_mother?(task) do
-        Monitoring.achieve_children_tasks(task, curr_user_id)
-      end
-
+    if params["progression_change"] == nil or params["progression_change"] == "" do
       {:noreply,
-        socket
-        |> clear_flash()
-        |> put_flash(:info, "#{task.card.name} mise à jour.")
-        |> push_event("AnimateAlert", %{})
-      }
+       socket
+       |> clear_flash()
+       |> put_flash(:error, "La progression doit être comprise entre 0 à 100")
+       |> push_event("AnimateAlert", %{})}
+    else
+      progression = params["progression_change"] |> Float.parse() |> elem(0) |> trunc
+
+      if progression < 0 or progression > 100 do
+        {:noreply,
+         socket
+         |> clear_flash()
+         |> put_flash(:error, "La progression doit être comprise entre 0 à 100")
+         |> push_event("AnimateAlert", %{})}
+      else
+        task = Monitoring.get_task_with_card!(params["task_id"])
+
+        # Récupérer l'id de la dernière stage
+        stage_end_id = Monitoring.get_achieved_stage_id_from_project_id!(task.project_id)
+
+        curr_user_id = socket.assigns.curr_user_id
+
+        status_id = params["status_id"]
+
+        project = Monitoring.get_project_with_tasks!(task.project_id)
+
+        Kanban.put_card_to_achieve(
+          task.card,
+          %{
+            "stage_id" =>
+              case status_id do
+                "1" -> stage_end_id - 4
+                "2" -> stage_end_id - 3
+                "3" -> stage_end_id - 2
+                "4" -> stage_end_id - 1
+                _ -> nil
+              end
+          }
+        )
+
+        Monitoring.update_task(task, %{"status_id" => status_id})
+        Monitoring.update_task_progression(task, %{"progression" => params["progression_change"]})
+
+        Monitoring.broadcast_progression_change({:ok, task})
+
+        if Monitoring.is_a_child?(task) do
+          Monitoring.update_mother_task_progression(task, curr_user_id)
+        end
+
+        if Monitoring.is_task_primary?(task) do
+          Monitoring.add_progression_to_project(project)
+        end
+
+        if Monitoring.is_task_mother?(task) do
+          Monitoring.achieve_children_tasks(task, curr_user_id)
+        end
+
+        {:noreply,
+         socket
+         |> clear_flash()
+         |> put_flash(:info, "#{task.card.name} mise à jour.")
+         |> push_event("AnimateAlert", %{})}
+      end
     end
   end
 

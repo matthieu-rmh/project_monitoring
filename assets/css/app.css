@@ -30,6 +30,8 @@
 @import "./body.css";
 @import "./alert.css";
 @import "./dropdown.css";
+@import "./menu.css";
+@import "./checkbox.css";
 
 @font-face {
   font-family: "Axiforma";

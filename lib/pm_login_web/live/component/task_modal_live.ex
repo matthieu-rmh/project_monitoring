@@ -44,7 +44,7 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
 
                   <div class="column">
                     <label class="zoom-out">Tâche</label>
-                    <%= text_input f, :title, placeholder: "Ajouter le nom du tâche" %>
+                    <%= text_input f, :title %>
                     <div class="zoom-out">
                       <%= error_tag f, :title %>
                     </div>
@@ -55,14 +55,14 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
                   <div class="column">
                     <label class="zoom-out">Description</label>
                     <div class="zoom-out">
-                      <input id="task_description" name="task[description]" placeholder="Ajouter une description"/>
+                      <input id="task_description" name="task[description]"/>
                       <%= error_tag f, :description %>
                     </div>
                   </div>
 
                   <div class="column">
                     <label class="zoom-out">Durée estimée (en heure)</label>
-                    <%= number_input f, :estimated_duration, placeholder: "Ajouter la durée estimée" %>
+                    <%= number_input f, :estimated_duration %>
                     <div class="zoom-out">
                       <%= error_tag f, :estimated_duration %>
                       <%= error_tag f, :negative_estimated %>

@@ -16,7 +16,7 @@
     position: absolute;
     color: #ddd;
     z-index: 1;
-    border-radius: 5px;
+    padding-top: 3px;
 }
 
 /* Links inside the dropdown */
@@ -30,7 +30,6 @@
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {
     color: rgb(21, 21, 21);
-    padding-left: 15px;
     border-left: 5px solid #3ca0e7;
     transition: all 0.12s ease;
     background-color: #3ca0e740;
