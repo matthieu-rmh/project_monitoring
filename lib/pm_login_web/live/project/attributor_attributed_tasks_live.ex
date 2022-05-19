@@ -7,8 +7,7 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
   alias PmLoginWeb.LiveComponent.{
     PlusModalLive,
     ModifModalMenu,
-    CommentsModalMenu,
-    DeleteTaskModal
+    CommentsModalMenu
   }
 
   alias PmLogin.Monitoring
