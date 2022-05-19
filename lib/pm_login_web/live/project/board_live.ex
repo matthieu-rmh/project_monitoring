@@ -240,8 +240,6 @@ defmodule PmLoginWeb.Project.BoardLive do
               |> put_flash(:info, "Tâche #{task.title} supprimé.")
               |> push_event("AnimateAlert", %{})
     }
-
-
   end
 
   def handle_event(

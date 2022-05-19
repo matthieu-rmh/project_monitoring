@@ -7,7 +7,8 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
   alias PmLoginWeb.LiveComponent.{
     PlusModalLive,
     ModifModalMenu,
-    CommentsModalMenu
+    CommentsModalMenu,
+    DeleteTaskModal
   }
 
   alias PmLogin.Monitoring
@@ -67,6 +68,8 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
        show_modif_menu: false,
        show_comments_menu: false,
        show_plus_modal: false,
+       delete_task_modal: false,
+       arch_id: nil,
        card_with_comments: nil,
        card: nil,
        showing_my_attributes: false,
@@ -82,69 +85,73 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
 
   # Appliquer les changements du statut et de la progression
   def handle_event("status_and_progression_changed", params, socket) do
-    IO.inspect("fziuehfiuezhfiuzehufihzeuifhuizhfuihuzie")
-
-    IO.inspect(params)
-
-    progression = params["progression_change"] |> Float.parse() |> elem(0) |> trunc
-
-    if progression < 0 or progression > 100 do
+    if params["progression_change"] == nil or params["progression_change"] == "" do
       {:noreply,
        socket
        |> clear_flash()
        |> put_flash(:error, "La progression doit être comprise entre 0 à 100")
        |> push_event("AnimateAlert", %{})}
     else
-      task = Monitoring.get_task_with_card!(params["task_id"])
+      progression = params["progression_change"] |> Float.parse() |> elem(0) |> trunc
 
-      # Récupérer l'id de la dernière stage
-      stage_end_id = Monitoring.get_achieved_stage_id_from_project_id!(task.project_id)
+      if progression < 0 or progression > 100 do
+        {:noreply,
+        socket
+        |> clear_flash()
+        |> put_flash(:error, "La progression doit être comprise entre 0 à 100")
+        |> push_event("AnimateAlert", %{})}
+      else
+        task = Monitoring.get_task_with_card!(params["task_id"])
 
-      curr_user_id = socket.assigns.curr_user_id
+        # Récupérer l'id de la dernière stage
+        stage_end_id = Monitoring.get_achieved_stage_id_from_project_id!(task.project_id)
 
-      status_id = params["status_id"]
+        curr_user_id = socket.assigns.curr_user_id
 
-      IO.inspect(status_id)
+        status_id = params["status_id"]
 
-      project = Monitoring.get_project_with_tasks!(task.project_id)
+        # IO.inspect(status_id)
 
-      Kanban.put_card_to_achieve(
-        task.card,
-        %{
-          "stage_id" =>
-            case status_id do
-              "1" -> stage_end_id - 4
-              "2" -> stage_end_id - 3
-              "3" -> stage_end_id - 2
-              "4" -> stage_end_id - 1
-              "5" -> stage_end_id
-              _ -> nil
-            end
-        }
-      )
+        project = Monitoring.get_project_with_tasks!(task.project_id)
 
-      Monitoring.update_task(task, %{"status_id" => status_id})
-      Monitoring.update_task_progression(task, %{"progression" => params["progression_change"]})
+        Kanban.put_card_to_achieve(
+          task.card,
+          %{
+            "stage_id" =>
+              case status_id do
+                "1" -> stage_end_id - 4
+                "2" -> stage_end_id - 3
+                "3" -> stage_end_id - 2
+                "4" -> stage_end_id - 1
+                "5" -> stage_end_id
+                _ -> nil
+              end
+          }
+        )
 
-      Monitoring.broadcast_progression_change({:ok, task})
+        Monitoring.update_task(task, %{"status_id" => status_id})
+        Monitoring.update_task_progression(task, %{"progression" => params["progression_change"]})
 
-      if Monitoring.is_a_child?(task) do
-        Monitoring.update_mother_task_progression(task, curr_user_id)
+        Monitoring.broadcast_progression_change({:ok, task})
+
+        if Monitoring.is_a_child?(task) do
+          Monitoring.update_mother_task_progression(task, curr_user_id)
+        end
+
+        if Monitoring.is_task_primary?(task) do
+          Monitoring.add_progression_to_project(project)
+        end
+
+        if Monitoring.is_task_mother?(task) do
+          Monitoring.achieve_children_tasks(task, curr_user_id)
+        end
+
+        {:noreply,
+        socket
+        |> clear_flash()
+        |> put_flash(:info, "#{task.card.name} mise à jour.")
+        |> push_event("AnimateAlert", %{})}
       end
-
-      if Monitoring.is_task_primary?(task) do
-        Monitoring.add_progression_to_project(project)
-      end
-
-      if Monitoring.is_task_mother?(task) do
-        Monitoring.achieve_children_tasks(task, curr_user_id)
-      end
-
-      {:noreply,
-       socket
-       |> clear_flash()
-       |> put_flash(:info, "#{task.card.name} mise à jour.")
-       |> push_event("AnimateAlert", %{})}
     end
   end
 
@@ -217,6 +224,34 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
        tasks: tasks,
        tasks_not_achieved: tasks_not_achieved
      )}
+  end
+
+  def handle_event("delete_task", %{"id" => id}, socket) do
+    {:noreply, socket |> assign(delete_task_modal: true, arch_id: id)}
+  end
+
+  def handle_event("close_modal", _params, socket) do
+    {:noreply, socket |> assign(show_modal: false, delete_task_modal: false)}
+  end
+
+  def handle_event("delete_card", %{"id" => id}, socket) do
+    task = Monitoring.get_task_with_card!(id)
+    card = Kanban.get_card!(task.card.id)
+
+    Monitoring.remove_card(card.task_id)
+
+    curr_user_id = socket.assigns.curr_user_id
+    content = "Tâche #{task.title} supprimé par #{Login.get_user!(curr_user_id).username}."
+    Services.send_notifs_to_admins_and_attributors(curr_user_id, content)
+
+    Monitoring.broadcast_deleted_task({:ok, :deleted})
+
+    {:noreply, socket
+              |> clear_flash()
+              |> assign(delete_task_modal: false)
+              |> put_flash(:info, "Tâche #{task.title} supprimé.")
+              |> push_event("AnimateAlert", %{})
+    }
   end
 
   # Afficher le modal détails du tâche
@@ -441,10 +476,42 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
                        uploads: @uploads,
                        card: @card_with_comments)
     %>
-      <!-- <h3>
-        <i class="bi bi-list-task"></i>
-        Les tâches qui m'ont été assigné
-      </h3> -->
+      <!--
+        <h3>
+          <i class="bi bi-list-task"></i>
+          Les tâches qui m'ont été assigné
+        </h3>
+      -->
+
+      <div class="my__modal__container" style={"visibility: #{ if @delete_task_modal, do: "visible" , else: "hidden" };
+        opacity: #{ if @delete_task_modal, do: "1 !important" , else: "0" };"}>
+        <div class="container my__modal__card archive__modal__card">
+          <a class="x__close" title="Fermer" phx-click="close_modal"><i class="bi bi-x"></i></a>
+          <div class="row">
+            <div class="column">
+              <h5 style="text-align: center;" class="bi bi-trash3">Supprimer ?</h5>
+              <p class="zoom-out" style="text-align: center;">
+                Êtes-vous sûr(e) de supprimer la tâche
+                <%= if not is_nil(@arch_id), do: PmLogin.Monitoring.get_task!(@arch_id).title %>
+                ?
+              </p>
+
+              <div class="modal-buttons" style="margin-bottom: 20px;">
+                <!-- Left Button -->
+                <a href="#" class="button button-outline" type="button" phx-click="close_modal">
+                  <div>NON</div>
+                </a>
+                <!-- Right Button -->
+                <a href="#" class="button right-button" type="button" phx-click="delete_card" phx-value-id={@arch_id}>
+                  <div>OUI</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
       <h3 style="color: #fff; margin-bottom: 0px;"><i class="bi bi-person-plus"></i>Les tâches attribuées</h3>
 
       <%= if @tasks_not_achieved == [] do %>
@@ -543,21 +610,44 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
                       />
                     </td>
                     <td data-label="Actions" class="d-action">
-                      <div style="display: inline-block">
+                      <div style="display: flex;
+                                  margin-top: 40px;
+                                  justify-content: end;">
+                      <!--
                         <input
                           title="Mettre à jour"
                           value="Mettre à jour"
                           type="submit"
                           class="table-button btn-mobile"
                         />
+                      -->
+
+                        <button
+                          title="Mettre à jour"
+                          class="table-button btn-mobile"
+                          type="submit"
+                          style="margin-top: -40px; background-color: #0059b8; border-color: #0059b8"
+                        >
+                          Mettre à jour
+                        </button>
+
                         <div
                           title="Afficher"
                           class="table-button btn-mobile"
                           phx-click="show_plus_modal"
                           phx-value-id={task.card}
-                          style="margin-top: -40px; background-color: #2ecc71; border-color: #2ecc71"
+                          style="margin: -40px 5 0 5; background-color: #2ecc71; border-color: #2ecc71"
                         >
                           Afficher
+                        </div>
+                        <div
+                          title="Supprimer"
+                          class="table-button btn-mobile"
+                          phx-click="delete_task"
+                          phx-value-id={task.id}
+                          style="margin-top: -40px; background-color: #e74c3c; border-color: #e74c3c"
+                        >
+                          Supprimer
                         </div>
                       </div>
                     </td>
@@ -569,6 +659,15 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
                         phx-click="show_plus_modal"
                         phx-value-id={task.card}
                         style="background-color: #27ae60; border-color: #27ae60; border-radius: 50%;"
+                      />
+                    </td>
+                    <td class="btn-table" style="padding-left: 0;">
+                      <button
+                        title="Supprimer"
+                        class="bi bi-trash3 plus__icon table-button"
+                        phx-click="delete_task"
+                        phx-value-id={task.id}
+                        style="background-color: #e74c3c; border-color: #e74c3c; border-radius: 50%;"
                       />
                     </td>
                 </tr>
