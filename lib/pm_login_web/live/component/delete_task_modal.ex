@@ -49,8 +49,7 @@ defmodule PmLoginWeb.LiveComponent.DeleteTaskModal do
     ~H"""
     <div id={"modal-#{@id}"}>
       <!-- Modal Background -->
-      <div id="new_modal_container" class="modal-container" style={"visibility: #{if @delete_task_modal, do: "visible", else: "hidden"}; opacity: #{if @delete_task_modal, do: "1 !important", else: "0" };"}
-          phx-hook="ScrollLock">
+      <div id="new_modal_container" class="modal-container" style={"visibility: #{if @delete_task_modal, do: "visible", else: "hidden"}; opacity: #{if @delete_task_modal, do: "1 !important", else: "0" };"}>
         <div class="modal-inner-container">
           <div class="modal-card">
             <div class="modal-inner-card">

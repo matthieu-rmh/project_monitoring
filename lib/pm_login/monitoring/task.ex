@@ -2,7 +2,6 @@ defmodule PmLogin.Monitoring.Task do
   use Ecto.Schema
   import Ecto.Changeset
   alias PmLogin.Monitoring
-  alias PmLogin.Kanban
   alias PmLogin.Kanban.Card
   alias PmLogin.Login.User
   alias PmLogin.Services

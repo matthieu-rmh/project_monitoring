@@ -60,8 +60,7 @@ defmodule PmLoginWeb.LiveComponent.CommentsModalMenu do
 
 
       <!-- Modal Background -->
-      <div id="comment_modal_container" class="modal-container-menu" style={"visibility: #{ if @show_comments_menu, do: "visible", else: "hidden" }; opacity: #{if @show_comments_menu, do: "1 !important", else: "0" };"}
-          phx-hook="ScrollLock">
+      <div id="comment_modal_container" class="modal-container-menu" style={"visibility: #{ if @show_comments_menu, do: "visible", else: "hidden" }; opacity: #{if @show_comments_menu, do: "1 !important", else: "0" };"}>
         <%= if not is_nil(@card) do %>
           <div class="modal-inner-container">
             <div class="modal-card-comments">
