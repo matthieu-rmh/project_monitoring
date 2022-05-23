@@ -1414,7 +1414,13 @@ defmodule PmLoginWeb.Project.BoardLive do
 
   def handle_event("submit_secondary", %{"task" => params}, socket) do
     # IO.puts("input")
-    # IO.inspect params
+    hour        = String.to_integer(params["hour"])
+    minutes     = String.to_integer(params["minutes"])
+
+    total_minutes  = (hour * 60) + minutes
+
+    # Ajouter la durée estimée dans le map
+    params = Map.put(params, "estimated_duration", total_minutes)
 
     parent_task = Monitoring.get_task!(params["parent_id"])
     # IO.inspect parent_task
@@ -1483,6 +1489,14 @@ defmodule PmLoginWeb.Project.BoardLive do
     # IO.inspect params["estimated_duration"]
     # IO.puts("#{is_integer(params["estimated_duration"])}")
 
+    hour        = String.to_integer(params["hour"])
+    minutes     = String.to_integer(params["minutes"])
+
+    total_minutes  = (hour * 60) + minutes
+
+    # Ajouter la durée estimée dans le map
+    params = Map.put(params, "estimated_duration", total_minutes)
+
     new_params =
       if Login.get_user!(params["attributor_id"]).right_id == 3,
         do: Map.put(params, "contributor_id", params["attributor_id"]),
@@ -1530,6 +1544,14 @@ defmodule PmLoginWeb.Project.BoardLive do
     # progression to int
     # IO.puts "OIIIIIIIIII"
     # IO.inspect params
+
+    hour        = String.to_integer(params["hour"])
+    minutes     = String.to_integer(params["minutes"])
+
+    total_minutes  = (hour * 60) + minutes
+
+    # Ajouter la durée estimée dans le map
+    params = Map.put(params, "estimated_duration", total_minutes)
 
     int_progression = params["progression"] |> Float.parse() |> elem(0) |> trunc
     attrs = %{params | "progression" => int_progression}

@@ -55,8 +55,11 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
 
                 <div class="row">
                   <div class="column">
-                    <label class="zoom-out">Durée estimée (en heure)</label>
-                    <%= number_input f, :estimated_duration %>
+                    <label class="zoom-out">Durée estimée</label>
+                    <div style="display: flex;">
+                      <input id="task_estimated_duration_hour" name="task[hour]" type="number" min="0" placeholder="Heure" required/>
+                      <input id="task_estimated_duration_minutes" name="task[minutes]" type="number" min="0" max="60" placeholder="Minutes" required/>
+                    </div>
                     <div class="zoom-out">
                       <%= error_tag f, :estimated_duration %>
                       <%= error_tag f, :negative_estimated %>

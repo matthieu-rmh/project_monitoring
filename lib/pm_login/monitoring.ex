@@ -1618,13 +1618,13 @@ defmodule PmLogin.Monitoring do
   def duration_diff(%Task{} = t) do
     cond do
       t.performed_duration > t.estimated_duration ->
-        "(+ #{t.performed_duration - t.estimated_duration} h)"
+        "(+ #{t.performed_duration - t.estimated_duration} #{if t.estimated_duration  > 1, do: "minutes", else: "minute"})"
 
       t.performed_duration == t.estimated_duration ->
-        "(= #{t.performed_duration - t.estimated_duration} h)"
+        "(= #{t.performed_duration - t.estimated_duration} #{if t.estimated_duration  > 1, do: "minutes", else: "minute"})"
 
       t.performed_duration < t.estimated_duration ->
-        "(- #{t.estimated_duration - t.performed_duration} h)"
+        "(- #{t.estimated_duration - t.performed_duration} #{if t.estimated_duration  > 1, do: "minutes", else: "minute"})"
     end
   end
 

@@ -20,8 +20,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
     ~H"""
     <div id={"modal-#{@id}"}>
       <!-- Modal Background -->
-      <div id="modif_modal_container" class="modal-container" style={"visibility: #{ if @show_modif_modal, do: "visible", else: "hidden" }; opacity: #{ if @show_modif_modal, do: "1 !important", else: "0" };"}
-          phx-hook="ScrollLock">
+      <div id="modif_modal_container" class="modal-container" style={"visibility: #{ if @show_modif_modal, do: "visible", else: "hidden" }; opacity: #{ if @show_modif_modal, do: "1 !important", else: "0" };"}>
         <%= if not is_nil(@card) do %>
         <div class="modal-inner-container">
           <div class="modal-card-task">
@@ -132,11 +131,30 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <% end %>
                         </td>
                         <td data-label="Durée estimée">
+                          <p style="display: none">
+                            <%=
+                              estimated_duration = @card.task.estimated_duration / 60
+                                                 # trunc, retourne la partie entier
+                              i_hour             = trunc(estimated_duration)
+                              e                  = estimated_duration - i_hour
+                              i_minutes          = round(e * 60)
+                            %>
+                          </p>
+
                           <%= if @is_admin or @is_attributor do %>
-                            <%= number_input f, :estimated_duration, style: "width: 70px; margin-bottom: 0;", value: @card.task.estimated_duration %> h
-                            <%= error_tag_modif f, :negative_estimated %>
+                            <div>
+                              <input id="task_estimated_duration_hour" name="task[hour]" type="number" min="0" placeholder="Heure" value={i_hour} style="max-width: 125px; margin-bottom: 0;" required/>
+                              <input id="task_estimated_duration_minutes" name="task[minutes]" type="number" min="0" max="60" placeholder="Minutes" value={i_minutes} style="max-width: 125px; margin-bottom: 0;" required/>
+                            </div>
                           <% else %>
-                            <%= @card.task.estimated_duration %> h
+                            <%=
+                              cond do
+                                i_hour == 0 and i_minutes >= 0 -> if i_minutes > 1, do: "#{i_minutes} minutes", else: "#{i_minutes} minute"
+                                i_hour >= 0 and i_minutes == 0 -> if i_hour > 1, do: "#{i_hour} heures", else: "#{i_hour} heure"
+                                i_hour > 0  and i_minutes > 0  -> "#{i_hour} h #{i_minutes} m"
+                                true                           -> ""
+                              end
+                            %>
                           <% end %>
                         </td>
                         <td data-label="Durée effectuée">

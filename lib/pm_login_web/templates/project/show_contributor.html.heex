@@ -50,7 +50,27 @@
                                         <div>Projet: <p class="onboard__text__descri"><%= task.project.title %></p></div>
                                         </div>
                                         <div class=" column-50 recap__cols">
-                                        <div>Durée estimée: <p class="onboard__text__descri"><%= task.estimated_duration %> h</p></div>
+                                        <div>Durée estimée: 
+                                            <p style="display: none">
+                                                <%=
+                                                    estimated_duration = task.estimated_duration / 60
+                                                                    # trunc, retourne la partie entier
+                                                    i_hour             = trunc(estimated_duration)
+                                                    e                  = estimated_duration - i_hour
+                                                    i_minutes          = round(e * 60)
+                                                %>
+                                            </p>
+                                            <p class="onboard__text__descri">
+                                                <%=
+                                                    cond do
+                                                        i_hour == 0 and i_minutes >= 0 -> if i_minutes > 1, do: "#{i_minutes} minutes", else: "#{i_minutes} minute"
+                                                        i_hour >= 0 and i_minutes == 0 -> if i_hour > 1, do: "#{i_hour} heures", else: "#{i_hour} heure"
+                                                        i_hour > 0  and i_minutes > 0  -> "#{i_hour} h #{i_minutes} m"
+                                                        true                           -> ""
+                                                    end
+                                                 %>
+                                            </p>
+                                        </div>
                                         <div>Date d'échéance: <p class="onboard__text__descri"><%= Utilities.simple_date_format(task.deadline) %></p></div>
                                         <div>Attributeur: <p class="onboard__text__descri"><%= task.attributor.username %></p></div>
                                         </div>
@@ -84,7 +104,7 @@
                                     <div>Projet: <p class="onboard__text__descri"><%= task.project.title %></p></div>
                                     </div>
                                     <div class=" column-50 recap__cols">
-                                    <div>Durée effectuée: <p class="onboard__text__descri"><%= task.performed_duration %> h</p> <p class={ Monitoring.duration_diff_color_class(task) }><%= Monitoring.duration_diff(task) %></p></div>
+                                    <div>Durée effectuée: <p class="onboard__text__descri"><%= if task.performed_duration  > 1, do: "#{task.performed_duration} minutes", else: "#{task.performed_duration} minute" %></p> <p class={ Monitoring.duration_diff_color_class(task) }><%= Monitoring.duration_diff(task) %></p></div>
                                     <div>Date d'achèvement: <p class="onboard__text__descri"><%= Utilities.simple_date_format_with_hours_onboard(task.achieved_at) %></p><p class={ Monitoring.date_diff_color_class(task) }><%= Monitoring.date_diff(task) %></p></div>
                                     <div>Attributeur: <p class="onboard__text__descri"><%= task.attributor.username %></p></div>
                                     </div>

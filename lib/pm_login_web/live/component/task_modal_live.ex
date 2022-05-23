@@ -18,8 +18,7 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
     ~H"""
     <div id={"modal-#{@id}"}>
       <!-- Modal Background -->
-      <div id="task_modal_container" class="modal-container" style={"visibility: #{ if @show_task_modal, do: "visible", else: "hidden" }; opacity: #{ if @show_task_modal, do: "1 !important", else: "0" };"}
-          phx-hook="ScrollLock">
+      <div id="task_modal_container" class="modal-container" style={"visibility: #{ if @show_task_modal, do: "visible", else: "hidden" }; opacity: #{ if @show_task_modal, do: "1 !important", else: "0" };"}>
         <div class="modal-inner-container">
           <div class="modal-card-task">
             <div class="modal-inner-card">
@@ -61,8 +60,11 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
                   </div>
 
                   <div class="column">
-                    <label class="zoom-out">Durée estimée (en heure)</label>
-                    <%= number_input f, :estimated_duration %>
+                    <label class="zoom-out">Durée estimée</label>
+                    <div style="display: flex;">
+                      <input id="task_estimated_duration_hour" name="task[hour]" type="number" min="0" placeholder="Heure" required/>
+                      <input id="task_estimated_duration_minutes" name="task[minutes]" type="number" min="0" max="60" placeholder="Minutes" required/>
+                    </div>
                     <div class="zoom-out">
                       <%= error_tag f, :estimated_duration %>
                       <%= error_tag f, :negative_estimated %>
