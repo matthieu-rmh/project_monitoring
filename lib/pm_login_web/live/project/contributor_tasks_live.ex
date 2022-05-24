@@ -304,6 +304,20 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
 
   # Mettre à jour les modifications des tâches
   def handle_event("update_task", %{"task" => params}, socket) do
+    hour        = String.to_integer(params["hour"])
+    hour_p      = String.to_integer(params["hour_performed"])
+    minutes     = String.to_integer(params["minutes"])
+    minutes_p   = String.to_integer(params["minutes_performed"])
+
+    total_minutes   = (hour * 60) + minutes
+    total_minutes_p = (hour_p * 60) + minutes_p
+
+    # Ajouter la durée estimée dans le map
+    params =
+      params
+      |> Map.put("estimated_duration", total_minutes)
+      |> Map.put("performed_duration", total_minutes_p)
+
     int_progression = params["progression"] |> Float.parse() |> elem(0) |> trunc
     attrs = %{params | "progression" => int_progression}
 
@@ -526,7 +540,8 @@ defmodule PmLoginWeb.Project.ContributorTasksLive do
                     <td data-label="Date de début" style="min-width: 125px"> <%= Calendar.strftime(task.date_start, "%d-%m-%Y") %> </td>
                     <td data-label="Date d'échéance"> <%= Calendar.strftime(task.deadline, "%d-%m-%Y") %> </td>
                     <td data-label="Progression">
-                      <input name="progression_change" type="number" value={task.progression} style="width: 75px; color: #fff;"/>
+                      <input name="progression_change" type="number" value={task.progression} style="width: 75px; color: #fff;" min="0"
+                      max="100"/>
                     </td>
                     <td class="btn-table" style="padding: 0;">
                       <button

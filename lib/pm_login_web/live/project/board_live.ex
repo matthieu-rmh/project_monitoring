@@ -1546,12 +1546,18 @@ defmodule PmLoginWeb.Project.BoardLive do
     # IO.inspect params
 
     hour        = String.to_integer(params["hour"])
+    hour_p      = String.to_integer(params["hour_performed"])
     minutes     = String.to_integer(params["minutes"])
+    minutes_p   = String.to_integer(params["minutes_performed"])
 
-    total_minutes  = (hour * 60) + minutes
+    total_minutes   = (hour * 60) + minutes
+    total_minutes_p = (hour_p * 60) + minutes_p
 
     # Ajouter la durée estimée dans le map
-    params = Map.put(params, "estimated_duration", total_minutes)
+    params =
+      params
+      |> Map.put("estimated_duration", total_minutes)
+      |> Map.put("performed_duration", total_minutes_p)
 
     int_progression = params["progression"] |> Float.parse() |> elem(0) |> trunc
     attrs = %{params | "progression" => int_progression}

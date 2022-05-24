@@ -143,6 +143,12 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                             i_hour             = trunc(estimated_duration)
                             e                  = estimated_duration - i_hour
                             i_minutes          = round(e * 60)
+
+                            performed_duration = @card.task.performed_duration / 60
+                                               # trunc, retourne la partie entier
+                            hour_p             = trunc(performed_duration)
+                            p                  = performed_duration - hour_p
+                            minutes_p          = round(p * 60)
                           %>
                         </p>
 
@@ -157,18 +163,25 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                             end
                           %>
                         </td>
-                        <td data-label="Durée effectuée"> <%= @card.task.performed_duration %> heure</td>
+                        <td data-label="Durée effectuée">
+                          <%=
+                            cond do
+                              hour_p == 0 and minutes_p >= 0 -> if minutes_p > 1, do: "#{minutes_p} minutes", else: "#{minutes_p} minute"
+                              hour_p >= 0 and minutes_p == 0 -> if hour_p > 1, do: "#{hour_p} heures", else: "#{hour_p} heure"
+                              hour_p > 0  and minutes_p > 0  -> "#{hour_p} h #{minutes_p} m"
+                              true                           -> ""
+                            end
+                          %>
+                        </td>
                         <td data-label="Progression"> <%= @card.task.progression %> % </td>
                         <td data-label="Date d'échéance">
                           <%= Utilities.letters_date_format(@card.task.deadline) %>
                         </td>
-                        <td data-label="Description" style="word-wrap: anywhere;">
-                          <%= if @card.task.description == nil or @card.task.description == " " or @card.task.description == [] do %>
-                            Aucune description
-                          <% else %>
-                            <%= @card.task.description %>
-                          <% end %>
-                        </td>
+                        <%= if @card.task.description == nil or @card.task.description == " " or @card.task.description == [] do %>
+                          <td data-label="Description" style="word-wrap: anywhere;">
+                              Aucune description
+                          </td>
+                        <% end %>
                       </tr>
                     </tbody>
                   </table>
@@ -181,11 +194,13 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                     <%= PmLogin.Monitoring.avg_working_hours(@card.task) %> heures
                   </p>
 
+                  <!--
                   <button class="button button-outline" type="button" phx-click="left-button-click" phx-target={"#modal-#{@id}"}>
                     <div>
                       <%= @left_button %>
                     </div>
                   </button>
+                  -->
 
                   <div class="row">
                     <div class="column column-100">

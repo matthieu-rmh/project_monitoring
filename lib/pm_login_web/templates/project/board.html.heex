@@ -295,8 +295,12 @@
               class="priority__point"></div>
             <% end %>
 
-            <div class="card__name" style="margin-top: 10px; margin-bottom: 5px;">
+            <div class="card__name" style="margin-top: 10px; font-size: 12px;">
               <%= card.task.title %>
+            </div>
+
+            <div data-label="Description" style="word-wrap: anywhere; font-size: 11px; color: #727272; margin-bottom: 3px;">
+              <%= card.task.description %>
             </div>
 
             <%= if !is_nil(card.task.parent_id) do %>

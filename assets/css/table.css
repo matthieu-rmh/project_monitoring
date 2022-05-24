@@ -199,6 +199,11 @@ th {
   display: table;
 }
 
+.table-tasks-mobile tr > td > input, 
+.table-tasks-mobile tr > td > select {
+  font-size: 12px;
+}
+
 .table-tasks-mobile thead {
   display: none;
 }

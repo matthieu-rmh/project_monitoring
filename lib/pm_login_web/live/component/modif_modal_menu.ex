@@ -163,18 +163,27 @@ defmodule PmLoginWeb.LiveComponent.ModifModalMenu do
                           <p style="display: none">
                             <%=
                               estimated_duration = @card.task.estimated_duration / 60
-                                                # trunc, retourne la partie entier
+                                                 # trunc, retourne la partie entier
                               i_hour             = trunc(estimated_duration)
                               e                  = estimated_duration - i_hour
                               i_minutes          = round(e * 60)
+
+                              performed_duration = @card.task.performed_duration / 60
+                                                 # trunc, retourne la partie entier
+                              hour_p             = trunc(performed_duration)
+                              p                  = performed_duration - hour_p
+                              minutes_p          = round(p * 60)
                             %>
                           </p>
 
                           <%= if @is_admin or @is_attributor do %>
-                            <div>
-                              <input id="task_estimated_duration_hour" name="task[hour]" type="number" min="0" placeholder="Heure" value={i_hour} style="max-width: 125px; margin-bottom: 0;" required/>
-                              <input id="task_estimated_duration_minutes" name="task[minutes]" type="number" min="0" max="60" placeholder="Minutes" value={i_minutes} style="max-width: 125px; margin-bottom: 0;"required/>
-                            </div>
+                            <input id="task_estimated_duration_hour_performed" name="task[hour_performed]" type="hidden" min="0" placeholder="Heure" value={hour_p} style="max-width: 125px; margin-bottom: 0; height: auto;" required>
+
+                            <input id="task_estimated_duration_minutes_performed" name="task[minutes_performed]" type="hidden" min="0" max="60" placeholder="Minutes" value={minutes_p} style="max-width: 125px; margin-bottom: 0; height: auto;" required>
+
+                            <input id="task_estimated_duration_hour" name="task[hour]" type="number" min="0" placeholder="Heure" value={i_hour} style="max-width: 125px; margin-bottom: 0; height: auto;" required/>
+
+                            <input id="task_estimated_duration_minutes" name="task[minutes]" type="number" min="0" max="60" placeholder="Minutes" value={i_minutes} style="max-width: 125px; margin-bottom: 0; height: auto;"required/>
                           <% else %>
                             <%=
                               cond do
@@ -188,14 +197,28 @@ defmodule PmLoginWeb.LiveComponent.ModifModalMenu do
                         </td>
                         <td data-label="Durée effectuée">
                           <%= if @is_contributor do %>
-                            <input id="task_performed_duration" name="task[performed_duration]" style="width: 70px; margin-bottom: 0;" type="number" value={@card.task.performed_duration} /> h
+
+                            <input id="task_estimated_duration_hour" name="task[hour]" type="hidden" min="0" placeholder="Heure" value={i_hour} style="max-width: 125px; margin-bottom: 0; height: auto;"/>
+
+                            <input id="task_estimated_duration_minutes" name="task[minutes]" type="hidden" min="0" max="60" placeholder="Minutes" value={i_minutes} style="max-width: 125px; margin-bottom: 0; height: auto;"/>
+
+                            <input id="task_estimated_duration_hour_performed" name="task[hour_performed]" type="number" min="0" placeholder="Heure" value={hour_p} style="max-width: 125px; margin-bottom: 0; height: auto;" required>
+
+                            <input id="task_estimated_duration_minutes_performed" name="task[minutes_performed]" type="number" min="0" max="60" placeholder="Minutes" value={minutes_p} style="max-width: 125px; margin-bottom: 0; height: auto;" required>
                             <%= error_tag_modif f, :negative_performed%>
                           <% else %>
-                            <%= @card.task.performed_duration %> h
+                            <%=
+                              cond do
+                                hour_p == 0 and minutes_p >= 0 -> if minutes_p > 1, do: "#{minutes_p} minutes", else: "#{minutes_p} minute"
+                                hour_p >= 0 and minutes_p == 0 -> if hour_p > 1, do: "#{hour_p} heures", else: "#{hour_p} heure"
+                                hour_p > 0  and minutes_p > 0  -> "#{hour_p} h #{minutes_p} m"
+                                true                           -> ""
+                              end
+                            %>
                           <% end %>
                         </td>
                         <td data-label="Progression">
-                          <%= number_input f, :progression, value: @card.task.progression, style: "width: 70px; margin-bottom: 0;" %> %
+                          <input id="task_progression" name="task[progression]" style="width: 70px; margin-bottom: 0;" type="number" value={@card.task.progression} min="0" max="100"> %
 
                           <%= error_tag_modif f, :invalid_progression %>
                           <%= error_tag_modif f, :progression_not_int %>
@@ -208,7 +231,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalMenu do
                         <button type="button" class="btn btn-lg btn-success" phx-click="achieve" phx-value-id={@card.task.id}>Achever</button>
                       <% end %>
 
-                      <div class="modal-buttons" style="margin-top: -5;margin-bottom: -5;">
+                      <div class="modal-buttons" style="margin-top: -15px; margin-bottom: -15px;">
                         <!-- Left Button -->
                         <button class="button button-outline"
                                 type="button"
