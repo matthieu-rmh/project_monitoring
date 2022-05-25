@@ -1,7 +1,9 @@
 .board-menu-button {
     margin: 0 auto;
     padding: 10px;
-    width: auto;
+    width: inherit;
+    width: -moz-available;
+    max-width: 1200px;
     max-height: 80px;
     background-color: white;
     border-radius: 5px;

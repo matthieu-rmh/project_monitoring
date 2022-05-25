@@ -61,9 +61,15 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
 
                   <div class="column">
                     <label class="zoom-out">Durée estimée</label>
-                    <div style="display: flex;">
-                      <input id="task_estimated_duration_hour" name="task[hour]" type="number" min="0" placeholder="Heure" required/>
-                      <input id="task_estimated_duration_minutes" name="task[minutes]" type="number" min="0" max="60" placeholder="Minutes" required/>
+                    <div style="display: flex; font-size: 12px;">
+                      <input id="task_estimated_duration_hour" name="task[hour]" type="number" min="0" placeholder="Heure" style="margin-right: 10px" required/>
+                      <div style="margin-top: 9px;">
+                        h
+                      </div>
+                      <input id="task_estimated_duration_minutes" name="task[minutes]" type="number" min="0" max="60" placeholder="Minutes" style="margin-right: 10px; margin-left: 10px;" required/>
+                      <div style="margin-top: 9px;">
+                        m
+                      </div>
                     </div>
                     <div class="zoom-out">
                       <%= error_tag f, :estimated_duration %>
@@ -87,7 +93,7 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
                   <%= if not @is_contributor do %>
                     <div class="column">
                       <label class="zoom-out">Assigner intervenant</label>
-                      <%= select f, :contributor_id, @attributors ++ @contributors, style: "width: -moz-available;" %>
+                      <%= select f, :contributor_id, @attributors ++ @contributors, style: "width: -moz-available; height: 38px;" %>
                       <div class="zoom-out">
                         <%= error_tag f, :contributor_id %>
                       </div>
