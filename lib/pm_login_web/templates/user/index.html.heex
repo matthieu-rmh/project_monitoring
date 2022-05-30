@@ -72,11 +72,11 @@
         <td data-label="Email"><%= user.email %></td>
         <td data-label="Statut"><%= user.title %></td>
 
-        <td data-label="Actions">
+        <td data-label="Actions" style="display: block ruby; padding-top: 19px;">
           <%= if user.id != @curr_user_id do %>
-              <a href={Routes.user_path(@socket, :edit, user)} class=""><i class="bi bi-info-circle info__user btn btn-info btn-lg"></i></a>
+              <a title="Modifier" href={Routes.user_path(@socket, :edit, user)} class=""><i class="bi bi-info-circle info__user btn btn-info btn-lg"></i></a>
               <%= if user.right_id != 100 do %>
-                <i class="bi bi-archive btn btn-danger btn-lg archive__user" phx-click="go-arch" phx-value-id={user.id}></i>
+                <i title="Archiver" class="bi bi-archive btn btn-danger btn-lg archive__user" phx-click="go-arch" phx-value-id={user.id}></i>
               <% else %>
                 <i class="bi bi-archive btn btn-dark btn-lg"></i>
             <% end %>
