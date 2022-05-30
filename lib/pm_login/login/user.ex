@@ -128,6 +128,13 @@ defmodule PmLogin.Login.User do
     |> put_change(:password, Bcrypt.hash_pwd_salt(attrs["new_password"]))
   end
 
+  def update_raw_password(user, attrs) do
+    user
+    |> cast(attrs, [])
+    |> required_new_password(attrs)
+    |> put_change(:password, Bcrypt.hash_pwd_salt(attrs["new_password"]))
+  end
+
   def required_old_password(changeset, attrs) do
     case attrs["old_password"] do
       "" -> changeset |> add_error(:old_password, "Entrez votre ancien mot de passe.")

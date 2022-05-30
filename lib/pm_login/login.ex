@@ -404,6 +404,12 @@ defmodule PmLogin.Login do
     |> Repo.update()
   end
 
+  def update_raw_user_password(%User{} = user, attrs) do
+    user
+    |> User.update_raw_password(attrs)
+    |> Repo.update()
+  end
+
   def update_profile(%User{} = user, attrs) do
     user
     |> User.profile_changeset(attrs)
