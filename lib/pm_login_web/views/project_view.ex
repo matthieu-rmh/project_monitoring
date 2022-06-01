@@ -7,7 +7,10 @@ defmodule PmLoginWeb.ProjectView do
     CommentsModalLive,
     CommentsModalMenu,
     SecondaryModalLive,
-    DeleteTaskModal
+    DeleteTaskModal,
+    ClientModalRequestLive,
+    DetailModalRequestLive,
+    ProjectModalLive
   }
 
   alias PmLogin.Monitoring

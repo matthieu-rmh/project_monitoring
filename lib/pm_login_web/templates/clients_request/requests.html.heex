@@ -1,5 +1,10 @@
-<h1 class="my__requests"><span class="material-icons mat__ico__big">receipt_long</span>Requêtes des clients</h1>
-<div class="container request__container">
+<div class="card-info" style="max-width: 750px;">
+  <span class="material-icons mat__ico__big">
+    receipt_long
+  </span>Requêtes des clients
+</div>
+<!-- 
+<div class="container request__container"> 
   <%= for request <- @requests do %>
     <div class="basecontents__without__radius request__panel">
       <div class="row">
@@ -39,13 +44,104 @@
               <input id="encours" type="checkbox" phx-click="switch-ongoing" phx-value-id={request.id} checked={request.ongoing}>
             </div>
 
-            <div class="my_col">
-              <label for="accomplie">Accomplie</label>
-              <input id="accomplie" type="checkbox" phx-click="switch-done" phx-value-id={request.id } checked={request.done}>
-            </div>
         </div>
     </div>
   <% end %>
 </div>
+-->
+
+<%= for request <- @requests do %>
+  <div style="display: flex">
+    <div class="card-info" style="width: 750px;" data-id={request.id}>
+      <div class="card-avatar">
+        <i class="bi bi-person"></i>
+      </div>
+
+      <div class="col">
+        <div class="card-info-text">
+          <div class="card-text-username">
+            <%= request.title %>
+          </div>
+          <div class="column">
+            <img class="profile-pic-header request__pp" src={Routes.static_path(@socket, "/#{request.active_client.company.logo}")} alt="" style="float: right;">
+          </div>
+          <div class="card-text-content">
+            <%= request.content %>
+          </div>
+          <div class="card-image">
+          <div class="column" style="margin: 10px 0 20px 0;">
+              <%= for url <- request.file_urls do %>
+              <%= if Path.extname(url)==".jpg" or Path.extname(url)==".png" or Path.extname(url)==".jpeg" do %>
+                <a href={url} style="margin-bottom: 10px;"><img src={url} alt="" height="150"/></a>
+                <% else %>
+                <a href={url} download><%= Path.basename(url) %></a>
+                <br>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-left: 300px">
+          <div 
+            class="card-button" 
+            style="background-color: #2980b9; 
+            cursor: inherit;"
+          >
+            Vue
+            <input 
+              id="vu" 
+              type="checkbox" 
+              phx-click="switch-seen" 
+              phx-value-id={request.id} 
+              checked={request.seen}
+              style="margin: 0 0 0 5;" 
+              disabled
+            >
+          </div>
+          <div 
+            class="card-button" 
+            style="background-color: #e67e22; 
+            cursor: inherit;"
+          >
+            En cours
+            <input
+              id="encours" 
+              type="checkbox" 
+              phx-click="switch-ongoing"
+              phx-value-id={request.id} 
+              checked={request.ongoing}
+              style="margin: 0 0 0 5;" 
+              disabled
+            >
+          </div>
+          <div 
+            class="card-button" 
+            style="background-color: #27ae60; 
+            cursor: inherit;"
+          >
+            Accomplie
+            <input 
+              id="accomplie" 
+              type="checkbox" 
+              phx-click="switch-done" 
+              phx-value-id={request.id } 
+              checked={request.done}
+              style="margin: 0 0 0 5;" 
+              disabled
+            >
+          </div>
+        </div>
+
+        <div class="card-text-date">
+          <%= Utilities.letters_date_format_with_hours request.date_post %>
+        </div>
+      </div>
+
+    
+    </div>
+  </div>
+<% end %>
+
 <br>
 <span><a href={Routes.company_path(@socket, :services)} class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i> Services</a></span>

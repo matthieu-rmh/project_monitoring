@@ -93,6 +93,9 @@ defmodule PmLoginWeb.ProjectController do
 end
 
   def create(conn, %{"project" => project_params}) do
+    IO.inspect(project_params)
+
+    IO.inspect(conn)
     case Monitoring.create_project(project_params) do
       {:ok, project} ->
         Services.send_notifs_to_admins_and_attributors(Login.get_curr_user_id(conn), "Un projet du nom de #{project.title} a été crée par #{Login.get_curr_user(conn).username}")

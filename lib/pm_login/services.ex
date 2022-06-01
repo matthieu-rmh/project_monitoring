@@ -732,6 +732,31 @@ defmodule PmLogin.Services do
     Repo.all(ClientsRequest)
   end
 
+  def list_clients_requests_with_client_name do
+    user_query = from u in User
+    ac_query = from ac in ActiveClient,
+            preload: [user: ^user_query]
+    query = from req in ClientsRequest,
+            preload: [active_client: ^ac_query],
+            order_by: [desc: req.date_post],
+            limit: 1,
+            where: req.ongoing == false
+
+    Repo.all(query)
+  end
+
+  def list_clients_requests_with_client_name_and_id(id) do
+    user_query = from u in User
+    ac_query = from ac in ActiveClient,
+            preload: [user: ^user_query]
+    query = from req in ClientsRequest,
+            preload: [active_client: ^ac_query],
+            where: req.id == ^id
+
+    [cli_req] = Repo.all(query)
+    cli_req
+  end
+
   def list_my_requests(user_id) do
     company_query = from c in Company
     user_query = from u in User
@@ -742,7 +767,22 @@ defmodule PmLogin.Services do
             where: req.active_client_id == ^get_ac_id_from_user_id(user_id),
             order_by: [desc: req.date_post]
     Repo.all(query)
+  end
 
+  def count_list_client_request(user_id) do
+    company_query = from c in Company
+    user_query = from u in User
+    ac_query =
+      from ac in ActiveClient,
+      preload: [user: ^user_query, company: ^company_query]
+    query =
+      from req in ClientsRequest,
+      preload: [active_client: ^ac_query],
+      where: req.active_client_id == ^get_ac_id_from_user_id(user_id) and (req.ongoing or req.done) == false
+
+    count = Repo.all(query)
+
+    Enum.count(count)
   end
 
   def list_requests do

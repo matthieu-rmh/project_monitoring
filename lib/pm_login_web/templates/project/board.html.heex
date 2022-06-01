@@ -43,7 +43,7 @@
             </div>
 
             <div class="row">
-              <div class="column" style="margin-top: -4px;">
+              <div class="column" style="margin-top: -4px; max-width: 36.4%;">
                 <%= if @is_admin or @is_attributor do %>
 
                   <span class="material-icons-round filter__icon filt__and__sort__ico filter__icon__resized">person</span>
@@ -97,7 +97,7 @@
 
 
               <%= if @is_admin or @is_attributor do %>
-                <div class="column" style="max-width: 23%">
+                <div class="column" style="max-width: 15%">
                   <div class="form-check form-switch" style="margin-top: 3px;">
                     <form class="vue__form__resized" phx-change="distinct_task">
                       <div class="row">
@@ -129,20 +129,21 @@
               <% end %>
 
               <%= if @is_admin or @is_attributor do %>
-                <div class="column" style="max-width: 15%">
+                <div class="column" style="max-width: 43%; margin-top: -10px;">
                   <%= if @is_admin or @is_attributor or @is_contributor do %>
                     <button 
                         title="Nouvelle tâche"
                         href="#"
-                        class="rounded-circle"
+                        class="card-button"
                         phx-click="show_task_modal"
+                        style="font-size: 10px;"
                     >
-                      <i class="bi bi-plus-circle" style="font-size: 16px; color: #fff;"></i>
+                      Nouvelle tâche
                     </button>
                     <button 
                         title="Création sous-tâche"
                         href="#"
-                        class="rounded-circle-gray"
+                        class="card-button"
                         phx-click="show-secondary"
                     >
                       <i class="bi bi-plus-circle" style="font-size: 16px; color: #fff;"></i> 
@@ -152,7 +153,7 @@
                       <button 
                         title="Restaurer les tâches archivées"
                         href="#"
-                        class="rounded-circle-green"
+                        class="card-button"
                         phx-click="show_hidden_tasks"
                       > 
                         <i class="bi bi-archive" style="font-size: 16px; color: #fff;"></i>

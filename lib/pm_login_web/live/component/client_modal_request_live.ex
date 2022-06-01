@@ -1,9 +1,7 @@
-defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
+defmodule PmLoginWeb.LiveComponent.ClientModalRequestLive do
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
   import PmLoginWeb.ErrorHelpers
-  alias PmLogin.Login
-  alias PmLogin.Login.User
 
   @defaults %{
     left_button: "Cancel",
@@ -14,21 +12,20 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
     right_button_param: nil
   }
 
-  # render modal
-  @spec render(map()) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
     <div id={"modal-#{@id}"}>
       <!-- Modal Background -->
-      <div id="secondary_modal_container" class="modal-container" style={"visibility: #{if @show_secondary, do: "visible", else: "hidden"}; opacity: #{ if @show_secondary, do: "1 !important", else: "0" };"}>
-        <div class="modal-inner-container">
+      <div id="task_modal_container" class="modal-container" style={"visibility: #{ if @show_client_request_modal, do: "visible", else: "hidden" }; opacity: #{ if @show_client_request_modal, do: "1 !important", else: "0" };"}>
+      <%= if not is_nil(@client_request) do %>
+        <div class="modal-inner-container" phx-window-keydown="modal_close">
           <div class="modal-card-task">
             <div class="modal-inner-card">
               <!-- Title -->
               <%= if @title != nil do %>
               <div class="modal-title">
                 <%= @title %>
-                <a href="#" class="x__close" style="position: relative; left: 0; margin-top: -5px;" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
+                <a href="#" class="x__close" style="position: relative; left: 0; margin-top: -5px" title="Fermer" phx-click="left-button-click" phx-target={"#modal-#{@id}"}><i class="bi bi-x"></i></a>
               </div>
               <% end %>
 
@@ -41,19 +38,25 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
 
               <!-- MY FORM -->
               <div class="modal-body">
-              <.form let={f} for={@task_changeset} phx-submit="submit_secondary">
-                <div class="row">
+              <.form let={f} for={@task_changeset} phx-submit="save" style="margin-bottom: 0;">
+                  <%= hidden_input f, :client_request_id, value: @client_request.id %>
                   <div class="column">
-                    <label class="zoom-out">Tâche</label>
-                    <%= text_input f, :title %>
+                    <label class="zoom-out">Titre</label>
+                    <%= text_input f, :title, value: @client_request.title %>
                     <div class="zoom-out">
                       <%= error_tag f, :title %>
                     </div>
-                    <%= hidden_input f, :project_id, value: @pro_id %>
+                    <%= hidden_input f, :attributor_id, value: @curr_user_id %>
                   </div>
-                </div>
 
-                <div class="row">
+                  <div class="column">
+                    <label class="zoom-out">Description</label>
+                    <div class="zoom-out">
+                      <input id="task_description" name="task[description]" value={@client_request.content}/>
+                      <%= error_tag f, :description %>
+                    </div>
+                  </div>
+
                   <div class="column">
                     <label class="zoom-out">Durée estimée</label>
                     <div style="display: flex; font-size: 12px;">
@@ -71,38 +74,35 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
                       <%= error_tag f, :negative_estimated %>
                     </div>
                   </div>
-                </div>
 
                   <div class="row">
+
                     <div class="column">
-                      <label class="zoom-out">Date d'échéance</label>
+                      <label class="zoom-out">Date d'écheance</label>
                       <%= date_input f, :deadline %>
                       <div class="zoom-out">
                         <%= error_tag f, :deadline %>
                         <%= error_tag f, :deadline_lt %>
                         <%= error_tag f, :deadline_before_dtstart %>
                       </div>
+
                     </div>
 
+                  <%= if not @is_contributor do %>
                     <div class="column">
                       <label class="zoom-out">Assigner intervenant</label>
-                      <%= select f, :contributor_id, @attributors ++ @contributors, style: "width: -webkit-fill-available; width: -moz-available; height: 38px;"%>
+                      <%= select f, :contributor_id, @attributors ++ @contributors, style: "width: -webkit-fill-available; width: -moz-available; height: 38px;" %>
                       <div class="zoom-out">
                         <%= error_tag f, :contributor_id %>
                       </div>
                     </div>
-
+                  <% end %>
                   </div>
 
                   <div class="row">
                     <div class="column">
-                      <label class="zoom-out">Tâche mère</label>
-                      <div class="text-wrap">
-                        <%= select f, :parent_id, @primaries, style: "width: -webkit-fill-available; width: -moz-available; height: 38px;"%>
-                      </div>
-                      <div class="zoom-out">
-                        <%= error_tag f, :parent_id %>
-                      </div>
+                      <label class="zoom-out">Ajouter au projet</label>
+                      <%= select f, :project_id, @list_projects, style: "width: -webkit-fill-available; width: -moz-available; height: 38px;" %>
                     </div>
                   </div>
 
@@ -114,8 +114,9 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
                   </div>
 
 
+
                   <!-- Buttons -->
-                  <div class="modal-buttons">
+                  <div class="modal-buttons" style="margin-top: 0;">
                       <!-- Left Button -->
                       <a
                         href="#" class="button button-outline"
@@ -128,7 +129,7 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
                       </a>
 
                       <div class="right-button">
-                        <%= submit "Créer sous-tâche" %>
+                        <%= submit "Créer tâche" %>
                       </div>
 
                   </div>
@@ -143,16 +144,15 @@ defmodule PmLoginWeb.LiveComponent.SecondaryModalLive do
             </div>
           </div>
         </div>
+
+      <% end %>
       </div>
     </div>
     """
   end
 
   def mount(socket) do
-    attributors = Login.list_attributors()
-    list_attributors = Enum.map(attributors, fn %User{} = a -> {a.username, a.id} end)
-
-    {:ok, socket |> assign(attributors: list_attributors)}
+    {:ok, socket}
   end
 
   def update(%{id: _id} = assigns, socket) do

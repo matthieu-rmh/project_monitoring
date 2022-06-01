@@ -1406,6 +1406,8 @@ defmodule PmLogin.Monitoring do
 
   def broadcast_restored_task({:ok, :restored}), do: {:ok, :restored} |> broadcast_change([:task, :restored])
 
+  def broadcast_clients_requests(tuple), do: tuple |> broadcast_change([:request, :created])
+
   @doc """
   Deletes a task.
 

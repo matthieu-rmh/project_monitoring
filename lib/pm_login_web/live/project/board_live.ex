@@ -8,8 +8,7 @@ defmodule PmLoginWeb.Project.BoardLive do
     ModifModalMenu,
     CommentsModalLive,
     CommentsModalMenu,
-    SecondaryModalLive,
-    DeleteTaskModal
+    SecondaryModalLive
   }
 
   alias PmLoginWeb.ProjectView
@@ -346,11 +345,7 @@ defmodule PmLoginWeb.Project.BoardLive do
     {:noreply, socket}
   end
 
-  def handle_event(
-        "distinct_task",
-        %{"_target" => ["task_view"], "task_view" => radio_value},
-        socket
-      ) do
+  def handle_event("distinct_task", %{"_target" => ["task_view"], "task_view" => radio_value}, socket) do
     # IO.inspect(radio_value)
 
     stages =
