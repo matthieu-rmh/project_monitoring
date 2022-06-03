@@ -102,10 +102,10 @@
                     <form class="vue__form__resized" phx-change="distinct_task">
                       <div class="row">
                         <label class="vues__fs__content" for="primary" style="font-size: 11px">Tâches</label>
-                        <input class="vues__fs__content" type="radio" id="primary" name="task_view" value="task" style="margin-top: -3px;"
+                        <input class="vues__fs__content" type="radio" id="primary" name="task_view" value="task" style="margin-top: 0;"
                           checked={@showing_primaries}>
                         <label class="vues__fs__content" for="secondary" style="font-size: 11px">Sous-tâches</label>
-                        <input class="vues__fs__content" type="radio" id="secondary" name="task_view" value="subtask" style="margin-top: -3px;"
+                        <input class="vues__fs__content" type="radio" id="secondary" name="task_view" value="subtask" style="margin-top: 0;"
                           checked={@showing_secondaries}>
                       </div>
                     </form>
@@ -131,33 +131,57 @@
               <%= if @is_admin or @is_attributor do %>
                 <div class="column" style="max-width: 43%; margin-top: -10px;">
                   <%= if @is_admin or @is_attributor or @is_contributor do %>
-                    <button 
-                        title="Nouvelle tâche"
-                        href="#"
-                        class="card-button"
-                        phx-click="show_task_modal"
-                        style="font-size: 10px;"
+                    <div 
+                      class="card-button" 
+                      type="button" 
+                      phx-click="show_task_modal"
+                      style="font-size: 10px; height: 30px; margin-top: 4px; background-color: #1a9e51;"
                     >
                       Nouvelle tâche
-                    </button>
+                    </div>
+
+                    <div 
+                      class="card-button" 
+                      type="button" 
+                      phx-click="show-secondary"
+                      style="font-size: 10px; height: 30px; margin-top: 4px;"
+                    >
+                      Création sous-tâche
+                    </div>
+
+                    <!--
                     <button 
                         title="Création sous-tâche"
                         href="#"
                         class="card-button"
                         phx-click="show-secondary"
+                        style="font-size: 10px; height: 30px; margin-top: 4px;"
                     >
                       <i class="bi bi-plus-circle" style="font-size: 16px; color: #fff;"></i> 
                     </button>
+                    -->
                     
                     <%= if @is_admin or @is_attributor do %>
-                      <button 
-                        title="Restaurer les tâches archivées"
-                        href="#"
-                        class="card-button"
+                      <div 
+                        class="card-button" 
+                        type="button" 
                         phx-click="show_hidden_tasks"
-                      > 
-                        <i class="bi bi-archive" style="font-size: 16px; color: #fff;"></i>
-                      </button>
+                        style="font-size: 10px; height: 30px; margin-top: 4px; background-color: #e64922;"
+                      >
+                        Restaurer les tâches archivées
+                      </div>
+
+                      <!--
+                        <button 
+                          title="Restaurer les tâches archivées"
+                          href="#"
+                          class="card-button"
+                          phx-click="show_hidden_tasks"
+                          style="font-size: 10px; height: 30px;  margin-top: 4px;"
+                        > 
+                          <i class="bi bi-archive" style="font-size: 16px; color: #fff;"></i>
+                        </button>
+                      -->
                     <% end %>
                   <% end %>
                 </div>
