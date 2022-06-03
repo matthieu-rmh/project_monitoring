@@ -2,6 +2,9 @@ defmodule PmLogin.Services.ClientsRequest do
   use Ecto.Schema
   import Ecto.Changeset
   alias PmLogin.Services.ActiveClient
+  alias PmLogin.Monitoring.Task
+  alias PmLogin.Monitoring.Project
+
   schema "clients_requests" do
     field :title, :string
     field :content, :string
@@ -13,13 +16,16 @@ defmodule PmLogin.Services.ClientsRequest do
     # field :active_client_id, :id
     belongs_to :active_client, ActiveClient
 
+    belongs_to :task, Task
+    belongs_to :project, Project
+
     timestamps()
   end
 
   @doc false
   def changeset(clients_request, attrs) do
     clients_request
-    |> cast(attrs, [:title ,:content, :date_post, :seen, :ongoing, :done, :active_client_id])
+    |> cast(attrs, [:title ,:content, :date_post, :seen, :ongoing, :done, :active_client_id, :task_id, :project_id])
     # |> unique_constraint(:title, message: "Titre de requête déjà existant")
     # |> validate_required(:content, message: "Entrez le contenu de votre requête")
   end
