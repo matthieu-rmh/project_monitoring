@@ -5,7 +5,6 @@ defmodule PmLoginWeb.Project.IndexLive do
   alias PmLogin.Services
   alias PmLogin.Login
   alias PmLogin.Kanban
-  alias PmLogin.Utilities
   alias PmLogin.Login.User
   alias PmLogin.Monitoring.{Task, Project}
   alias PmLoginWeb.LiveComponent.{ClientModalRequestLive, DetailModalRequestLive, ProjectModalLive}
@@ -113,8 +112,6 @@ defmodule PmLoginWeb.Project.IndexLive do
 
 
   def handle_event("create", %{"task" => project_params}, socket) do
-    # IO.inspect(project_params)
-
     hour        = String.to_integer(project_params["hour"])
     minutes     = String.to_integer(project_params["minutes"])
     estimated_duration  = (hour * 60) + minutes
@@ -123,29 +120,43 @@ defmodule PmLoginWeb.Project.IndexLive do
       project_params
       |> Map.put("estimated_duration", estimated_duration)
       |> Map.put("active_client_id", project_params["client_id"])
+      |> Map.put("client_request_id", project_params["client_request_id"])
       |> Map.delete("hour")
       |> Map.delete("minutes")
       |> Map.delete("client_id")
       |> Map.delete("attributor_id")
 
-      case Monitoring.create_project(project_params) do
-        {:ok, project} ->
-          # Mettre la requête en vue
-          request = Services.get_request_with_user_id!(project_params["client_request_id"])
-          Services.update_request_bool(request, %{"ongoing" => true})
+    case Monitoring.create_project(project_params) do
+      {:ok, project} ->
+        # Mettre la requête en vue
+        request = Services.get_request_with_user_id!(project_params["client_request_id"])
+        Services.update_request_bool(request, %{"ongoing" => true})
 
-          # Changement en direct
-          Monitoring.broadcast_clients_requests({:ok, :clients_requests})
+        clients_request = Services.get_clients_request!(project_params["client_request_id"])
 
-          {:noreply,
+        clients_request_params = %{
+          "project_id" => project.id
+        }
+
+        Services.update_clients_request(clients_request, clients_request_params)
+
+        # Changement en direct
+        Monitoring.broadcast_clients_requests({:ok, :clients_requests})
+
+        {:noreply,
           socket
-            |> assign(show_project_modal: false)
-            |> put_flash(:info, "Le projet #{Monitoring.get_project!(project.id).title} a été créé avec succès")
-            # |> push_redirect(to: "/boards/#{Monitoring.get_project!(project.id).id}")
-          }
+          |> assign(show_project_modal: false)
+          |> put_flash(:info, "Le projet #{Monitoring.get_project!(project.id).title} a été créé avec succès")
+          # |> push_redirect(to: "/boards/#{Monitoring.get_project!(project.id).id}")
+        }
 
-        {:error, _} -> "Erreur"
-      end
+      {:error, _} ->
+        {:noreply,
+          socket
+          |> assign(show_project_modal: false)
+          |> put_flash(:error, "Une erreur a été produite lors du création du projet")
+        }
+    end
   end
 
   def handle_event("modal_close", %{"key" => key}, socket) do
@@ -191,7 +202,10 @@ defmodule PmLoginWeb.Project.IndexLive do
     total_minutes  = (hour * 60) + minutes
 
     # Ajouter la durée estimée dans le map
-    params = Map.put(params, "estimated_duration", total_minutes)
+    params =
+      params
+      |> Map.put("estimated_duration", total_minutes)
+      |> Map.put("client_request_id", params["client_request_id"])
 
     new_params =
       if Login.get_user!(params["attributor_id"]).right_id == 3,
@@ -220,6 +234,17 @@ defmodule PmLoginWeb.Project.IndexLive do
         # Mettre la requête en vue
         request = Services.get_request_with_user_id!(params["client_request_id"])
         Services.update_request_bool(request, %{"ongoing" => true})
+
+
+        # Mettre à jour task_id et project_id à partir de la tâche créée
+        clients_request = Services.get_clients_request!(params["client_request_id"])
+
+        clients_request_params = %{
+          "task_id" => task.id,
+          "project_id" => task.project_id
+        }
+
+        Services.update_clients_request(clients_request, clients_request_params)
 
         # Changement en direct
         Monitoring.broadcast_clients_requests({:ok, :clients_requests})
@@ -266,7 +291,15 @@ defmodule PmLoginWeb.Project.IndexLive do
   end
 
   def handle_info({Monitoring, [:request, :created], _}, socket) do
-    {:noreply, socket |> assign(list_clients_requests: Services.list_clients_requests_with_client_name, projects: Monitoring.list_projects)}
+
+    projects = Monitoring.list_projects()
+    list_projects = Enum.map(projects, fn %Project{} = p -> {p.title, p.id} end)
+
+    {:noreply,
+      socket |> assign(list_clients_requests: Services.list_clients_requests_with_client_name,
+                       projects: Monitoring.list_projects,
+                       list_projects: list_projects)
+    }
   end
 
   def handle_info({Monitoring, [:project, :updated], _}, socket) do
