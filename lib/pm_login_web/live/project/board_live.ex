@@ -1018,10 +1018,11 @@ defmodule PmLoginWeb.Project.BoardLive do
             )
 
             socket
-            |> put_flash(
-              :info,
-              "Tâche \"#{Monitoring.get_task_with_status!(real_task.id).title}\" mise dans \" #{Monitoring.get_task_with_status!(real_task.id).status.title} \" "
-            )
+            # Désactiver les informations sur la statut du carte
+            # |> put_flash(
+            #   :info,
+            #   "Tâche \"#{Monitoring.get_task_with_status!(real_task.id).title}\" mise dans \" #{Monitoring.get_task_with_status!(real_task.id).status.title} \" "
+            # )
             |> push_event("AnimateAlert", %{})
           end
 
