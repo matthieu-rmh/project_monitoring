@@ -1,35 +1,36 @@
 .alert-primary {
-    display: flex;
-    margin-top: 25px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
-    color: #fff;
-    background-color:#0284C7;
-    padding: 15px;
-    font-size: 15px;
+  display: flex;
+  margin-top: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  color: #fff;
+  background-color: #0284C7;
+  padding: 15px;
+  font-size: 15px;
 }
 
 .card-info {
-    display: flex;
-    margin: 0 auto;
-    border-radius: 5px;
-    color: #2c3e50;
-    background-color: #fff;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    padding: 16px 15px 15px 15px;
-    font-size: 15px;
-    width: auto;
-    max-width: 900px;
-    margin-bottom: 10px;
+  display: flex;
+  margin: 0 auto;
+  border-radius: 5px;
+  color: #2c3e50;
+  background-color: #fff;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  padding: 16px 15px 15px 15px;
+  font-size: 15px;
+  width: auto;
+  max-width: 900px;
+  margin-bottom: 10px;
 }
 
 .card-button-select {
-    margin-top: 4px;
+  margin-top: 4px;
 }
 
-.card-button {
+.card-button,
+.card-button-green,
+.card-button-orange {
   align-items: center;
-  background-color: #0284C7;
   border: 0;
   border-radius: 100px;
   box-sizing: border-box;
@@ -58,8 +59,39 @@
   margin-right: 5px;
 }
 
+.card-button {
+  background-color: #0284C7;
+}
+
+.card-button-green {
+  background-color: #1a9e51;
+}
+
+.card-button-orange {
+  background-color: #e64922;
+}
+
+
+.card-button-green:hover,
+.card-button-green:focus {
+  background-color: #168544;
+  color: #ffffff;
+}
+
+.card-button-orange:hover,
+.card-button-orange:focus {
+  background-color: #cb3f1c;
+  color: #ffffff;
+}
+
 .card-button:hover,
-.card-button:focus { 
+.card-button:focus {
+  background-color: #006ea5;
+  color: #ffffff;
+}
+
+.card-button:hover,
+.card-button:focus {
   background-color: #006ea5;
   color: #ffffff;
 }
@@ -69,7 +101,17 @@
   color: rgb(255, 255, 255, .9);
 }
 
-.card-button:disabled { 
+.card-button-green:active {
+  background: #106d37;
+  color: rgb(255, 255, 255, .9);
+}
+
+.card-button-orange:active {
+  background: #bf3a19;
+  color: rgb(255, 255, 255, .9);
+}
+
+.card-button:disabled {
   cursor: not-allowed;
   background: rgba(0, 0, 0, .08);
   color: rgba(0, 0, 0, .3);
@@ -84,15 +126,15 @@
 
 
 .col {
-    padding-left: 12px;
-    font-size: 12px;
-    padding-top: 3px;
+  padding-left: 12px;
+  font-size: 12px;
+  padding-top: 3px;
 }
 
 .card-text-content {
-    max-width: 600px;
-    word-break: break-word;
-    opacity: 0.65;
+  max-width: 600px;
+  word-break: break-word;
+  opacity: 0.65;
 }
 
 .card-image {
@@ -100,38 +142,45 @@
 }
 
 .card-avatar {
-    position: relative;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #626976;
-    text-align: center;
-    text-transform: uppercase;
-    vertical-align: bottom;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background:#3498db no-repeat center/cover;
-    border-radius: 4px;
-    color: #fff;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #626976;
+  text-align: center;
+  text-transform: uppercase;
+  vertical-align: bottom;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: #3498db no-repeat center/cover;
+  border-radius: 4px;
+  color: #fff;
 }
 
 .alert-text {
-    margin-left: 9px;
+  margin-left: 9px;
 }
 
-.card-avatar-resize { width: 9%; }
+.card-avatar-resize {
+  width: 9%;
+}
 
-.card-info-text-resize { width: 30%; }
+.card-info-text-resize {
+  width: 30%;
+}
 
-.card-button-select-resize { width: 61%; }
+.card-button-select-resize {
+  width: 61%;
+}
 
 @media (max-width: 875px) {
+
   .card-avatar-resize,
   .card-info-text-resize,
   .card-button-select-resize {

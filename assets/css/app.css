@@ -32,6 +32,8 @@
 @import "./dropdown.css";
 @import "./menu.css";
 @import "./checkbox.css";
+@import "./switch.css";
+@import "./scrollbar.css";
 
 @font-face {
   font-family: "Axiforma";

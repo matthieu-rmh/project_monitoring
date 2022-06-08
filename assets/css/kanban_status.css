@@ -1,21 +1,31 @@
 .priority__point{
-  background-color: black;
+  background-color: #00000035;
+  color: #000;
+  text-transform: uppercase;
 }
 
 .urg__priority__point{
-  background-color: #e74c3c;
+  background-color: #e74d3c6b;
+  color: #db5040;
+  text-transform: uppercase;
 }
 
 .high__priority__point{
-  background-color: #e67e22;
+  background-color: #e67d225f;
+  color: #e67d22;
+  text-transform: uppercase;
 }
 
 .avg__priority__point{
-  background-color: #3498db;;
+  background-color: #3498db55;
+  color: #3498db;
+  text-transform: uppercase;
 }
 
 .low__priority__point{
-  background-color: #2ecc71;
+  background-color: #2ecc7030;
+  color: #2ecc70;
+  text-transform: uppercase;
 }
 
 .priority__point, .low__priority__point, .avg__priority__point, .high__priority__point, .urg__priority__point {

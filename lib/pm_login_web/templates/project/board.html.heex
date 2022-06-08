@@ -97,16 +97,31 @@
 
 
               <%= if @is_admin or @is_attributor do %>
-                <div class="column" style="max-width: 15%">
+                <div class="column" style="max-width: 16%">
                   <div class="form-check form-switch" style="margin-top: 3px;">
                     <form class="vue__form__resized" phx-change="distinct_task">
                       <div class="row">
+                        <p style="font-size: 10px; margin-right: 5px;">Tâches</p>
+                        <label class="switch" style="margin-right: 5px;">
+                          <input class="vues__fs__content" type="radio" id="primary" name="task_view" value="task" style="margin-top: 0;"
+                          checked={@showing_primaries}>
+                          <span class="slider round"></span>
+                        </label>
+                        <!--
                         <label class="vues__fs__content" for="primary" style="font-size: 11px">Tâches</label>
                         <input class="vues__fs__content" type="radio" id="primary" name="task_view" value="task" style="margin-top: 0;"
                           checked={@showing_primaries}>
+                       
                         <label class="vues__fs__content" for="secondary" style="font-size: 11px">Sous-tâches</label>
                         <input class="vues__fs__content" type="radio" id="secondary" name="task_view" value="subtask" style="margin-top: 0;"
                           checked={@showing_secondaries}>
+                        -->
+                        <p style="font-size: 10px; margin-right: 5px;">Sous-tâches</p>
+                        <label class="switch">
+                          <input class="vues__fs__content" type="radio" id="secondary" name="task_view" value="subtask" style="margin-top: 0;"
+                          checked={@showing_secondaries}>
+                          <span class="slider round"></span>
+                        </label>
                       </div>
                     </form>
                   </div>
@@ -129,13 +144,13 @@
               <% end %>
 
               <%= if @is_admin or @is_attributor do %>
-                <div class="column" style="max-width: 43%; margin-top: -10px;">
+                <div class="column" style="max-width: 42%; margin-top: -10px;">
                   <%= if @is_admin or @is_attributor or @is_contributor do %>
                     <div 
-                      class="card-button" 
+                      class="card-button-green" 
                       type="button" 
                       phx-click="show_task_modal"
-                      style="font-size: 10px; height: 30px; margin-top: 4px; background-color: #1a9e51;"
+                      style="font-size: 10px; height: 30px; margin-top: 4px;"
                     >
                       Nouvelle tâche
                     </div>
@@ -163,12 +178,13 @@
                     
                     <%= if @is_admin or @is_attributor do %>
                       <div 
-                        class="card-button" 
+                        class="card-button-orange" 
                         type="button" 
                         phx-click="show_hidden_tasks"
-                        style="font-size: 10px; height: 30px; margin-top: 4px; background-color: #e64922;"
+                        style="font-size: 10px; height: 30px; margin-top: 4px;"
                       >
-                        Restaurer les tâches archivées
+                        <i class="bi bi-archive" style="font-size: 16px; color: #fff; margin-right: 5px;"></i>
+                        Restaurer les tâches
                       </div>
 
                       <!--
@@ -289,7 +305,6 @@
   <section id="the_board" class="board" phx-hook="Board" style="">
     <%= for stage <- @board.stages do %>
     <div data-stage-id={ stage.id } class="stage basecontents__without__shadow__and__radius">
-      <div>
         <div class="stage__header basecontents__without__radius" id="stage__header__sticked">
           <div class="stage__name">
             <%= stage.name %>
@@ -298,9 +313,8 @@
               <%= length(stage.cards) %>
             </b></span>
         </div>
-      </div>
 
-      <ul data-stage-id={ stage.id } class={if (not @is_admin and not @is_attributor) and stage.status_id==5 do ""
+      <ul data-stage-id={ stage.id } id="stage__height" class={if (not @is_admin and not @is_attributor) and stage.status_id==5 do ""
         else "stage__cards" end}>
 
         <%= for card <- stage.cards do %>
@@ -311,19 +325,19 @@
             do "" end}"} style={"display: #{ if card.task.hidden, do: "none !important" }; margin-bottom: 50px;"}>
 
             <%= case card.task.priority_id do %>
-            <% 1 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+            <% 1 -> %><div style="display: inline-table; font-size: 8px; padding: 4px 8px 2px 8px;"
               class="low__priority__point"> Faible </div>
-            <% 2 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+            <% 2 -> %><div style="display: inline-table; font-size: 8px; padding: 4px 8px 2px 8px;"
               class="avg__priority__point"> Moyenne </div>
-            <% 3 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+            <% 3 -> %><div style="display: inline-table; font-size: 8px; padding: 4px 8px 2px 8px;"
               class="high__priority__point"> Importante </div>
-            <% 4 -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+            <% 4 -> %><div style="display: inline-table; font-size: 8px; padding: 4px 8px 2px 8px;"
               class="urg__priority__point"> Urgente </div>
-            <% _ -> %><div style="display: inline-table; color: #fff; font-size: 7px; padding: 3px;"
+            <% _ -> %><div style="display: inline-table; font-size: 8px; padding: 4px 8px 2px 8px;"
               class="priority__point"></div>
             <% end %>
 
-            <div class="card__name" style="margin-top: 10px; font-size: 12px;">
+            <div class="card__name" style="margin-top: 10px; font-size: 11px;">
               <%= card.task.title %>
             </div>
 
@@ -361,28 +375,17 @@
             <div class="column" style="margin-bottom: 5px;">
               <div style="font-size: 10px; text-align: center;">
                 <div style="display: flex;">
-                  <div class="column">
-                    <div style="font-size: 9px; font-weight: bold;"> Attributeur </div>
-                    <img class="profile-pic-mini-resized" src={
+                  <div class="column" style="cursor: pointer;">
+                    <img title={"#{card.task.attributor.username}"} class="profile-pic-mini-resized" src={
                       Routes.static_path(@socket, "/#{card.task.attributor.profile_picture}" ) } width="50" />
 
-                    <div class="zoom-out"
-                      style="font-size: 8px; margin-top: 4px; word-wrap: anywhere; margin-left: 2px;">
-                      <%= "#{card.task.attributor.username}" %>
-                    </div>
                   </div>
 
                   <%= if card.task.contributor !=nil do %>
                   <div class="right-button" style="display: flex;">
-                    <div class="column">
-                      <div style="font-size: 9px; font-weight: bold;"> Contributeur </div>
-                      <img class="profile-pic-mini-resized" src={
+                    <div class="column" style="cursor: pointer;">
+                      <img title={"#{card.task.contributor.username}"} class="profile-pic-mini-resized" src={
                         Routes.static_path(@socket, "/#{card.task.contributor.profile_picture}" ) } width="50" />
-
-                      <div class="zoom-out"
-                        style="font-size: 8px; margin-top: 4px; word-wrap: anywhere; margin-left: 2px;">
-                        <%= "#{card.task.contributor.username}" %>
-                      </div>
                     </div>
                   </div>
                   <% end %>
@@ -400,7 +403,7 @@
 
           <div style="display: flex; 
                  box-shadow: 0px 11px 35px 2px rgba(90, 87, 87, 0.2);
-                 background-color: #3498db; 
+                 background-color: #34495e; 
                  float: right; 
                  margin-top: -50px;
                  margin-right: 4px; 
