@@ -35,10 +35,6 @@ defmodule PmLoginWeb.Project.BoardLive do
         _ -> {}
       end
 
-
-
-
-
     task_changeset = Monitoring.change_task(%Task{})
     modif_changeset = Monitoring.change_task(%Task{})
 
@@ -116,7 +112,13 @@ defmodule PmLoginWeb.Project.BoardLive do
        show_hidden_modal: false,
        hidden_tasks: Monitoring.list_hidden_tasks(pro_id),
        project_contributors: Monitoring.list_project_contributors(board),
-       project_attributors: Monitoring.list_project_attributors(board)
+       project_attributors: Monitoring.list_project_attributors(board),
+       hour: 0,
+       minute: 0,
+       second: 0,
+       data_card_id: nil,
+       estimated_duration: 0,
+       total: 0
      )
      |> allow_upload(:file,
        accept:
@@ -233,12 +235,12 @@ defmodule PmLoginWeb.Project.BoardLive do
 
     Monitoring.broadcast_deleted_task({:ok, :deleted})
 
-    {:noreply, socket
-              |> clear_flash()
-              |> assign(delete_task_modal: false)
-              |> put_flash(:info, "Tâche #{task.title} supprimé.")
-              |> push_event("AnimateAlert", %{})
-    }
+    {:noreply,
+     socket
+     |> clear_flash()
+     |> assign(delete_task_modal: false)
+     |> put_flash(:info, "Tâche #{task.title} supprimé.")
+     |> push_event("AnimateAlert", %{})}
   end
 
   def handle_event(
@@ -345,9 +347,11 @@ defmodule PmLoginWeb.Project.BoardLive do
     {:noreply, socket}
   end
 
-  def handle_event("distinct_task", %{"_target" => ["task_view"], "task_view" => radio_value}, socket) do
-    # IO.inspect(radio_value)
-
+  def handle_event(
+        "distinct_task",
+        %{"_target" => ["task_view"], "task_view" => radio_value},
+        socket
+      ) do
     stages =
       case radio_value do
         "task" ->
@@ -383,7 +387,13 @@ defmodule PmLoginWeb.Project.BoardLive do
         _ -> false
       end
 
-    {:noreply, socket |> assign(board: board, showing_primaries: showing_primaries, showing_secondaries: showing_secondaries)}
+    {:noreply,
+     socket
+     |> assign(
+       board: board,
+       showing_primaries: showing_primaries,
+       showing_secondaries: showing_secondaries
+     )}
   end
 
   def handle_event("distinct_task", %{"_target" => ["task_view"]}, socket) do
@@ -806,7 +816,9 @@ defmodule PmLoginWeb.Project.BoardLive do
 
     s_modal = if key == "Escape" and show_modal == true, do: false, else: show_modal
 
-    s_delete = if key == "Escape" and delete_task_modal == true, do: false, else: delete_task_modal
+    s_delete =
+      if key == "Escape" and delete_task_modal == true, do: false, else: delete_task_modal
+
     s_hidden_modal =
       if key == "Escape" and show_hidden_modal == true, do: false, else: show_hidden_modal
 
@@ -1319,7 +1331,6 @@ defmodule PmLoginWeb.Project.BoardLive do
   end
 
   def handle_event("show_comments_menu", %{"id" => id}, socket) do
-
     card_menu = Kanban.get_card_from_modal!(id)
     # IO.puts id
     # IO.puts "com modal showed"
@@ -1332,10 +1343,7 @@ defmodule PmLoginWeb.Project.BoardLive do
      |> assign(show_comments_menu: true, card_with_comments: card, com_nb: com_nb)
      |> push_event("updateScroll", %{})
      |> assign(show_plus_modal: false, card: card_menu)
-     |> assign(show_modif_menu: false, card: card_menu)
-    }
-
-
+     |> assign(show_modif_menu: false, card: card_menu)}
   end
 
   def handle_event("load_comments", %{}, socket) do
@@ -1363,12 +1371,12 @@ defmodule PmLoginWeb.Project.BoardLive do
 
   def handle_event("show_plus_modal", %{"id" => id}, socket) do
     card = Kanban.get_card_from_modal!(id)
+
     {:noreply,
-      socket
-      |> assign(show_plus_modal: true, card: card)
-      |> assign(show_modif_menu: false, card: card)
-      |> assign(show_comments_menu: false, card: card)
-    }
+     socket
+     |> assign(show_plus_modal: true, card: card)
+     |> assign(show_modif_menu: false, card: card)
+     |> assign(show_comments_menu: false, card: card)}
   end
 
   def handle_event("show_modif_modal", %{"id" => id}, socket) do
@@ -1378,12 +1386,100 @@ defmodule PmLoginWeb.Project.BoardLive do
 
   def handle_event("show_modif_menu", %{"id" => id}, socket) do
     card = Kanban.get_card_from_modal!(id)
+
     {:noreply,
-      socket
-      |> assign(show_modif_menu: true, card: card)
-      |> assign(show_plus_modal: false, card: card)
-      |> assign(show_comments_menu: false, card: card)
-    }
+     socket
+     |> assign(show_modif_menu: true, card: card)
+     |> assign(show_plus_modal: false, card: card)
+     |> assign(show_comments_menu: false, card: card)}
+  end
+
+  def handle_event("start_clock", %{"id" => id}, socket) do
+    :timer.send_interval(1000, self(), :tick)
+
+    card = Kanban.get_card_from_modal!(id)
+
+    estimated_duration = card.task.estimated_duration
+    performed_duration = card.task.performed_duration
+
+    {:noreply,
+     socket
+     |> assign(
+       estimated_duration: estimated_duration,
+       performed_duration: performed_duration,
+       data_card_id: card.id,
+       hour: 0,
+       minute: 0,
+       second: 0
+     )}
+  end
+
+  def handle_event("stop_clock", %{"id" => id}, socket) do
+    card = Kanban.get_card_from_modal!(id)
+
+    estimated_duration = card.task.estimated_duration
+
+    hour = socket.assigns.hour
+    minute = socket.assigns.minute
+    second = socket.assigns.second
+
+    total = hour * 60 + minute + second / 60
+
+    total =
+      total
+      |> Float.round(2)
+      |> trunc()
+
+    task = Monitoring.get_task_with_card!(card.task.id)
+
+    performed_duration = task.performed_duration
+
+    Monitoring.update_task(task, %{"performed_duration" => performed_duration + total})
+
+    :timer.kill_after(0)
+
+    {:noreply,
+     socket
+     |> assign(estimated_duration: estimated_duration)}
+  end
+
+  def handle_info(:tick, %{assigns: %{second: 59}} = socket) do
+    minute = socket.assigns.minute
+    {:noreply, socket |> assign(second: 0, minute: minute + 1)}
+  end
+
+  def handle_info(:tick, %{assigns: %{minute: 60}} = socket) do
+    hour = socket.assigns.hour
+    {:noreply, socket |> assign(minute: 0, hour: hour + 1, second: 1)}
+  end
+
+  def handle_info(:tick, %{assigns: %{second: second}} = socket) do
+    hour = socket.assigns.hour
+    minute = socket.assigns.minute
+    second = socket.assigns.second
+    estimated_duration = socket.assigns.estimated_duration
+    performed_duration = socket.assigns.performed_duration
+
+    id = socket.assigns.data_card_id
+
+    total = hour * 60 + minute + second / 60
+
+    total =
+      total
+      |> Float.round(2)
+      |> trunc()
+
+    # total_and_performed = total + performed_duration
+
+    # if total_and_performed >= estimated_duration do
+    #   card = Kanban.get_card_from_modal!(id)
+
+    #   task = Monitoring.get_task_with_card!(card.task.id)
+
+    #   Monitoring.update_task(task, %{"performed_duration" => performed_duration + total})
+    # end
+
+    {:noreply, socket |> assign(second: second + 1, total: total + performed_duration)}
   end
 
   def handle_info({TaskModalLive, :button_clicked, %{action: "cancel"}}, socket) do
@@ -1410,10 +1506,10 @@ defmodule PmLoginWeb.Project.BoardLive do
 
   def handle_event("submit_secondary", %{"task" => params}, socket) do
     # IO.puts("input")
-    hour        = String.to_integer(params["hour"])
-    minutes     = String.to_integer(params["minutes"])
+    hour = String.to_integer(params["hour"])
+    minutes = String.to_integer(params["minutes"])
 
-    total_minutes  = (hour * 60) + minutes
+    total_minutes = hour * 60 + minutes
 
     # Ajouter la durée estimée dans le map
     params = Map.put(params, "estimated_duration", total_minutes)
@@ -1485,10 +1581,10 @@ defmodule PmLoginWeb.Project.BoardLive do
     # IO.inspect params["estimated_duration"]
     # IO.puts("#{is_integer(params["estimated_duration"])}")
 
-    hour        = String.to_integer(params["hour"])
-    minutes     = String.to_integer(params["minutes"])
+    hour = String.to_integer(params["hour"])
+    minutes = String.to_integer(params["minutes"])
 
-    total_minutes  = (hour * 60) + minutes
+    total_minutes = hour * 60 + minutes
 
     # Ajouter la durée estimée dans le map
     params = Map.put(params, "estimated_duration", total_minutes)
@@ -1541,13 +1637,13 @@ defmodule PmLoginWeb.Project.BoardLive do
     # IO.puts "OIIIIIIIIII"
     # IO.inspect params
 
-    hour        = String.to_integer(params["hour"])
-    hour_p      = String.to_integer(params["hour_performed"])
-    minutes     = String.to_integer(params["minutes"])
-    minutes_p   = String.to_integer(params["minutes_performed"])
+    hour = String.to_integer(params["hour"])
+    hour_p = String.to_integer(params["hour_performed"])
+    minutes = String.to_integer(params["minutes"])
+    minutes_p = String.to_integer(params["minutes_performed"])
 
-    total_minutes   = (hour * 60) + minutes
-    total_minutes_p = (hour_p * 60) + minutes_p
+    total_minutes = hour * 60 + minutes
+    total_minutes_p = hour_p * 60 + minutes_p
 
     # Ajouter la durée estimée dans le map
     params =

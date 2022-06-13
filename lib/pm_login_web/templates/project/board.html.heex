@@ -160,18 +160,6 @@
                     >
                       Création sous-tâche
                     </div>
-
-                    <!--
-                    <button 
-                        title="Création sous-tâche"
-                        href="#"
-                        class="card-button"
-                        phx-click="show-secondary"
-                        style="font-size: 10px; height: 30px; margin-top: 4px;"
-                    >
-                      <i class="bi bi-plus-circle" style="font-size: 16px; color: #fff;"></i> 
-                    </button>
-                    -->
                     
                     <%= if @is_admin or @is_attributor do %>
                       <div 
@@ -223,13 +211,14 @@
               <% end %>
 
               <div class="circular-progression" style="margin-top: -15px">
-                <% prog_color = cond do @board.project.progression                                     <=20   -> "#e63946"
-                                        @board.project.progression > 20 and @board.project.progression <= 40  -> "#e76f51"
-                                        @board.project.progression > 40 and @board.project.progression <= 60  -> "#ffba08"
-                                        @board.project.progression > 60 and @board.project.progression <= 80  -> "#457b9d"
-                                        @board.project.progression > 80 and @board.project.progression <= 100 -> "#2a9d8f"
-                                        true                                                                  -> "black"
-                                end
+                <% prog_color = 
+                  cond do @board.project.progression                                     <=20   -> "#e63946"
+                          @board.project.progression > 20 and @board.project.progression <= 40  -> "#e76f51"
+                          @board.project.progression > 40 and @board.project.progression <= 60  -> "#ffba08"
+                          @board.project.progression > 60 and @board.project.progression <= 80  -> "#457b9d"
+                          @board.project.progression > 80 and @board.project.progression <= 100 -> "#2a9d8f"
+                          true                                                                  -> "black"
+                  end
                 %>
 
                 <div class="pie" style={"--p: #{@board.project.progression};--c:#{prog_color};--b:4px"}> <%= @board.project.progression %>% </div>
@@ -295,24 +284,61 @@
             <% _ -> %><div style="display: inline-table; font-size: 8px; padding: 4px 8px 2px 8px;"
               class="priority__point"></div>
             <% end %>
-            
-            <!--
+
+            <div style="display: none;">
+              <%=
+                performed_duration = card.task.performed_duration / 60
+                                  # trunc, retourne la partie entier
+                i_hour             = trunc(performed_duration)
+                e                  = performed_duration - i_hour
+                i_minutes          = round(e * 60)
+                i_seconds          = round(i_minutes * 60)
+              %>
+            </div>
+
+
             <%= if @data_card_id != nil do %>
               <%= if card.id == @data_card_id do %> 
-                <%= if @hour != nil and @minute != nil do %>
-                  <%= if @hour < 10 and @hour >= 0, do: "0#{@hour}", else: @hour %>
-                  :
-                  <%= cond do %>
-                      <% @minute < 10 -> %> <%= "0#{@minute}" %>
-                      <% @minute > 59 -> %> <%= "00" %>
-                      <% true -> %> <%= @minute %>
-                  <% end %>
-                  :
-                  <%= if @second < 10 and @second >= 0, do: "0#{@second}", else: @second %>
+                <%= if @total >= card.task.estimated_duration do %>
+                   <div id="task-timer" class="task-timer-record" style="background-color: #e74c3c;">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <%= if @hour != nil and @minute != nil do %>
+                      <%= cond do %>
+                        <% @hour < 10 and i_hour < 10 -> %> <%= "0#{@hour + i_hour}" %>
+                        <% true -> %> <%= @hour + i_hour %>
+                      <% end %>
+                      :
+                      <%= cond do %>
+                        <% @minute < 10 and i_minutes < 10 -> %> <%= "0#{@minute + i_minutes}" %>
+                        <% @minute > 59 -> %> <%= "00" %>
+                        <% true -> %> <%= @minute + i_minutes %>
+                      <% end %>
+                      :
+                      <%= if @second < 10 and @second >= 0, do: "0#{@second}", else: @second %>
+                    <% end %>
+                  </div>
+                <% else %>
+                  <div id="task-timer">
+                    <i class="bi bi-play task-timer-record"></i>
+                    <%= if @hour != nil and @minute != nil do %>
+                      <%= cond do %>
+                        <% @hour < 10 and i_hour < 10 -> %> <%= "0#{@hour + i_hour}" %>
+                        <% true -> %> <%= @hour + i_hour %>
+                      <% end %>
+                      :
+                      <%= cond do %>
+                        <% @minute < 10 and i_minutes < 10 -> %> <%= "0#{@minute + i_minutes}" %>
+                        <% @minute > 59 -> %> <%= "00" %>
+                        <% true -> %> <%= @minute + i_minutes %>
+                      <% end %>
+                      :
+                      <%= if @second < 10 and @second >= 0, do: "0#{@second}", else: @second %>
+                    <% end %>
+                  </div>
                 <% end %>
               <% end %>
             <% end %>
-            -->
+
 
             <div class="card__name" style="margin-top: 10px; font-size: 11px;">
               <%= card.task.title %>
@@ -399,41 +425,29 @@
               class="bi bi-pencil modif__icon" phx-click="show_modif_modal" phx-value-id={card.id}>
             </a>
 
-            <!-- 
-            <a
-              class="bi bi-play modif__icon"
-              title="Démarrer le compteur"
-              style={"display: #{ if card.task.hidden, do: "none !important" }; padding: -1px; font-size: 20px;"}
-              type="button"
-              phx-click="start_clock"
-              phx-value-id={card.id}
-            >
-            </a>
+            <%= if @is_attributor or @is_contributor do %>
+              <a id="starting_clock" title="Démarrer le compteur" style={"display: #{ if card.task.hidden, do: "none !important" }; font-size: 20px;"}
+                class="bi bi-play modif__icon" phx-click={Phoenix.LiveView.JS.push("start_clock") |> Phoenix.LiveView.JS.hide(to: "#starting_clock", transition: "fade-out")} phx-value-id={card.id}>
+              </a>
+          
+              <a id="stoping_clock" title="Arrêter le compteur" style={"display: #{ if card.task.hidden, do: "none !important" }; font-size: 20px;"}
+                class="bi bi-stop modif__icon" phx-click={Phoenix.LiveView.JS.push("stop_clock") |> Phoenix.LiveView.JS.show(to: "#starting_clock", transition: "fade-out")} phx-value-id={card.id}> 
+              </a>
+            <% end %>
 
-            <a
-              class="bi bi-pause modif__icon"
-              title="Arrêter le compteur"
-              style={"display: #{ if card.task.hidden, do: "none !important" }; padding: -1px; font-size: 20px;"}
-              type="button"
-              phx-click="stop_clock"
-              phx-value-id={card.id}
-            >
-            </a>
-          -->
 
-            <%= if @is_admin or @is_attributor do %>
-            <a title="Archiver" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
-              class="bi bi-archive delete__icon" phx-click="go_archive" phx-value-id={card.task.id}>
-            </a>
+            <%= if @is_admin do %>
+              <a title="Archiver" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
+                class="bi bi-archive delete__icon" phx-click="go_archive" phx-value-id={card.task.id}>
+              </a>
             <% end %>
 
             <%= if @is_admin or @is_attributor do %>
-            <a title="Supprimer" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
-              class="bi bi-trash3 delete__icon" phx-click="delete_task" phx-value-id={card.task.id}>
-            </a>
+              <a title="Supprimer" style={"display: #{ if card.task.hidden, do: "none !important" }; padding: 8px;"}
+                class="bi bi-trash3 delete__icon" phx-click="delete_task" phx-value-id={card.task.id}>
+              </a>
             <% end %>
           </div>
-
         </div>
 
         <% end %>
@@ -693,9 +707,10 @@
                 <% end %>
               </div>
             </div>
-            <button class="btn btn-lg btn-primary right-button" style="float: right;" type="submit"><i
-                class="bi bi-clock-fill"></i>
-              Planifier</button>
+            <button class="btn btn-lg btn-primary right-button" style="float: right;" type="submit">
+              <i class="bi bi-clock-fill"></i>
+              Planifier
+            </button>
 
           </.form>
         </div>
@@ -745,16 +760,14 @@
                   <%= task.period %> jours
                 </td>
                 <td>
-                  <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/#{task.attributor.profile_picture}"
-                    ) } width="50" style="position: relative;" />
+                  <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/#{task.attributor.profile_picture}") } width="50" style="position: relative;" />
                   <%= task.attributor.username %>
                 </td>
                 <td>
                   <%= if is_nil(task.contributor) do %>
                   -
                   <% else %>
-                  <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/#{task.contributor.profile_picture}"
-                    ) } width="50" style="position: relative;" />
+                  <img class="profile-pic-mini" src={ Routes.static_path(@socket, "/#{task.contributor.profile_picture}") } width="50" style="position: relative;" />
                   task.contributor.username
                   <% end %>
                 </td>
@@ -790,9 +803,9 @@
         <div class="column">
           <h3 style="text-align: center;">Retirer?</h3>
           <p style="text-align: center;">Êtes-vous sûr(e) de retirer la tâche planifiée
-            <%= if not
-                              is_nil(@del_plan_id) do PmLogin.Monitoring.get_planified!(@del_plan_id).description end %>
-            ?</p>
+            <%= if not is_nil(@del_plan_id) do PmLogin.Monitoring.get_planified!(@del_plan_id).description end %>
+            ?
+          </p>
 
           <div class="modal-buttons" style="margin-bottom: 20px;">
             <!-- Left Button -->

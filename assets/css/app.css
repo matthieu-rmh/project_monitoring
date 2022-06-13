@@ -34,6 +34,7 @@
 @import "./checkbox.css";
 @import "./switch.css";
 @import "./scrollbar.css";
+@import "./timer.css";
 
 @font-face {
   font-family: "Axiforma";

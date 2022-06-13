@@ -33,6 +33,8 @@ import {LiveSocket} from "phoenix_live_view"
 import { Sortable, Plugins } from "@shopify/draggable";
 import topbar from "../vendor/topbar"
 
+// import "../vendor/timer.js";
+
 let messageBody = document.querySelector('#messageBody');
 
 const Hooks = {}

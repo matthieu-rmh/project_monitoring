@@ -168,25 +168,14 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <% end %>
                         </td>
                         <td data-label="Durée effectuée">
-                          <%= if @is_contributor do %>
-                            <input id="task_estimated_duration_hour" name="task[hour]" type="hidden" min="0" placeholder="Heure" value={i_hour} style="max-width: 125px; margin-bottom: 0; height: auto;"/>
-
-                            <input id="task_estimated_duration_minutes" name="task[minutes]" type="hidden" min="0" max="60" placeholder="Minutes" value={i_minutes} style="max-width: 125px; margin-bottom: 0; height: auto;"/>
-
-                            <input id="task_estimated_duration_hour_performed" name="task[hour_performed]" type="number" min="0" placeholder="Heure" value={hour_p} style="max-width: 125px; margin-bottom: 0; height: auto;" required> h
-
-                            <input id="task_estimated_duration_minutes_performed" name="task[minutes_performed]" type="number" min="0" max="60" placeholder="Minutes" value={minutes_p} style="max-width: 125px; margin-bottom: 0; height: auto;" required> m
-                            <%= error_tag_modif f, :negative_performed%>
-                          <% else %>
-                            <%=
-                              cond do
-                                hour_p == 0 and minutes_p >= 0 -> if minutes_p > 1, do: "#{minutes_p} minutes", else: "#{minutes_p} minute"
-                                hour_p >= 0 and minutes_p == 0 -> if hour_p > 1, do: "#{hour_p} heures", else: "#{hour_p} heure"
-                                hour_p > 0  and minutes_p > 0  -> "#{hour_p} h #{minutes_p} m"
-                                true                           -> ""
-                              end
-                            %>
-                          <% end %>
+                          <%=
+                            cond do
+                              hour_p == 0 and minutes_p >= 0 -> if minutes_p > 1, do: "#{minutes_p} minutes", else: "#{minutes_p} minute"
+                              hour_p >= 0 and minutes_p == 0 -> if hour_p > 1, do: "#{hour_p} heures", else: "#{hour_p} heure"
+                              hour_p > 0  and minutes_p > 0  -> "#{hour_p} h #{minutes_p} m"
+                              true                           -> ""
+                            end
+                          %>
                         </td>
                         <td data-label="Progression">
                           <input id="task_progression" name="task[progression]" style="width: 70px; margin-bottom: 0;" type="number" value={@card.task.progression} min="0" max="100"> %
