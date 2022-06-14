@@ -1404,6 +1404,7 @@ defmodule PmLoginWeb.Project.BoardLive do
 
     {:noreply,
      socket
+     |> clear_flash()
      |> assign(
        estimated_duration: estimated_duration,
        performed_duration: performed_duration,
@@ -1440,6 +1441,7 @@ defmodule PmLoginWeb.Project.BoardLive do
 
     {:noreply,
      socket
+     |> clear_flash()
      |> assign(estimated_duration: estimated_duration)}
   end
 

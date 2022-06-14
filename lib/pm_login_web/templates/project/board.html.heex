@@ -212,7 +212,7 @@
 
               <div class="circular-progression" style="margin-top: -15px">
                 <% prog_color = 
-                  cond do @board.project.progression                                     <=20   -> "#e63946"
+                  cond do @board.project.progression                                     <= 20  -> "#e63946"
                           @board.project.progression > 20 and @board.project.progression <= 40  -> "#e76f51"
                           @board.project.progression > 40 and @board.project.progression <= 60  -> "#ffba08"
                           @board.project.progression > 60 and @board.project.progression <= 80  -> "#457b9d"
@@ -285,17 +285,14 @@
               class="priority__point"></div>
             <% end %>
 
-            <div style="display: none;">
-              <%=
-                performed_duration = card.task.performed_duration / 60
-                                  # trunc, retourne la partie entier
-                i_hour             = trunc(performed_duration)
-                e                  = performed_duration - i_hour
-                i_minutes          = round(e * 60)
-                i_seconds          = round(i_minutes * 60)
-              %>
-            </div>
-
+            <%
+              performed_duration = card.task.performed_duration / 60
+                                # trunc, retourne la partie entier
+              i_hour             = trunc(performed_duration)
+              e                  = performed_duration - i_hour
+              i_minutes          = round(e * 60)
+              i_seconds          = round(i_minutes * 60)
+            %>
 
             <%= if @data_card_id != nil do %>
               <%= if card.id == @data_card_id do %> 
@@ -426,12 +423,30 @@
             </a>
 
             <%= if @is_attributor or @is_contributor do %>
-              <a id="starting_clock" title="Démarrer le compteur" style={"display: #{ if card.task.hidden, do: "none !important" }; font-size: 20px;"}
-                class="bi bi-play modif__icon" phx-click={Phoenix.LiveView.JS.push("start_clock") |> Phoenix.LiveView.JS.hide(to: "#starting_clock", transition: "fade-out")} phx-value-id={card.id}>
+              <a 
+                id="starting_clock" 
+                title="Démarrer le compteur" 
+                style={"display: #{ if card.task.hidden, do: "none !important" }; font-size: 20px;"}
+                class="bi bi-play modif__icon" 
+                phx-click={
+                  Phoenix.LiveView.JS.push("start_clock") 
+                  |> Phoenix.LiveView.JS.hide(to: "#starting_clock") 
+                  |> Phoenix.LiveView.JS.show(to: "#stoping_clock")
+                } 
+                phx-value-id={card.id}>
               </a>
           
-              <a id="stoping_clock" title="Arrêter le compteur" style={"display: #{ if card.task.hidden, do: "none !important" }; font-size: 20px;"}
-                class="bi bi-stop modif__icon" phx-click={Phoenix.LiveView.JS.push("stop_clock") |> Phoenix.LiveView.JS.show(to: "#starting_clock", transition: "fade-out")} phx-value-id={card.id}> 
+              <a 
+                id="stoping_clock" 
+                title="Arrêter le compteur" 
+                style="display: none; font-size: 20px;"
+                class="bi bi-stop modif__icon" 
+                phx-click={
+                  Phoenix.LiveView.JS.push("stop_clock") 
+                  |> Phoenix.LiveView.JS.show(to: "#starting_clock") 
+                  |> Phoenix.LiveView.JS.hide(to: "#stoping_clock")
+                } 
+                phx-value-id={card.id}> 
               </a>
             <% end %>
 
