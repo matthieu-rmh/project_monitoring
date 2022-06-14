@@ -136,8 +136,7 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                           end %>
                         </td>
 
-                        <p style="display: none">
-                          <%=
+                          <%
                             estimated_duration = @card.task.estimated_duration / 60
                                                # trunc, retourne la partie entier
                             i_hour             = trunc(estimated_duration)
@@ -150,7 +149,6 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                             p                  = performed_duration - hour_p
                             minutes_p          = round(p * 60)
                           %>
-                        </p>
 
 
                         <td data-label="Durée estimée">

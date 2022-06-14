@@ -51,15 +51,13 @@
                                         </div>
                                         <div class=" column-50 recap__cols">
                                         <div>Durée estimée: 
-                                            <p style="display: none">
-                                                <%=
+                                                <%
                                                     estimated_duration = task.estimated_duration / 60
                                                                     # trunc, retourne la partie entier
                                                     i_hour             = trunc(estimated_duration)
                                                     e                  = estimated_duration - i_hour
                                                     i_minutes          = round(e * 60)
                                                 %>
-                                            </p>
                                             <p class="onboard__text__descri">
                                                 <%=
                                                     cond do

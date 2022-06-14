@@ -102,8 +102,7 @@
                 <td>
                   <%= if not is_nil(project.date_end) do Utilities.simple_date_format(project.date_end) else "-" end %>
                 </td>
-                <p style="display: none;"> 
-                  <%=
+                  <%
                     estimated_duration = project.estimated_duration / 60
                     i_hour             = trunc(estimated_duration)
                     e                  = estimated_duration - i_hour
@@ -115,7 +114,6 @@
                     p                  = performed_duration - hour_p
                     minutes_p          = round(p * 60)
                   %>
-                </p>
                 <td>
                   <%=
                     cond do

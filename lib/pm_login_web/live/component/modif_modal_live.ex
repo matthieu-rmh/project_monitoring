@@ -131,8 +131,7 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                           <% end %>
                         </td>
                         <td data-label="Durée estimée">
-                          <p style="display: none">
-                            <%=
+                            <%
                               estimated_duration = @card.task.estimated_duration / 60
                                                 # trunc, retourne la partie entier
                               i_hour             = trunc(estimated_duration)
@@ -145,7 +144,6 @@ defmodule PmLoginWeb.LiveComponent.ModifModalLive do
                               p                  = performed_duration - hour_p
                               minutes_p          = round(p * 60)
                             %>
-                          </p>
 
                           <%= if @is_admin or @is_attributor do %>
                             <input id="task_estimated_duration_hour_performed" name="task[hour_performed]" type="hidden" min="0" placeholder="Heure" value={hour_p} style="max-width: 125px; margin-bottom: 0; height: auto;" required>
