@@ -241,7 +241,7 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
 
     curr_user_id = socket.assigns.curr_user_id
     content = "Tâche #{task.title} supprimé par #{Login.get_user!(curr_user_id).username}."
-    Services.send_notifs_to_admins_and_attributors(curr_user_id, content)
+    Services.send_notifs_to_admins_and_attributors(curr_user_id, content, 3)
 
     Monitoring.broadcast_deleted_task({:ok, :deleted})
 
@@ -374,7 +374,8 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
           Services.send_notif_to_one(
             updated_task.attributor_id,
             updated_task.contributor_id,
-            "#{Login.get_user!(updated_task.attributor_id).username} vous a assigné à la tâche #{updated_task.title}."
+            "#{Login.get_user!(updated_task.attributor_id).username} vous a assigné à la tâche #{updated_task.title}.",
+            6
           )
         end
 

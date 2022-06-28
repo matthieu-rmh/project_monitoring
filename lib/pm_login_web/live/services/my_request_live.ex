@@ -111,7 +111,8 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
 
         Services.send_notifs_to_admins(
           curr_user_id,
-          "Le client #{the_client.user.username} de la société #{the_client.company.name} a envoyé une requête intitulée \"#{result.title}\"."
+          "Le client #{the_client.user.username} de la société #{the_client.company.name} a envoyé une requête intitulée \"#{result.title}\".",
+          5
         )
 
         Monitoring.broadcast_clients_requests({:ok, :clients_requests})

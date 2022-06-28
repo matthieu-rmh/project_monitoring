@@ -211,7 +211,7 @@ defmodule PmLoginWeb.Project.BoardLive do
 
     curr_user_id = socket.assigns.curr_user_id
     content = "Tâche #{task.title} archivée par #{Login.get_user!(curr_user_id).username}."
-    Services.send_notifs_to_admins_and_attributors(curr_user_id, content)
+    Services.send_notifs_to_admins_and_attributors(curr_user_id, content, 2)
 
     Monitoring.broadcast_archived_task({:ok, :archived})
 
@@ -231,7 +231,7 @@ defmodule PmLoginWeb.Project.BoardLive do
 
     curr_user_id = socket.assigns.curr_user_id
     content = "Tâche #{task.title} supprimé par #{Login.get_user!(curr_user_id).username}."
-    Services.send_notifs_to_admins_and_attributors(curr_user_id, content)
+    Services.send_notifs_to_admins_and_attributors(curr_user_id, content, 3)
 
     Monitoring.broadcast_deleted_task({:ok, :deleted})
 
@@ -1026,7 +1026,8 @@ defmodule PmLoginWeb.Project.BoardLive do
             Services.send_notifs_to_admins_and_attributors(
               curr_user_id,
               "Tâche \"#{Monitoring.get_task_with_status!(real_task.id).title}\"
-          du projet #{socket.assigns.board.project.title} mise dans \" #{Monitoring.get_task_with_status!(real_task.id).status.title} \" par #{Login.get_user!(curr_user_id).username}"
+          du projet #{socket.assigns.board.project.title} mise dans \" #{Monitoring.get_task_with_status!(real_task.id).status.title} \" par #{Login.get_user!(curr_user_id).username}",
+              1
             )
 
             socket
@@ -1560,7 +1561,8 @@ defmodule PmLoginWeb.Project.BoardLive do
           Services.send_notif_to_one(
             task.attributor_id,
             task.contributor_id,
-            "Vous avez été assigné à la sous-tâche #{task.title} du projet #{Monitoring.get_project!(task.project_id).title}"
+            "Vous avez été assigné à la sous-tâche #{task.title} du projet #{Monitoring.get_project!(task.project_id).title}",
+            6
           )
         end
 
@@ -1612,14 +1614,16 @@ defmodule PmLoginWeb.Project.BoardLive do
 
         Services.send_notifs_to_admins_and_attributors(
           curr_user_id,
-          "Tâche nouvellement créee du nom de #{task.title} par #{Login.get_user!(curr_user_id).username} dans le projet #{this_project.title}."
+          "Tâche nouvellement créee du nom de #{task.title} par #{Login.get_user!(curr_user_id).username} dans le projet #{this_project.title}.",
+          5
         )
 
         if not is_nil(task.contributor_id) do
           Services.send_notif_to_one(
             curr_user_id,
             task.contributor_id,
-            "#{Login.get_user!(task.attributor_id).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}."
+            "#{Login.get_user!(task.attributor_id).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}.",
+            6
           )
         end
 
@@ -1675,7 +1679,8 @@ defmodule PmLoginWeb.Project.BoardLive do
           Services.send_notif_to_one(
             updated_task.attributor_id,
             updated_task.contributor_id,
-            "#{Login.get_user!(updated_task.attributor_id).username} vous a assigné à la tâche #{updated_task.title}."
+            "#{Login.get_user!(updated_task.attributor_id).username} vous a assigné à la tâche #{updated_task.title}.",
+            6
           )
         end
 

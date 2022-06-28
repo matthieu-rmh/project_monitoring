@@ -9,7 +9,7 @@ defmodule PmLogin.Services do
   alias PmLogin.Services.Company
   alias PmLogin.Login.User
   alias PmLogin.Login
-  alias PmLogin.Services.{Software, Editor, License, AssistContract}
+  alias PmLogin.Services.{Software, Editor, License, AssistContract, Type}
 
   @topic inspect(__MODULE__)
   def subscribe do
@@ -85,6 +85,12 @@ defmodule PmLogin.Services do
   def create_company(attrs \\ %{}) do
     %Company{}
     |> Company.create_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_type(attrs \\ %{}) do
+    %Type{}
+    |> Type.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -1001,31 +1007,44 @@ defmodule PmLogin.Services do
     |> Repo.insert()
   end
 
-  def send_notif_to_one(sender_id, receiver_id, content) do
-  %{"content" => content, "seen" => false, "sender_id" => sender_id, "receiver_id" => receiver_id}
-  |> send_notification
+  def send_notif_to_one(sender_id, receiver_id, content, notifications_type_id) do
+    map =
+      %{
+        "content" => content,
+        "seen" => false,
+        "sender_id" => sender_id,
+        "receiver_id" => receiver_id,
+        "notifications_type_id" => notifications_type_id
+      }
+    send_notification(map)
   end
 
-  def send_notifs_to_admins_and_attributors(curr_user_id, content) do
+  def send_notifs_to_admins_and_attributors(curr_user_id, content, notifications_type_id) do
     notifs = Login.list_admins_and_attributors(curr_user_id)
     |> Enum.map(fn id ->
-       [sender_id: curr_user_id, content: content,
-       receiver_id: id, seen: false,
-       inserted_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second),
-       updated_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second)]
+        [
+          sender_id: curr_user_id, content: content,
+          receiver_id: id, seen: false,
+          inserted_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second),
+          updated_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second),
+          notifications_type_id: notifications_type_id
+        ]
      end)
 
     Repo.insert_all(Notification, notifs)
     |> broadcast_notifs([:notifs, :sent])
   end
 
-  def send_notifs_to_admins(curr_user_id, content) do
+  def send_notifs_to_admins(curr_user_id, content, notifications_type_id) do
     notifs = Login.list_admins(curr_user_id)
     |> Enum.map(fn id ->
-       [sender_id: curr_user_id, content: content,
-       receiver_id: id, seen: false,
-       inserted_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second),
-       updated_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second)]
+       [
+          sender_id: curr_user_id, content: content,
+          receiver_id: id, seen: false,
+          inserted_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second),
+          updated_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second),
+          notifications_type_id: notifications_type_id
+        ]
      end)
 
     Repo.insert_all(Notification, notifs)

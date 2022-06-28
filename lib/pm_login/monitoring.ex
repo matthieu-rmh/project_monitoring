@@ -711,7 +711,8 @@ defmodule PmLogin.Monitoring do
 
     Services.send_notifs_to_admins_and_attributors(
       curr_user_id,
-      "La tâche #{task.title} a été achevée avec toutes ses tâches filles."
+      "La tâche #{task.title} a été achevée avec toutes ses tâches filles.",
+      4
     )
   end
 
@@ -739,7 +740,8 @@ defmodule PmLogin.Monitoring do
 
     Services.send_notifs_to_admins_and_attributors(
       curr_user_id,
-      "La tâche #{task.title} a été achevée."
+      "La tâche #{task.title} a été achevée.",
+      4
     )
   end
 
@@ -1181,7 +1183,8 @@ defmodule PmLogin.Monitoring do
 
       Services.send_notifs_to_admins_and_attributors(
         curr_user_id,
-        "La tâche #{moth.title} a été placée automatiquement \"en cours\" car toutes ses tâches filles ont été achevées"
+        "La tâche #{moth.title} a été placée automatiquement \"en cours\" car toutes ses tâches filles ont été achevées",
+        7
       )
     end
   end
@@ -1286,14 +1289,16 @@ defmodule PmLogin.Monitoring do
 
     Services.send_notifs_to_admins_and_attributors(
       planified_map[:attributor_id],
-      "Tâche nouvellement créee du nom de #{task.title} par #{Login.get_user!(planified_map[:attributor_id]).username} dans le projet #{this_project.title}."
+      "Tâche nouvellement créee du nom de #{task.title} par #{Login.get_user!(planified_map[:attributor_id]).username} dans le projet #{this_project.title}.",
+      5
     )
 
     if not is_nil(planified_map[:contributor_id]) do
       Services.send_notif_to_one(
         planified_map[:attributor_id],
         planified_map[:contributor_id],
-        "#{Login.get_user!(planified_map[:attributor_id]).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}."
+        "#{Login.get_user!(planified_map[:attributor_id]).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}.",
+        6
       )
     end
   end

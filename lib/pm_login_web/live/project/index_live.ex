@@ -228,7 +228,8 @@ defmodule PmLoginWeb.Project.IndexLive do
 
         Services.send_notifs_to_admins_and_attributors(
           curr_user_id,
-          "Tâche nouvellement créee du nom de #{task.title} par #{Login.get_user!(curr_user_id).username} dans le projet #{this_project.title}."
+          "Tâche nouvellement créee du nom de #{task.title} par #{Login.get_user!(curr_user_id).username} dans le projet #{this_project.title}.",
+          5
         )
 
         # Mettre la requête en vue
@@ -253,7 +254,8 @@ defmodule PmLoginWeb.Project.IndexLive do
           Services.send_notif_to_one(
             curr_user_id,
             task.contributor_id,
-            "#{Login.get_user!(task.attributor_id).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}."
+            "#{Login.get_user!(task.attributor_id).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}.",
+            6
           )
         end
 

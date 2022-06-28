@@ -31,7 +31,7 @@ defmodule PmLoginWeb.Services.RequestsLive do
     end
     curr_user_id = socket.assigns.curr_user_id
     notif_text = "La requête #{request.title} a été #{text_vu}"
-    Services.send_notif_to_one(curr_user_id, request.active_client.user_id, notif_text)
+    Services.send_notif_to_one(curr_user_id, request.active_client.user_id, notif_text, 8)
 
     {:noreply, socket |> put_flash(:info, notif_text) |> push_event("AnimateAlert", %{})}
   end
@@ -50,7 +50,7 @@ defmodule PmLoginWeb.Services.RequestsLive do
     end
     curr_user_id = socket.assigns.curr_user_id
     notif_text = "La requête #{request.title} #{text_encours}"
-    Services.send_notif_to_one(curr_user_id, request.active_client.user_id, notif_text)
+    Services.send_notif_to_one(curr_user_id, request.active_client.user_id, notif_text, 8)
 
     {:noreply, socket |> put_flash(:info, notif_text) |> push_event("AnimateAlert", %{})}
   end
@@ -70,7 +70,7 @@ defmodule PmLoginWeb.Services.RequestsLive do
     curr_user_id = socket.assigns.curr_user_id
 
     notif_text = "Requête #{request.title} #{text_accomplie}"
-    Services.send_notif_to_one(curr_user_id, request.active_client.user_id, notif_text)
+    Services.send_notif_to_one(curr_user_id, request.active_client.user_id, notif_text, 8)
     {:noreply, socket |> put_flash(:info, notif_text) |> push_event("AnimateAlert", %{})}
   end
 
