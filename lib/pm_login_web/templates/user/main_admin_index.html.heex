@@ -6,7 +6,10 @@
 
         <a href={Routes.company_path(@socket, :services)}  class="column">
           <div class="card-style">
-            <img src={ Routes.static_path(@socket, "/images/6.jpg" )}/>
+            <img
+              class="image-fit-cover" 
+              src={ Routes.static_path(@socket, "/images/6.jpg" )}
+            />
             <div style="padding: 20px;">
               <span class="material-icons mat__ico">miscellaneous_services</span>
               <p>Services</p>
@@ -16,7 +19,10 @@
 
         <a href={Routes.user_path(@socket, :admin_space)} class="column">
           <div class="card-style">
-            <img src={ Routes.static_path(@socket, "/images/3.jpg" )}/>
+            <img 
+              class="image-fit-cover"
+              src={ Routes.static_path(@socket, "/images/3.jpg" )}
+            />
             <div style="padding: 7px;">
               <span class="material-icons mat__ico">admin_panel_settings</span>
               <p>Espace administrateur</p>
@@ -26,7 +32,10 @@
 
         <a href={Routes.project_path(@socket, :recaps)} class="column">
           <div class="card-style">
-            <img src={ Routes.static_path(@socket, "/images/12.jpg" )}/>
+            <img 
+              class="image-fit-cover"
+              src={ Routes.static_path(@socket, "/images/12.jpg" )}
+            />
             <div style="padding: 20px;">
               <span class="material-icons mat__ico">stacked_line_chart</span>
               <p>Récapitulatifs</p>

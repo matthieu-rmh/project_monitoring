@@ -3,7 +3,10 @@
 <div class="row" style="margin-top: 50px;">
   <a href={Routes.contributor_path(@socket, :my_projects)} class="column">
     <div class="card-style">
-      <img src={ Routes.static_path(@socket, "/images/1.jpg" )} />
+      <img 
+        class="image-fit-cover" 
+        src={ Routes.static_path(@socket, "/images/1.jpg" )} 
+      />
       <div style="padding: 20px;">
         <span class="material-icons mat__ico">insert_chart</span>
         <p>Mes projets</p>
@@ -12,7 +15,10 @@
   </a>
   <a href={Routes.contributor_path(@socket, :my_tasks)} class="column">
     <div class="card-style">
-      <img src={ Routes.static_path(@socket, "/images/9.jpg" )} />
+      <img 
+        class="image-fit-cover" 
+        src={ Routes.static_path(@socket, "/images/9.jpg" )} 
+      />
       <div style="padding: 20px;">
         <span class="material-icons mat__ico">format_list_bulleted</span>
         <p>Mes tâches</p>
@@ -21,7 +27,10 @@
   </a>
   <a href={Routes.user_path(@socket, :show, @curr_user_id)} class="column">
     <div class="card-style">
-      <img src={ Routes.static_path(@socket, "/images/4.jpg" )} />
+      <img 
+        class="image-fit-cover" 
+        src={ Routes.static_path(@socket, "/images/4.jpg" )} 
+      />
       <div style="padding: 20px;">
         <span class="material-icons mat__ico">account_circle</span>
         <p>Mon profil</p>
