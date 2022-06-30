@@ -262,4 +262,26 @@ end
     end
   end
 
+  # Logs: Historiques
+  def logs(conn, _params) do
+    if Login.is_connected?(conn) do
+      cond do
+        Login.is_admin?(conn) ->
+          LiveView.Controller.live_render(
+            conn,
+            PmLoginWeb.Project.LogsLive,
+            session: %{"curr_user_id" => get_session(conn, :curr_user_id)},
+            router: PmLoginWeb.Router
+          )
+
+        true ->
+          conn
+            |> Login.not_admin_redirection
+      end
+    else
+      conn
+      |> Login.not_connected_redirection
+    end
+  end
+
 end
