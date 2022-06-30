@@ -1,8 +1,8 @@
 defmodule PmLoginWeb.Router do
   use PmLoginWeb, :router
-"""
-COMMENTED ROUTES ARE NOT TO BE DELETED BUT JUST NOT USED AT THE TIME
-"""
+
+# COMMENTED ROUTES ARE NOT TO BE DELETED BUT JUST NOT USED AT THE TIME
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -20,6 +20,7 @@ COMMENTED ROUTES ARE NOT TO BE DELETED BUT JUST NOT USED AT THE TIME
     pipe_through :browser
 
     #contributor route
+    get "/logs", ProjectController, :logs
     get "/my_projects", ContributorController, :my_projects
     get "/my_tasks", ContributorController, :my_tasks
 
