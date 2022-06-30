@@ -10,9 +10,9 @@
               class="image-fit-cover" 
               src={ Routes.static_path(@socket, "/images/6.jpg" )}
             />
-            <div style="padding: 20px;">
+            <div style="padding: 20px; display: block ruby">
               <span class="material-icons mat__ico">miscellaneous_services</span>
-              <p>Services</p>
+              <p style="margin-top: revert;">Services</p>
             </div>
           </div>
         </a>
@@ -23,26 +23,41 @@
               class="image-fit-cover"
               src={ Routes.static_path(@socket, "/images/3.jpg" )}
             />
-            <div style="padding: 7px;">
+            <div style="padding: 20px; display: block ruby">
               <span class="material-icons mat__ico">admin_panel_settings</span>
-              <p>Espace administrateur</p>
+              <p style="margin-top: revert;">Espace administrateur</p>
             </div>
           </div>
         </a>
 
-        <a href={Routes.project_path(@socket, :recaps)} class="column">
-          <div class="card-style">
-            <img 
-              class="image-fit-cover"
-              src={ Routes.static_path(@socket, "/images/12.jpg" )}
-            />
-            <div style="padding: 20px;">
-              <span class="material-icons mat__ico">stacked_line_chart</span>
-              <p>Récapitulatifs</p>
-            </div>
+    </div>
+
+
+    <div class="row">
+      <a href={Routes.project_path(@socket, :recaps)} class="column">
+        <div class="card-style">
+          <img 
+            class="image-fit-cover"
+            src={ Routes.static_path(@socket, "/images/12.jpg" )}
+          />
+          <div style="padding: 20px; display: block ruby">
+            <span class="material-icons mat__ico">stacked_line_chart</span>
+            <p style="margin-top: revert;">Récapitulatifs</p>
           </div>
-        </a>
+        </div>
+      </a>
+
+      <a href={Routes.project_path(@socket, :logs)} class="column">
+        <div class="card-style">
+          <img 
+            class="image-fit-cover"
+            src={ Routes.static_path(@socket, "/images/13.jpg" )}
+          />
+          <div style="padding: 20px; display: block ruby">
+            <span class="material-icons mat__ico">stacked_line_chart</span>
+            <p style="margin-top: revert;">Tableau de bord</p>
+          </div>
+        </div>
+      </a>
     </div>
   </div>
-
-  <h1 style="text-align: center; margin-top: 20px;">Bienvenue administrateur Mgbi!</h1>
