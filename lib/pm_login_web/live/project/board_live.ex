@@ -1561,7 +1561,13 @@ defmodule PmLoginWeb.Project.BoardLive do
           Services.send_notif_to_one(
             task.attributor_id,
             task.contributor_id,
-            "Vous avez été assigné à la sous-tâche #{task.title} du projet #{Monitoring.get_project!(task.project_id).title}",
+            "#{Login.get_user!(task.contributor_id).username} a été assigné à la sous-tâche #{task.title} du projet #{Monitoring.get_project!(task.project_id).title} par #{Login.get_user!(task.attributor_id).username}",
+            6
+          )
+
+          Services.send_notifs_to_admins(
+            task.attributor_id,
+            "#{Login.get_user!(task.contributor_id).username} a été assigné à la sous-tâche #{task.title} du projet #{Monitoring.get_project!(task.project_id).title} par #{Login.get_user!(task.attributor_id).username}",
             6
           )
         end
@@ -1622,7 +1628,13 @@ defmodule PmLoginWeb.Project.BoardLive do
           Services.send_notif_to_one(
             curr_user_id,
             task.contributor_id,
-            "#{Login.get_user!(task.attributor_id).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}.",
+            "#{Login.get_user!(task.contributor_id).username} a été assigné à la tâche #{task.title} dans le projet #{this_project.title} par #{Login.get_user!(curr_user_id).username}",
+            6
+          )
+
+          Services.send_notifs_to_admins(
+            curr_user_id,
+            "#{Login.get_user!(task.contributor_id).username} a été assigné à la tâche #{task.title} dans le projet #{this_project.title} par #{Login.get_user!(curr_user_id).username}",
             6
           )
         end
@@ -1679,7 +1691,13 @@ defmodule PmLoginWeb.Project.BoardLive do
           Services.send_notif_to_one(
             updated_task.attributor_id,
             updated_task.contributor_id,
-            "#{Login.get_user!(updated_task.attributor_id).username} vous a assigné à la tâche #{updated_task.title}.",
+            "#{Login.get_user!(updated_task.contributor_id).username} a été assigné à la tâche #{updated_task.title} par #{Login.get_user!(updated_task.attributor_id).username}",
+            6
+          )
+
+          Services.send_notifs_to_admins(
+            updated_task.attributor_id,
+            "#{Login.get_user!(updated_task.contributor_id).username} a été assigné à la tâche #{updated_task.title} par #{Login.get_user!(updated_task.attributor_id).username}",
             6
           )
         end

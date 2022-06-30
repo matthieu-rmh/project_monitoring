@@ -359,7 +359,13 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
           Services.send_notif_to_one(
             updated_task.attributor_id,
             updated_task.contributor_id,
-            "#{Login.get_user!(updated_task.attributor_id).username} vous a assigné à la tâche #{updated_task.title}.",
+            "#{Login.get_user!(updated_task.contributor_id).username} a été assigné à la tâche #{updated_task.title} par #{Login.get_user!(updated_task.attributor_id).username}",
+            6
+          )
+
+          Services.send_notifs_to_admins(
+            updated_task.attributor_id,
+            "#{Login.get_user!(updated_task.contributor_id).username} a été assigné à la tâche #{updated_task.title} par #{Login.get_user!(updated_task.attributor_id).username}",
             6
           )
         end

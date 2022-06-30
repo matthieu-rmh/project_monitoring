@@ -27,7 +27,7 @@
     <main id="main" role="main" class="container">
       <p class="alert alert-info basecontents" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p> -->
-  
+
       <%= @inner_content %>
       <!-- <br/>
       <br/>

@@ -254,7 +254,13 @@ defmodule PmLoginWeb.Project.IndexLive do
           Services.send_notif_to_one(
             curr_user_id,
             task.contributor_id,
-            "#{Login.get_user!(task.attributor_id).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}.",
+            "#{Login.get_user!(task.contributor_id).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}.",
+            6
+          )
+
+          Services.send_notifs_to_admins(
+            curr_user_id,
+            "#{Login.get_user!(task.contributor_id).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}.",
             6
           )
         end
