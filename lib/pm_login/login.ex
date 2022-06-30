@@ -8,7 +8,7 @@ defmodule PmLogin.Login do
   alias PmLogin.Repo
   alias PmLogin.Services.ActiveClient
   alias PmLogin.Services
-  alias PmLogin.Login.Right
+  alias PmLogin.Login.{Right, User}
 
   @topic inspect(__MODULE__)
   def subscribe do
@@ -24,6 +24,72 @@ defmodule PmLogin.Login do
   def filter_username(text, username) do
     Regex.match?(~r/^#{text}/i, username)
   end
+
+  # Récuperer la liste des administrateurs
+  def list_admins_users do
+    query =
+      from u in User,
+      where: u.right_id == 1
+
+    Repo.all(query)
+  end
+
+   # Récuperer la liste des attributeurs
+  def list_attributors_users do
+    query =
+      from u in User,
+      where: u.right_id == 2
+
+    Repo.all(query)
+  end
+
+   # Récuperer la liste des attributeurs par son identifiant
+  def list_attributors_users(attributor_id) do
+    query =
+      from u in User,
+      where: u.id == ^attributor_id
+
+    # Récupérer qu'une seule résultat
+    Repo.one(query)
+  end
+
+   # Récuperer la liste des contributeurs
+  def list_contributors_users do
+    query =
+      from u in User,
+      where: u.right_id == 3
+
+    Repo.all(query)
+  end
+
+    # Récuperer la liste des contributeurs par son identifiant
+  def list_contributors_users(contributor_id) do
+    query =
+      from u in User,
+      where: u.id == ^contributor_id
+
+    # Pour ne pas envoyer le résultat en forme de liste
+    Repo.one(query)
+  end
+
+   # Récuperer la liste des clients
+  def list_clients_users do
+    query =
+      from u in User,
+      where: u.right_id == 4
+
+    Repo.all(query)
+  end
+
+  # Récuperer la liste utilisateurs non attribuées
+  def list_unattributed_users do
+    query =
+      from u in User,
+      where: u.right_id == 5
+
+    Repo.all(query)
+  end
+
   @doc """
   Returns the list of rights.
 

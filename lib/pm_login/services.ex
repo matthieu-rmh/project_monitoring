@@ -931,6 +931,72 @@ defmodule PmLogin.Services do
     Repo.all(Notification)
   end
 
+   # Récupérer la liste des notification en tant qu'administrateur
+   def list_notifications_by_updated_at_desc do
+    query =
+      from n in Notification,
+      order_by: [desc: n.updated_at]
+
+    Repo.all(query)
+  end
+
+  def list_notifications_updated_today do
+    # Récupérer la date actuelle et le changer en chaine de caractères
+    date_today =
+      Date.utc_today()
+      |> Date.to_string()
+
+    # IO.inspect(date_today)
+    query =
+      from n in Notification,
+      where: n.receiver_id == 85,
+      order_by: [desc: n.updated_at]
+
+    result = Repo.all(query)
+
+    # IO.inspect(result)
+
+    # Filtrer les résultats
+    # Récupérer les tâches qui sont modifiés à la date actuelle
+    Enum.filter(result,
+      fn result ->
+        string = NaiveDateTime.to_string(result.updated_at)
+        String.contains?(string, date_today)
+      end
+    )
+  end
+
+  def list_notifications_updated_yesterday do
+    # Récupérer la date actuelle et le changer en chaine de caractères
+    date_today = Date.utc_today()
+
+    date_yesterday =
+      Date.new!(date_today.year, date_today.month, date_today.day - 1)
+      |> Date.to_string()
+
+    # IO.puts("µµµµµµµµµµµµ")
+    # IO.inspect(date_yesterday)
+
+    query =
+      from n in Notification,
+      where: n.receiver_id == 85,
+      order_by: [desc: n.updated_at]
+
+    result = Repo.all(query)
+
+    # IO.inspect(result)
+
+    # Filtrer les résultats
+    # Récupérer les tâches qui sont modifiés à la date actuelle
+    Enum.filter(result,
+      fn result ->
+        string = NaiveDateTime.to_string(result.updated_at)
+        String.contains?(string, date_yesterday)
+      end
+    )
+  end
+
+
   def list_my_notifications(id) do
     query = from n in Notification,
             where: n.receiver_id == ^id,
@@ -954,7 +1020,7 @@ defmodule PmLogin.Services do
   end
 
   def time_ago(%Notification{} = n) do
-    seconds_ago = NaiveDateTime.diff(NaiveDateTime.utc_now, n.inserted_at)
+    seconds_ago = NaiveDateTime.diff(NaiveDateTime.local_now(), n.inserted_at)
     # IO.puts seconds_ago
     cond do
       seconds_ago > 59 and seconds_ago < 3600 -> "#{trunc(seconds_ago / 60)} minute(s)"
@@ -1025,8 +1091,9 @@ defmodule PmLogin.Services do
         [
           sender_id: curr_user_id, content: content,
           receiver_id: id, seen: false,
-          inserted_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second),
-          updated_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second),
+          # Mettre la date et heure d'insertion à la même que celle de l'utilisateur
+          inserted_at: NaiveDateTime.local_now(),
+          updated_at: NaiveDateTime.local_now(),
           notifications_type_id: notifications_type_id
         ]
      end)
@@ -1041,8 +1108,9 @@ defmodule PmLogin.Services do
        [
           sender_id: curr_user_id, content: content,
           receiver_id: id, seen: false,
-          inserted_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second),
-          updated_at: (NaiveDateTime.utc_now)|>NaiveDateTime.truncate(:second),
+          # Mettre la date et heure d'insertion à la même que celle de l'utilisateur
+          inserted_at: NaiveDateTime.local_now(),
+          updated_at: NaiveDateTime.local_now(),
           notifications_type_id: notifications_type_id
         ]
      end)

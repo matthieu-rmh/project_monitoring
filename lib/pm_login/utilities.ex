@@ -18,6 +18,7 @@ defmodule PmLogin.Utilities do
   def simple_date_format_with_hours_onboard(naive_dt) do
     Calendar.strftime(naive_dt, "%d/%m/%Y, %Hh %M")
   end
+
   def letters_date_format_with_hours(naive_dt) do
 
     Calendar.strftime(naive_dt,"%A %d %B %Y, %Hh %M",
@@ -26,6 +27,17 @@ defmodule PmLogin.Utilities do
          "Vendredi", "Samedi", "Dimanche"}
          |> elem(day_of_week - 1)
        end,
+       month_names: fn month ->
+         {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+         "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"}
+         |> elem(month - 1)
+       end
+      )
+  end
+
+  def letters_date_format_with_only_month_and_hours(naive_dt) do
+
+    Calendar.strftime(naive_dt,"%d %B %Y, %Hh %M",
        month_names: fn month ->
          {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
          "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"}

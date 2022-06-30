@@ -7,7 +7,7 @@ defmodule PmLogin.Monitoring do
   import PmLogin.Utilities
   alias PmLogin.Repo
   alias PmLogin.Kanban
-  alias PmLogin.Monitoring.{Status, Task, Planified}
+  alias PmLogin.Monitoring.{Status, Task, Planified, Priority}
   alias PmLogin.Login
   alias PmLogin.Services
   alias PmLogin.Login.User
@@ -711,7 +711,7 @@ defmodule PmLogin.Monitoring do
 
     Services.send_notifs_to_admins_and_attributors(
       curr_user_id,
-      "La tâche #{task.title} a été achevée avec toutes ses tâches filles.",
+      "Tâche #{task.title} a été achevée avec toutes ses tâches filles.",
       4
     )
   end
@@ -1011,7 +1011,7 @@ defmodule PmLogin.Monitoring do
   end
 
   def list_achieved_tasks_today do
-    achieved_tasks = list_achieved_tasks
+    achieved_tasks = list_achieved_tasks()
     curr_date = Services.current_date()
 
     achieved_tasks
@@ -1022,7 +1022,7 @@ defmodule PmLogin.Monitoring do
   end
 
   def list_achieved_tasks_this_week do
-    achieved_tasks = list_achieved_tasks
+    achieved_tasks = list_achieved_tasks()
     curr_date = Services.current_date()
 
     achieved_tasks
@@ -1033,7 +1033,7 @@ defmodule PmLogin.Monitoring do
   end
 
   def list_achieved_tasks_this_month do
-    achieved_tasks = list_achieved_tasks
+    achieved_tasks = list_achieved_tasks()
     curr_date = Services.current_date()
 
     achieved_tasks
@@ -1065,8 +1065,239 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  def list_statuses_by_id(status_id) do
+    query =
+      from s in Status,
+      where: s.id == ^status_id
+
+    Repo.one(query)
+  end
+
+  def get_first_and_third_name do
+    ""
+  end
+
+  def get_first_and_third_name(title) do
+    cond do
+      String.length(title) <= 0 ->
+        ""
+
+      String.length(title) < 3 and String.length(title) > 0 ->
+        title
+        |> String.upcase()
+
+      true ->
+        title =
+          title
+          |> String.slice(0, 3)
+          |> String.upcase()
+          |> String.graphemes()
+
+        [one, _two, three] = title
+        one <> three
+    end
+  end
+
+  def list_priorities(priority_id) do
+    query =
+      from p in Priority,
+      where: p.id == ^priority_id
+
+    Repo.one(query)
+  end
+
   def list_tasks do
-    Repo.all(Task)
+    query =
+      from t in Task,
+      order_by: [desc: t.updated_at]
+
+    Repo.all(query)
+  end
+
+  # Récupérer la liste des tâches par mise à jour d'ordre décroissant
+  def list_tasks_order_by_updated_at do
+    query =
+      from t in Task,
+      where: t.status_id != 5,
+      order_by: [desc: t.updated_at]
+
+    Repo.all(query)
+  end
+
+  # Récupérer la liste des tâches achevées par mise à jour d'ordre décroissant
+  def list_tasks_achieved_order_by_updated_at do
+    query =
+      from t in Task,
+      where: t.status_id == 5,
+      order_by: [desc: t.updated_at]
+
+    Repo.all(query)
+  end
+
+  # Récupérer la liste des tâches par contributor_id
+  def list_tasks_by_contributor_id(contributor_id) do
+    query =
+      from t in Task,
+      where: t.status_id != 5 and t.contributor_id == ^contributor_id
+
+    Repo.all(query)
+  end
+
+  # Récupérer la liste des tâches sans contributeurs
+  def list_tasks_without_contributor do
+    query =
+      from t in Task,
+      where: t.status_id != 5 and is_nil(t.contributor_id)
+
+    Repo.all(query)
+  end
+
+  # Récupérer la liste des tâches filtrer par date de début
+  def list_tasks_filtered_by_date(date) do
+    query =
+      from t in Task,
+      where: t.status_id != 5 and t.date_start <= ^date,
+      order_by: [desc: t.updated_at]
+
+    Repo.all(query)
+  end
+
+  # Récupérer la listes des tâches mise à jour aujourd'hui
+  def list_tasks_filtered_by_date_today do
+    # Récupérer la date actuelle et le changer en chaine de caractères
+    date_today =
+      Date.utc_today()
+      |> Date.to_string()
+
+    # IO.inspect(date_today)
+
+    query =
+      from t in Task,
+      where: t.status_id != 5,
+      order_by: [desc: t.updated_at]
+
+    result = Repo.all(query)
+
+    # Filtrer les résultats
+    # Récupérer les tâches qui sont modifiés à la date actuelle
+    Enum.filter(result,
+      fn result ->
+        string = NaiveDateTime.to_string(result.updated_at)
+        String.contains?(string, date_today)
+      end
+    )
+  end
+
+  # Récupérer la liste des tâches effectuées hier
+  def list_tasks_updated_yesterday do
+    # Récupérer la date actuelle et le changer en chaine de caractères
+    date_today = Date.utc_today
+
+    date_yesterday =
+      Date.new!(date_today.year, date_today.month, date_today.day - 1)
+      |> Date.to_string()
+
+    # IO.inspect(date_yesterday)
+
+    query =
+      from t in Task,
+      where: t.status_id != 5,
+      order_by: [desc: t.updated_at]
+
+    result = Repo.all(query)
+
+    # Filtrer les résultats
+    # Récupérer les tâches qui sont modifiés à la date actuelle
+    Enum.filter(result,
+      fn result ->
+        string = NaiveDateTime.to_string(result.updated_at)
+        String.contains?(string, date_yesterday)
+      end
+    )
+  end
+
+  # Récupérer la liste des tâches effectuées il y a un mois
+  def list_tasks_updated_a_month_ago do
+    # Récupérer la date actuelle et le changer en chaine de caractères
+    date_today = NaiveDateTime.local_now()
+
+    month_ago =
+      NaiveDateTime.new!(date_today.year, date_today.month - 1, date_today.day, 23, 59, 59)
+
+
+    # IO.inspect(month_ago)
+
+    query =
+      from t in Task,
+      where: t.status_id != 5 and t.updated_at <= ^month_ago,
+      order_by: [desc: t.updated_at]
+
+    Repo.all(query)
+  end
+
+  # Différence entre la date de mise à jour et la date locale
+  def difference_between_updated_at_and_local_time(naive_dt) do
+    # Récupérer le fuseau horaire de l'utilisateur
+    # Convertir le fuseau horaire saisie en heure locale
+    time =
+      NaiveDateTime.local_now()
+      |> NaiveDateTime.to_time()
+
+    # Convertir le fuseau horaire saisie en heure locale
+    naive_dt = NaiveDateTime.to_time(naive_dt)
+
+    # Calculer la différence entre la date de mise à jour et l'heure locale
+    seconds_ago = Time.diff(time, naive_dt, :second)
+
+    cond do
+
+      # seconds_ago > 59 and seconds_ago < 3600 -> "#{trunc(seconds_ago / 60)} minute(s)"
+      # seconds_ago > 3599 and seconds_ago < 86400 -> "#{trunc(seconds_ago / 3600)} heure(s)"
+      # seconds_ago > 86399 and seconds_ago < 2592000 -> "#{trunc(seconds_ago / 86400)} jour(s)"
+      # seconds_ago > 2591999 and seconds_ago < 31104000 -> "#{trunc(seconds_ago / 2592000)} mois"
+      # seconds_ago > 31103999 -> "#{trunc(seconds_ago / 31104000)} an(s)"
+      # true -> "#{seconds_ago} secondes"
+
+      # On affiche la seconde
+      seconds_ago >= 0 and seconds_ago < 60 ->
+        if seconds_ago > 1 do
+          "Il y a #{seconds_ago} secondes"
+        else
+          "Il y a #{seconds_ago} seconde"
+        end
+
+      # On affiche la minute
+      seconds_ago >= 60 and seconds_ago < 3600 ->
+        # On convertit la minute en integer
+        seconds_ago = Integer.floor_div(seconds_ago, 60)
+
+        if seconds_ago > 1 do
+          "Il y a #{seconds_ago} minutes"
+        else
+          "Il y a #{seconds_ago} minute"
+        end
+
+      # On affiche l'heure
+      seconds_ago >= 3600 and seconds_ago < 86400 ->
+        seconds_ago = Integer.floor_div(seconds_ago, 3600)
+
+        if seconds_ago > 1 do
+          "Il y a #{seconds_ago} heures"
+        else
+          "Il y a #{seconds_ago} heure"
+        end
+
+      seconds_ago >= 86400 and seconds_ago < 2592000 ->
+        seconds_ago = Integer.floor_div(seconds_ago, 86400)
+
+        if seconds_ago > 1 do
+          "Il y a #{seconds_ago} jour"
+        else
+          "Il y a #{seconds_ago} jours"
+        end
+
+      true -> "#{seconds_ago} secondes"
+    end
   end
 
   def show_hidden_tasks(project_id) do
@@ -1183,7 +1414,7 @@ defmodule PmLogin.Monitoring do
 
       Services.send_notifs_to_admins_and_attributors(
         curr_user_id,
-        "La tâche #{moth.title} a été placée automatiquement \"en cours\" car toutes ses tâches filles ont été achevées",
+        "Tâche #{moth.title} a été placée automatiquement \"en cours\" car toutes ses tâches filles ont été achevées",
         7
       )
     end
@@ -1297,7 +1528,13 @@ defmodule PmLogin.Monitoring do
       Services.send_notif_to_one(
         planified_map[:attributor_id],
         planified_map[:contributor_id],
-        "#{Login.get_user!(planified_map[:attributor_id]).username} vous a assigné à la tâche #{task.title} dans le projet #{this_project.title}.",
+        "#{Login.get_user!(planified_map[:contributor_id]).username} a été assigné à la tâche #{task.title} dans le projet #{this_project.title} par #{Login.get_user!(planified_map[:attributor_id]).username}",
+        6
+      )
+
+      Services.send_notifs_to_admins(
+        planified_map[:attributor_id],
+        "#{Login.get_user!(planified_map[:contributor_id]).username} a été assigné à la tâche #{task.title} dans le projet #{this_project.title} par #{Login.get_user!(planified_map[:attributor_id]).username}",
         6
       )
     end
