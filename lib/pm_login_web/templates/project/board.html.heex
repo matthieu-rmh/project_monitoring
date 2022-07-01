@@ -379,6 +379,10 @@
                     <img title={"#{card.task.attributor.username}"} class="profile-pic-mini-resized" src={
                       Routes.static_path(@socket, "/#{card.task.attributor.profile_picture}" ) } width="50" />
 
+                    <div class="zoom-out"
+                      style="font-size: 8px; margin-top: 4px; word-wrap: anywhere; margin-left: 2px;">
+                      <%= "#{card.task.attributor.username}" %>
+                    </div>
                   </div>
 
                   <%= if card.task.contributor !=nil do %>
@@ -386,6 +390,11 @@
                     <div class="column" style="cursor: pointer;">
                       <img title={"#{card.task.contributor.username}"} class="profile-pic-mini-resized" src={
                         Routes.static_path(@socket, "/#{card.task.contributor.profile_picture}" ) } width="50" />
+
+                      <div class="zoom-out"
+                        style="font-size: 8px; margin-top: 4px; word-wrap: anywhere; margin-left: 2px;">
+                        <%= "#{card.task.contributor.username}" %>
+                      </div>
                     </div>
                   </div>
                   <% end %>
