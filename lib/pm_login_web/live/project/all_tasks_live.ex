@@ -6,6 +6,7 @@ defmodule PmLoginWeb.Project.AllTasksLive do
   alias PmLogin.Monitoring
   alias PmLogin.Monitoring.{Task, Priority}
   alias PmLogin.Services
+  alias PmLogin.Kanban
 
 
   def mount(_params, %{"curr_user_id" => curr_user_id}, socket) do
@@ -63,19 +64,80 @@ defmodule PmLoginWeb.Project.AllTasksLive do
     {:ok, socket, layout: {PmLoginWeb.LayoutView, "admin_layout_live.html"}}
   end
 
-  # def handle_info({Monitoring, [_, _], _}, socket) do
-  #   socket =
-  #     socket
-  #     |> assign(
-  #       list_projects: Monitoring.list_projects,
-  #       list_tasks: Monitoring.list_tasks,
-  #       list_tasks_updated_today: Monitoring.list_tasks_filtered_by_date_today,
-  #       list_tasks_achieved: Monitoring.list_tasks_achieved_order_by_updated_at,
-  #       list_tasks_updated_yesterday: Monitoring.list_tasks_updated_yesterday
-  #     )
+  def handle_event("delete_card", %{"id" => id}, socket) do
+    task = Monitoring.get_task_with_card!(id)
+    card = Kanban.get_card!(task.card.id)
 
-  #   {:noreply, socket}
-  # end
+    Monitoring.remove_card(card.task_id)
+
+    curr_user_id = socket.assigns.curr_user_id
+    content = "Tâche #{task.title} supprimé par #{Login.get_user!(curr_user_id).username}."
+    Services.send_notifs_to_admins_and_attributors(curr_user_id, content, 3)
+
+    Monitoring.broadcast_deleted_task({:ok, :deleted})
+
+    {:noreply,
+      socket
+      |> clear_flash()
+      |> assign(delete_task_modal: false)
+      |> put_flash(:info, "Tâche #{task.title} supprimé.")
+      |> push_event("AnimateAlert", %{})
+    }
+  end
+
+  def handle_event("switch-notif", %{}, socket) do
+    notifs_length = socket.assigns.notifs |> length
+    curr_user_id = socket.assigns.curr_user_id
+
+    switch =
+      if socket.assigns.show_notif do
+        ids =
+          socket.assigns.notifs
+          |> Enum.filter(fn x -> !x.seen end)
+          |> Enum.map(fn x -> x.id end)
+
+        Services.put_seen_some_notifs(ids)
+        false
+      else
+        true
+      end
+
+    {:noreply,
+     socket
+     |> assign(
+       show_notif: switch,
+       notifs: Services.list_my_notifications_with_limit(curr_user_id, notifs_length)
+     )}
+  end
+
+  def handle_event("load-notifs", %{}, socket) do
+    curr_user_id = socket.assigns.curr_user_id
+    notifs_length = socket.assigns.notifs |> length
+
+    {:noreply,
+     socket
+     |> assign(notifs: Services.list_my_notifications_with_limit(curr_user_id, notifs_length + 4))
+     |> push_event("SpinTest", %{})}
+  end
+
+  def handle_info({Monitoring, [_, _], _}, socket) do
+    socket =
+      socket
+      |> assign(
+        tasks: Monitoring.list_all_tasks_with_card()
+      )
+
+    {:noreply, socket}
+  end
+
+
+  def handle_info({Services, [:notifs, :sent], _}, socket) do
+    curr_user_id = socket.assigns.curr_user_id
+    length = socket.assigns.notifs |> length
+
+    {:noreply,
+     socket |> assign(notifs: Services.list_my_notifications_with_limit(curr_user_id, length))}
+  end
 
   def render(assigns) do
     PmLoginWeb.ProjectView.render("all_tasks.html", assigns)
