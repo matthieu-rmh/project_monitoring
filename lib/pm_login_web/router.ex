@@ -24,9 +24,11 @@ defmodule PmLoginWeb.Router do
     get "/my_projects", ContributorController, :my_projects
     get "/my_tasks", ContributorController, :my_tasks
 
+
     #Project LiveView
     get "/boards/:id", ProjectController, :board
     get "/recaps", ProjectController, :recaps
+    get "/all_tasks", ProjectController, :all_tasks
     #Monitoring context
     # resources "/statuses", StatusController
     get "tasks", ProjectController, :tasks
