@@ -184,6 +184,10 @@ defmodule PmLoginWeb.LiveComponent.PlusModalLive do
                     </tbody>
                   </table>
 
+                  <%= if @card.task.without_control and @card.task.status_id != 5 do %>
+                    <button type="button" class="btn btn-lg btn-success" phx-click="achieve" phx-value-id={@card.task.id}>Achever</button>
+                  <% end %>
+
                   <div class="zoom-out" style="margin-bottom: 6px; font-size: 11px">
                     Nombre approximatif d'heures par jour ouvrable pour l'intervenant pour terminer cette tâche avant la date d'échéance:
                   </div>

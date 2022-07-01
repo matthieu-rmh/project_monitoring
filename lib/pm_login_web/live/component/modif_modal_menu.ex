@@ -214,10 +214,6 @@ defmodule PmLoginWeb.LiveComponent.ModifModalMenu do
                     </tbody>
                   </table>
 
-                      <%= if @card.task.without_control and @is_contributor and @card.task.status_id != 5 do %>
-                        <button type="button" class="btn btn-lg btn-success" phx-click="achieve" phx-value-id={@card.task.id}>Achever</button>
-                      <% end %>
-
                       <div class="modal-buttons" style="margin-top: -15px; margin-bottom: -15px;">
                         <!-- Left Button -->
                         <button class="button button-outline"
