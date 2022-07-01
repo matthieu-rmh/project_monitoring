@@ -1191,10 +1191,11 @@ defmodule PmLogin.Monitoring do
   # Récupérer la liste des tâches effectuées hier
   def list_tasks_updated_yesterday do
     # Récupérer la date actuelle et le changer en chaine de caractères
-    date_today = Date.utc_today
+    date_today = Date.utc_today()
 
     date_yesterday =
-      Date.new!(date_today.year, date_today.month, date_today.day - 1)
+      date_today
+      |> Date.add(-1)
       |> Date.to_string()
 
     # IO.inspect(date_yesterday)

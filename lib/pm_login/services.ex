@@ -971,7 +971,8 @@ defmodule PmLogin.Services do
     date_today = Date.utc_today()
 
     date_yesterday =
-      Date.new!(date_today.year, date_today.month, date_today.day - 1)
+      date_today
+      |> Date.add(-1)
       |> Date.to_string()
 
     # IO.puts("µµµµµµµµµµµµ")
