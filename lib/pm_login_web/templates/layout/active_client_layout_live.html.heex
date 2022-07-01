@@ -114,7 +114,7 @@
     </header>
 
 
-    <main id="main" role="main" class="container" phx-click="cancel-notif" phx-hook="AnimateAlert">
+    <main id="main" role="main" class="container" phx-hook="AnimateAlert">
       <p class="alert alert-info basecontents" role="alert"
         phx-click="lv:clear-flash" id="alert_anim"
         phx-value-key="info"><%= live_flash(@flash, :info) %><%= if not is_nil(live_flash(@flash, :info)) do %><i class="bi bi-x alert__cross"></i><% end %></p>
