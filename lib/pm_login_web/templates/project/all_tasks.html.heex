@@ -5,20 +5,63 @@
   <table class="table-tasks" id="" style="font-size: 11px;">
     <thead>
       <tr>
+        <th></th>
+        <th></th>
+        <th>
+          <form phx-change="tasks_filtered_by_status"  style="margin-bottom: -2rem;">
+            <select
+              id="task_filter"
+              name="status_id"
+              style="margin-bottom: O;  color: #fff !important;"
+            >
+              <option value="" selected disabled hidden>Statut</option>
+              <%= for status <- @statuses do %>
+                <option value={status.id}>
+                  <%= status.title %>
+                </option>
+              <% end %>
+            </select>
+          </form>
+        </th>
+        <th></th>
+        <th></th>
+        <th> 
+          <form phx-change="tasks_filtered_by_contributors"  style="margin-bottom: -2rem;">
+            <select
+              id="task_filter"
+              name="contributor_select"
+              style="margin-bottom: O;  color: #fff !important;"
+            >
+              <option value="" selected disabled hidden>Contributeurs</option>
+              <option value="9000">Tout</option>
+
+              <%= for contributor <- @contributors do %>
+                <option value={contributor.id}>
+                  <%= contributor.username %>
+                </option>
+              <% end %>
+
+              <option value="-1">Sans contributeur</option>
+            </select>
+          </form>
+        </th>
+        <th></th>
+      </tr>
+      <tr>
         <th>Projet</th>
         <th>Nom</th>
         <!-- <th>Description</th> -->
         <th>Statut</th>
         <th>Priorité</th>
-        <th>Date de début</th>
-        <th>Date d'échéance</th>
+        <th>Attributeur</th>
+        <th>Contributeur</th>
         <th>Progression</th>
       </tr>
     </thead>
     <tbody>
       <%= for task <- @tasks do %>
         <!-- Afficher les tâches si son statut est différent de Achevée(s) et que c'est pas archivé -->
-        <%= if task.status_id != 5 and task.hidden == false do %>
+        <%= if task.hidden == false do %>
           <tr>
             <td data-label="Projet" style="word-wrap: anywhere; min-width: 125px;">
               <%= link "#{task.project.title}", to: Routes.project_path(@socket, :board, task.project_id) %>
@@ -73,8 +116,16 @@
                     </div>
                 <% end %>
               </td>
-              <td data-label="Date de début" style="min-width: 125px"> <%= Calendar.strftime(task.date_start, "%d-%m-%Y") %> </td>
-              <td data-label="Date d'échéance"> <%= Calendar.strftime(task.deadline, "%d-%m-%Y") %> </td>
+              <td data-label="Attributeur" style="min-width: 125px"> 
+                <%= PmLogin.Login.get_user!(task.attributor_id).username %>
+              </td>
+              <td data-label="Contributeur">
+                <%= if is_nil(task.contributor_id) do %>
+                  <%= PmLogin.Login.get_user!(task.attributor_id).username %>
+                <% else %>
+                  <%= PmLogin.Login.get_user!(task.contributor_id).username %>
+                <% end %>
+              </td>
               <td data-label="Progression">
                 <input
                   name="progression_change"

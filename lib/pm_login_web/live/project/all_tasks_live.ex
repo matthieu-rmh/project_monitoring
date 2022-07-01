@@ -43,9 +43,9 @@ defmodule PmLoginWeb.Project.AllTasksLive do
         is_contributor: Monitoring.is_contributor?(curr_user_id),
         task_changeset: task_changeset,
         modif_changeset: modif_changeset,
-        statuses: statuses,
-        curr_user_id: curr_user_id,
         show_notif: false,
+
+        contributors: Login.list_contributors_users,
 
         # Par défault, on n'affiche pas show_plus_modal
         show_modif_menu: false,
@@ -83,6 +83,32 @@ defmodule PmLoginWeb.Project.AllTasksLive do
       |> put_flash(:info, "Tâche #{task.title} supprimé.")
       |> push_event("AnimateAlert", %{})
     }
+  end
+
+  def handle_event("tasks_filtered_by_contributors", %{"_target" => ["contributor_select"], "contributor_select" => contributor_id}, socket) do
+    list_tasks_by_contributor_id =
+      case contributor_id do
+        "9000" ->
+          Monitoring.list_all_tasks_with_card
+
+        "-1" ->
+          Monitoring.list_tasks_without_contributor
+
+        _ ->
+          Monitoring.list_tasks_by_contributor_id(contributor_id)
+      end
+
+    {:noreply, socket |> assign(tasks: list_tasks_by_contributor_id)}
+  end
+
+  # Filtrer la liste des contributeurs par contributor_id
+  def handle_event("tasks_filtered_by_status", %{"_target" => ["status_id"], "status_id" => status_id}, socket) do
+    IO.puts("****************")
+    IO.inspect(status_id)
+
+    list_tasks_by_contributor_id = Monitoring.list_tasks_by_status_id(status_id)
+
+    {:noreply, socket |> assign(tasks: list_tasks_by_contributor_id)}
   end
 
   def handle_event("switch-notif", %{}, socket) do

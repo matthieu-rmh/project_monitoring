@@ -1122,7 +1122,7 @@ defmodule PmLogin.Monitoring do
     query =
       from t in Task,
       preload: [:project, :status, :priority, card: ^card_query],
-      order_by: [desc: t.priority_id]
+      order_by: [desc: t.updated_at]
     Repo.all(query)
   end
 
@@ -1148,17 +1148,40 @@ defmodule PmLogin.Monitoring do
 
   # Récupérer la liste des tâches par contributor_id
   def list_tasks_by_contributor_id(contributor_id) do
+    card_query =
+      from c in Card,
+        select: c.id
+
     query =
       from t in Task,
+      preload: [:project, :status, :priority, card: ^card_query],
       where: t.status_id != 5 and t.contributor_id == ^contributor_id
+
+    Repo.all(query)
+  end
+
+  def list_tasks_by_status_id(status_id) do
+    card_query =
+      from c in Card,
+        select: c.id
+
+    query =
+      from t in Task,
+      preload: [:project, :status, :priority, card: ^card_query],
+      where: t.status_id == ^status_id
 
     Repo.all(query)
   end
 
   # Récupérer la liste des tâches sans contributeurs
   def list_tasks_without_contributor do
+    card_query =
+      from c in Card,
+        select: c.id
+
     query =
       from t in Task,
+      preload: [:project, :status, :priority, card: ^card_query],
       where: t.status_id != 5 and is_nil(t.contributor_id)
 
     Repo.all(query)
