@@ -598,6 +598,38 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  def list_attributors_by_own_tasks(attributor_id) do
+    task_query =
+      from t in Task,
+      where: t.contributor_id == ^attributor_id and t.status_id != 5,
+      select: t.attributor_id
+
+    result = Repo.all(task_query)
+
+    query =
+      from u in User,
+      where: u.id in ^result,
+      select: {u.username, u.id}
+
+    Repo.all(query)
+  end
+
+  def list_contributors_by_attributed_tasks(attributor_id) do
+    task_query =
+      from t in Task,
+      where: t.attributor_id == ^attributor_id and t.status_id != 5,
+      select: t.contributor_id
+
+    result = Repo.all(task_query)
+
+    query =
+      from u in User,
+      where: u.id in ^result,
+      select: {u.username, u.id}
+
+    Repo.all(query)
+  end
+
   def remove_card(task_id) do
     task_query =
       from t in Task,
@@ -1160,7 +1192,7 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
-  def list_tasks_by_status_id(status_id) do
+  def list_tasks_by_status_id_and_contributor_id(status_id, contributor_id) do
     card_query =
       from c in Card,
         select: c.id
@@ -1168,7 +1200,46 @@ defmodule PmLogin.Monitoring do
     query =
       from t in Task,
       preload: [:project, :status, :priority, card: ^card_query],
-      where: t.status_id == ^status_id
+      where: t.status_id == ^status_id and t.contributor_id == ^contributor_id
+
+    Repo.all(query)
+  end
+
+  def list_tasks_by_status_id_and_attributor_id(status_id, attributor_id) do
+    card_query =
+      from c in Card,
+        select: c.id
+
+    query =
+      from t in Task,
+      preload: [:project, :status, :priority, card: ^card_query],
+      where: t.status_id == ^status_id and t.attributor_id == ^attributor_id
+
+    Repo.all(query)
+  end
+
+  def list_tasks_by_contributor_id(contributor_id, attributor_id) do
+    card_query =
+      from c in Card,
+        select: c.id
+
+    query =
+      from t in Task,
+      preload: [:project, :status, :priority, card: ^card_query],
+      where: t.contributor_id == ^contributor_id and t.attributor_id == ^attributor_id
+
+    Repo.all(query)
+  end
+
+  def list_tasks_by_attributor_id(attributor_id, contributor_id) do
+    card_query =
+      from c in Card,
+        select: c.id
+
+    query =
+      from t in Task,
+      preload: [:project, :status, :priority, card: ^card_query],
+      where: t.attributor_id == ^attributor_id and t.contributor_id == ^contributor_id
 
     Repo.all(query)
   end

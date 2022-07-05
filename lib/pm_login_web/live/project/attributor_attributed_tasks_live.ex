@@ -62,6 +62,8 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
        show_notif: false,
        secondary_changeset: secondary_changeset,
        comment_changeset: Monitoring.change_comment(%Comment{}),
+       list_contributors_by_attributed_tasks:
+         Monitoring.list_contributors_by_attributed_tasks(curr_user_id),
 
        # Par défault, on n'affiche pas show_plus_modal
        show_modif_menu: false,
@@ -82,6 +84,59 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
      ), layout: {PmLoginWeb.LayoutView, "attributor_layout_live.html"}}
   end
 
+  # Filtrer la liste des contributeurs par contributor_id
+  def handle_event(
+        "tasks_filtered_by_status",
+        %{"_target" => ["status_id"], "status_id" => status_id},
+        socket
+      ) do
+    curr_user_id = socket.assigns.curr_user_id
+
+    list_tasks_by_contributor_id =
+      case status_id do
+        "9000" ->
+          Monitoring.list_attributes_tasks_by_attributor_project(curr_user_id)
+
+        _ ->
+          Monitoring.list_tasks_by_status_id_and_attributor_id(status_id, curr_user_id)
+      end
+
+    {:noreply, socket |> assign(tasks: list_tasks_by_contributor_id)}
+  end
+
+  # Filtrer la liste des tâches par attributeurs
+  def handle_event(
+        "tasks_filtered_by_contributor",
+        %{"_target" => ["contributor_id"], "contributor_id" => contributor_id},
+        socket
+      ) do
+    curr_user_id = socket.assigns.curr_user_id
+
+    list_tasks_by_contributor_id =
+      case contributor_id do
+        "9000" ->
+          Monitoring.list_attributes_tasks_by_attributor_project(curr_user_id)
+
+        _ ->
+          Monitoring.list_tasks_by_contributor_id(contributor_id, curr_user_id)
+      end
+
+    {:noreply, socket |> assign(tasks: list_tasks_by_contributor_id)}
+  end
+
+  def handle_event("achieve", params, socket) do
+    # IO.puts "achevement"
+    # IO.inspect params
+    task = Monitoring.get_task_with_card!(params["id"])
+    # IO.inspect task
+
+    Monitoring.put_task_to_achieve(task, socket.assigns.curr_user_id)
+    # IO.inspect socket.assigns.board.stages
+    {:noreply,
+     socket
+     |> assign(show_modif_menu: false)}
+  end
+
   # Appliquer les changements du statut et de la progression
   def handle_event("status_and_progression_changed", params, socket) do
     if params["progression_change"] == nil or params["progression_change"] == "" do
@@ -95,10 +150,10 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
 
       if progression < 0 or progression > 100 do
         {:noreply,
-        socket
-        |> clear_flash()
-        |> put_flash(:error, "La progression doit être comprise entre 0 à 100")
-        |> push_event("AnimateAlert", %{})}
+         socket
+         |> clear_flash()
+         |> put_flash(:error, "La progression doit être comprise entre 0 à 100")
+         |> push_event("AnimateAlert", %{})}
       else
         task = Monitoring.get_task_with_card!(params["task_id"])
 
@@ -146,10 +201,10 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
         end
 
         {:noreply,
-        socket
-        |> clear_flash()
-        |> put_flash(:info, "#{task.card.name} mise à jour.")
-        |> push_event("AnimateAlert", %{})}
+         socket
+         |> clear_flash()
+         |> put_flash(:info, "#{task.card.name} mise à jour.")
+         |> push_event("AnimateAlert", %{})}
       end
     end
   end
@@ -245,12 +300,12 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
 
     Monitoring.broadcast_deleted_task({:ok, :deleted})
 
-    {:noreply, socket
-              |> clear_flash()
-              |> assign(delete_task_modal: false)
-              |> put_flash(:info, "Tâche #{task.title} supprimé.")
-              |> push_event("AnimateAlert", %{})
-    }
+    {:noreply,
+     socket
+     |> clear_flash()
+     |> assign(delete_task_modal: false)
+     |> put_flash(:info, "Tâche #{task.title} supprimé.")
+     |> push_event("AnimateAlert", %{})}
   end
 
   # Afficher le modal détails du tâche
@@ -344,13 +399,13 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
 
   # Mettre à jour les champs du tâche
   def handle_event("update_task", %{"task" => params}, socket) do
-    hour        = String.to_integer(params["hour"])
-    hour_p      = String.to_integer(params["hour_performed"])
-    minutes     = String.to_integer(params["minutes"])
-    minutes_p   = String.to_integer(params["minutes_performed"])
+    hour = String.to_integer(params["hour"])
+    hour_p = String.to_integer(params["hour_performed"])
+    minutes = String.to_integer(params["minutes"])
+    minutes_p = String.to_integer(params["minutes_performed"])
 
-    total_minutes   = (hour * 60) + minutes
-    total_minutes_p = (hour_p * 60) + minutes_p
+    total_minutes = hour * 60 + minutes
+    total_minutes_p = hour_p * 60 + minutes_p
 
     # Ajouter la durée estimée dans le map
     params =
@@ -542,18 +597,70 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
       <% else %>
         <table class="table-tasks" id="" style="font-size: 11px;">
           <thead>
+          <tr>
+              <th></th>
+              <th></th>
+              <th>
+                <form phx-change="tasks_filtered_by_status"  style="margin-bottom: -2rem;">
+                  <select
+                    id="task_filter"
+                    name="status_id"
+                    style="margin-bottom: O;  color: #fff !important;"
+                  >
+                    <option value="" selected disabled hidden>Trier par statut</option>
+                    <option value="9000">Tout</option>
+                    <%= for status <- @statuses do %>
+                      <option value={status.id}>
+                        <%= status.title %>
+                      </option>
+                    <% end %>
+                  </select>
+                </form>
+              </th>
+              <th></th>
+              <th>
+
+              </th>
+              <th>
+                <form phx-change="tasks_filtered_by_contributor"  style="margin-bottom: -2rem;">
+                  <select
+                    id="task_filter"
+                    name="contributor_id"
+                    style="margin-bottom: O;  color: #fff !important;"
+                  >
+                    <option value="" selected disabled hidden>Trier par contributeur</option>
+                    <option value="9000">Tout</option>
+                    <%= for attributor <- @list_contributors_by_attributed_tasks do %>
+                      <option value={elem(attributor, 1)}>
+                        <%= Login.get_username(elem(attributor, 1)) %>
+                      </option>
+                    <% end %>
+                  </select>
+                </form>
+              </th>
+              <th></th>
+            </tr>
+
             <tr>
               <th>Projet</th>
               <th>Nom</th>
               <!-- <th>Description</th> -->
               <th>Statut</th>
               <th>Priorité</th>
-              <th>Date de début</th>
-              <th>Date d'échéance</th>
+              <th>Attributeur</th>
+              <th>Contributeur</th>
               <th>Progression</th>
             </tr>
           </thead>
           <tbody>
+
+          <%= if @tasks == [] do %>
+            <div class="alert-primary" role="alert">
+              <i class="bi bi-info-circle" style="font-size: 20px"></i>
+              <div class="alert-text"> Aucune tâche ... </div>
+            </div>
+          <% else %>
+
             <%= for task <- @tasks do %>
               <!-- Afficher les tâches si son statut est différent de Achevée(s) et que c'est pas archivé -->
               <%= if task.status_id != 5 and task.hidden == false do %>
@@ -611,8 +718,8 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
                           </div>
                       <% end %>
                     </td>
-                    <td data-label="Date de début" style="min-width: 125px"> <%= Calendar.strftime(task.date_start, "%d-%m-%Y") %> </td>
-                    <td data-label="Date d'échéance"> <%= Calendar.strftime(task.deadline, "%d-%m-%Y") %> </td>
+                    <td data-label="Attributeur"> <%= Login.get_username(task.attributor_id) %> </td>
+                    <td data-label="Contributeur"> <%= Login.get_username(task.contributor_id) %> </td>
                     <td data-label="Progression">
                       <input
                         name="progression_change"
@@ -695,6 +802,8 @@ defmodule PmLoginWeb.Project.AttributorAttributedTasksLive do
                 </tr>
               <% end %>
             <% end %>
+
+          <% end %>
           </tbody>
         </table>
       <% end %>
