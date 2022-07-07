@@ -103,9 +103,6 @@ defmodule PmLoginWeb.Project.AllTasksLive do
 
   # Filtrer la liste des contributeurs par contributor_id
   def handle_event("tasks_filtered_by_status", %{"_target" => ["status_id"], "status_id" => status_id}, socket) do
-    IO.puts("****************")
-    IO.inspect(status_id)
-
     list_tasks_by_contributor_id = Monitoring.list_tasks_by_status_id(status_id)
 
     {:noreply, socket |> assign(tasks: list_tasks_by_contributor_id)}
