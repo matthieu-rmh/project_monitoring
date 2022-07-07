@@ -568,6 +568,15 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  def list_tasks_by_contributor_or_attributor(con_id) do
+    query =
+      from t in Task,
+        where: t.contributor_id == ^con_id or t.attributor_id == ^con_id,
+        preload: [:project, :status, :priority]
+
+    Repo.all(query)
+  end
+
   def list_tasks_by_attributor_project(con_id) do
     card_query =
       from c in Card,
@@ -1176,6 +1185,33 @@ defmodule PmLogin.Monitoring do
       order_by: [desc: t.updated_at]
 
     Repo.all(query)
+  end
+
+  # Récupérer la liste des tâches en passant en paramètre la status
+  def list_tasks_by_month(status_id, month) do
+    query =
+      from t in Task,
+      where: t.status_id == ^status_id
+
+    result = Repo.all(query)
+
+    Enum.filter(result,
+      fn result ->
+        naive_dt = result.updated_at
+
+        naive_dt.month == month
+      end
+    )
+  end
+
+  # Récupérer la liste des tâches par status_id
+  def list_tasks_by_status_id(status_id) do
+    query =
+      from t in Task,
+      where: t.status_id == ^status_id
+
+    Repo.all(query)
+    |> Enum.count()
   end
 
   # Récupérer la liste des tâches par contributor_id

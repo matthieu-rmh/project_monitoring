@@ -62,6 +62,15 @@ defmodule PmLogin.Login do
     Repo.all(query)
   end
 
+  def list_contributors_users_by_username do
+    query =
+      from u in User,
+      where: u.right_id == 3 or u.right_id == 2,
+      select: {u.username, u.id}
+
+    Repo.all(query)
+  end
+
     # Récuperer la liste des contributeurs par son identifiant
   def list_contributors_users(contributor_id) do
     query =

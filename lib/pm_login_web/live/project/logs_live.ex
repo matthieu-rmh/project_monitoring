@@ -9,6 +9,50 @@ defmodule PmLoginWeb.Project.LogsLive do
     Services.subscribe()
     Monitoring.subscribe()
 
+    labels_tasks_by_contributors =
+      for contributor <- Login.list_contributors_users_by_username do
+        elem(contributor, 0)
+      end
+
+    values_tasks_by_contributors =
+      for contributor <- Login.list_contributors_users_by_username do
+        contributor_id = elem(contributor, 1)
+
+        Monitoring.list_tasks_by_contributor_or_attributor(contributor_id)
+        |> Enum.count()
+      end
+
+    values_tasks_todo_by_month =
+      for month <- Enum.to_list(1..12) do
+        Monitoring.list_tasks_by_month(1, month)
+        |> Enum.count()
+      end
+
+    values_blocking_tasks_by_month =
+      for month <- Enum.to_list(1..12) do
+        Monitoring.list_tasks_by_month(2, month)
+        |> Enum.count()
+      end
+
+    values_tasks_in_progress_by_month =
+      for month <- Enum.to_list(1..12) do
+        Monitoring.list_tasks_by_month(3, month)
+        |> Enum.count()
+      end
+
+    values_tasks_in_control_by_month =
+      for month <- Enum.to_list(1..12) do
+        Monitoring.list_tasks_by_month(4, month)
+        |> Enum.count()
+      end
+
+    values_tasks_achieved_by_month =
+      for month <- Enum.to_list(1..12) do
+        Monitoring.list_tasks_by_month(5, month)
+        |> Enum.count()
+      end
+
+
     socket =
       socket
       |> assign(
@@ -34,7 +78,16 @@ defmodule PmLoginWeb.Project.LogsLive do
           list_notifications_updated_today: Services.list_notifications_updated_today,
           list_notifications_updated_yesterday: Services.list_notifications_updated_yesterday,
           show_notif: false,
-          notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)
+          notifs: Services.list_my_notifications_with_limit(curr_user_id, 4),
+          chart_data: %{
+            labels_tasks_by_contributors: labels_tasks_by_contributors,
+            values_tasks_by_contributors: values_tasks_by_contributors,
+            values_tasks_todo_by_month: values_tasks_todo_by_month,
+            values_blocking_tasks_by_month: values_blocking_tasks_by_month,
+            values_tasks_in_progress_by_month: values_tasks_in_progress_by_month,
+            values_tasks_in_control_by_month: values_tasks_in_control_by_month,
+            values_tasks_achieved_by_month: values_tasks_achieved_by_month,
+          }
        )
 
     {:ok, socket, layout: {PmLoginWeb.LayoutView, "board_layout_live.html"}}

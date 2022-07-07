@@ -73,6 +73,51 @@
           %>
       </div>
 
+      <%= if @show_dashboard_component != false do %>
+        <div class="row" id="chart">
+          <!--
+          <div class="column" style="width: 50%; padding: 0">
+            <div class="icon-card doughnut-chart">
+              <canvas phx-hook="DoughNutChart" 
+                      id="doughnut-chart"  
+                      data-chart-data={Jason.encode!(@chart_data)}>
+              </canvas>      
+            </div>
+          </div>
+
+          <div class="column" style="width: 50%; padding: 0">
+            <div class="icon-card horizontal-bar-chart">
+              <canvas phx-hook="LineChart" 
+                      id="line-chart"  
+                      data-chart-data={Jason.encode!(@chart_data)}>
+              </canvas>      
+            </div>
+          </div>
+          -->
+
+          <div class="column" style="width: 50%; padding: 0">
+            <div class="icon-card horizontal-bar-chart">
+              <canvas phx-hook="HorizontalBarChart" 
+                      id="horizontal-bar-chart"  
+                      data-chart-data={Jason.encode!(@chart_data)}>
+              </canvas>      
+            </div>
+          </div>
+
+          <div class="column" style="width: 50%; padding: 0">
+            <div class="icon-card stacked-bar-chart">
+              <canvas phx-hook="StackedBarChart" 
+                      id="stacked-bar-chart"  
+                      data-chart-data={Jason.encode!(@chart_data)}>
+              </canvas>      
+            </div>
+          </div>
+        </div>
+
+      <% end %>
+
+
+
       <div class="row list-activity-card" style="padding: 0; width: auto">
           <!-- Activités des utilisateurs -->
           <%= 
@@ -138,7 +183,6 @@
         <!-- Task Card END -->
       <% end %>
 
-  
     </div>
     <!-- Right Menu END -->
     

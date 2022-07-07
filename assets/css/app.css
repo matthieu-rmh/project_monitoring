@@ -37,6 +37,7 @@
 @import "./timer.css";
 @import "./logs.css";
 @import "./image.css";
+@import "./chart.css";
 
 @font-face {
   font-family: "Axiforma";
