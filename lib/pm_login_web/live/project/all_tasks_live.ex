@@ -45,7 +45,7 @@ defmodule PmLoginWeb.Project.AllTasksLive do
         modif_changeset: modif_changeset,
         show_notif: false,
 
-        contributors: Login.list_contributors_users,
+        contributors: Login.list_attributor_and_contributor_users,
 
         # Par défault, on n'affiche pas show_plus_modal
         show_modif_menu: false,

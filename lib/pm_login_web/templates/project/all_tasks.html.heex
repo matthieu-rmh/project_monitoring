@@ -36,12 +36,12 @@
               <option value="9000" style="background: #1F2937; color: #fff;">Tout</option>
 
               <%= for contributor <- @contributors do %>
-                <option value={contributor.id} style="background: #1F2937; color: #fff;">
-                  <%= contributor.username %>
+                <option value={elem(contributor, 1)} style="background: #1F2937; color: #fff;">
+                  <%= elem(contributor, 0) %>
                 </option>
               <% end %>
 
-              <option value="-1">Sans contributeur</option>
+              <option value="-1" style="background: #1F2937; color: #fff;">Sans contributeur</option>
             </select>
           </form>
         </th>
