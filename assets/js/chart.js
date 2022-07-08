@@ -1,4 +1,6 @@
 import Chart from "../node_modules/chart.js/dist/chart.js"
+import ChartDataLabels from "../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js"
+import "../node_modules/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"
 
 const colors = ["#36a2eb", "#ff6384"]
 const month =
@@ -56,29 +58,38 @@ class HorizontalBarChart {
         labels: labels,
         datasets: [
           {
-            axis: 'y',
+            axis: 'x',
             label: "Liste des tâches",
             data: values,
             fill: false,
             borderColor: colors,
             backgroundColor: colors,
-            borderWidth: 1
+            borderWidth: 1,
+            color: '#fff',
           }
         ]
       },
       options: {
-        indexAxis: 'y',
+        indexAxis: 'x',
         responsive: true,
         plugins: {
+          labels: {
+            render: 'value',
+            fontColor: '#5c5c5c',
+            position: 'outside'
+          },
           legend: {
-            position: 'top',
+            position: 'bottom',
           },
           title: {
             display: true,
             text: 'Liste des tâches par contributeurs'
-          }
+          },
+          datalabels: {
+            color: '#fff',
+          },
         }
-      }
+      },
     });
   }
 }
@@ -119,21 +130,21 @@ class StackedBarChart {
       },
       options: {
         plugins: {
+          labels: {
+            render: 'value',
+            fontColor: '#5c5c5c',
+            position: 'outside'
+          },
+          legend: {
+            position: 'bottom',
+          },
           title: {
             display: true,
             text: 'Tâches par mois'
           },
         },
         responsive: true,
-        scales: {
-          x: {
-            stacked: true,
-          },
-          y: {
-            stacked: true
-          }
-        }
-      }    
+      },
     });
   }
 }
