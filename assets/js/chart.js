@@ -2,7 +2,7 @@ import Chart from "../node_modules/chart.js/dist/chart.js"
 import ChartDataLabels from "../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js"
 import "../node_modules/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"
 
-const colors = ["#36a2eb", "#ff6384"]
+const colors = ["#36a2eb"]
 const month =
   [
     "Janvier",
