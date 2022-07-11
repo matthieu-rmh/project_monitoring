@@ -45,6 +45,7 @@ class DoughNutChart {
           }
         }
       },
+      plugins: ChartDataLabels,
     });
   }
 }
