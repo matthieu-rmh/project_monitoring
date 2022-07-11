@@ -43,6 +43,15 @@ defmodule PmLogin.Login do
     Repo.all(query)
   end
 
+  def list_attributor_and_contributor_users do
+    query =
+      from u in User,
+      where: u.right_id in [2, 3],
+      select: {u.username, u.id}
+
+    Repo.all(query)
+  end
+
    # Récuperer la liste des attributeurs par son identifiant
   def list_attributors_users(attributor_id) do
     query =

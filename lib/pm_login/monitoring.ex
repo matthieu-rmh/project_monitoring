@@ -1206,12 +1206,16 @@ defmodule PmLogin.Monitoring do
 
   # Récupérer la liste des tâches par status_id
   def list_tasks_by_status_id(status_id) do
+    card_query =
+      from c in Card,
+        select: c.id
+
     query =
       from t in Task,
+      preload: [:project, :status, :priority, card: ^card_query],
       where: t.status_id == ^status_id
 
     Repo.all(query)
-    |> Enum.count()
   end
 
   # Récupérer la liste des tâches par contributor_id

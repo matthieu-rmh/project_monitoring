@@ -587,10 +587,10 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
                     name="status_id"
                     style="margin-bottom: O;  color: #fff !important;"
                   >
-                    <option value="" selected disabled hidden>Trier par statut</option>
-                    <option value="9000">Tout</option>
+                    <option value="" selected disabled hidden style="background: #1F2937; color: #fff;">Trier par statut</option>
+                    <option value="9000" style="background: #1F2937; color: #fff;">Tout</option>
                     <%= for status <- @statuses do %>
-                      <option value={status.id}>
+                      <option value={status.id} style="background: #1F2937; color: #fff;">
                         <%= status.title %>
                       </option>
                     <% end %>
@@ -605,10 +605,10 @@ defmodule PmLoginWeb.Project.AttributorTasksLive do
                     name="attributor_id"
                     style="margin-bottom: O;  color: #fff !important;"
                   >
-                    <option value="" selected disabled hidden>Trier par attributeur</option>
-                    <option value="9000">Tout</option>
+                    <option value="" selected disabled hidden style="background: #1F2937; color: #fff;">Trier par attributeur</option>
+                    <option value="9000" style="background: #1F2937; color: #fff;">Tout</option>
                     <%= for attributor <- @list_attributors_by_own_tasks do %>
-                      <option value={elem(attributor, 1)}>
+                      <option value={elem(attributor, 1)} style="background: #1F2937; color: #fff;">
                         <%= Login.get_username(elem(attributor, 1)) %>
                       </option>
                     <% end %>
