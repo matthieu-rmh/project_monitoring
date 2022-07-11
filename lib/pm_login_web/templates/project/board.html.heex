@@ -432,7 +432,7 @@
             </a>
 
             <%= if @is_attributor or @is_contributor do %>
-              <%= if card.task.status_id in [1, 2, 3, 4] do %>
+              <%= if card.task.status_id == 3 do %>
                 <a 
                   id={"starting_clock"} 
                   title="Démarrer le compteur" 
