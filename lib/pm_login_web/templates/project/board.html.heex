@@ -433,27 +433,27 @@
 
             <%= if @is_attributor or @is_contributor do %>
               <a 
-                id="starting_clock" 
+                id={"starting_clock"} 
                 title="Démarrer le compteur" 
-                style={"display: #{ if card.task.hidden, do: "none !important" }; font-size: 20px;"}
+                style={"display: #{ if card.id != card.id, do: "none !important" }; font-size: 20px;"}
                 class="bi bi-play modif__icon" 
                 phx-click={
                   Phoenix.LiveView.JS.push("start_clock") 
-                  |> Phoenix.LiveView.JS.hide(to: "#starting_clock") 
-                  |> Phoenix.LiveView.JS.show(to: "#stoping_clock")
+                  |> Phoenix.LiveView.JS.hide(to: "#starting_clock")
+                  |> Phoenix.LiveView.JS.show(to: "#stoping_clock-#{card.id}")
                 } 
                 phx-value-id={card.id}>
               </a>
           
               <a 
-                id="stoping_clock" 
+                id={"stoping_clock-#{card.id}"} 
                 title="Arrêter le compteur" 
                 style="display: none; font-size: 20px;"
                 class="bi bi-stop modif__icon" 
                 phx-click={
                   Phoenix.LiveView.JS.push("stop_clock") 
-                  |> Phoenix.LiveView.JS.show(to: "#starting_clock") 
-                  |> Phoenix.LiveView.JS.hide(to: "#stoping_clock")
+                  |> Phoenix.LiveView.JS.show(to: "#starting_clock")
+                  |> Phoenix.LiveView.JS.hide(to: "#stoping_clock-#{card.id}")
                 } 
                 phx-value-id={card.id}> 
               </a>
