@@ -16,7 +16,8 @@ defmodule PmLoginWeb.ProjectView do
     UserLiveComponent,
     SidebarLiveComponent,
     ActivityLiveComponent,
-    CompletedActivitiesLiveComponent
+    CompletedActivitiesLiveComponent,
+    Loading
   }
 
   alias PmLogin.Monitoring
