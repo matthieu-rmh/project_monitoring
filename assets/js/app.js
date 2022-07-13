@@ -291,18 +291,8 @@ let topBarScheduled = undefined;
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
 
-window.addEventListener("phx:page-loading-start", () => {
-  if(!topBarScheduled) {
-    topBarScheduled = setTimeout(() => {
-      topbar.show()
-    }, 500)
-  }
-})
-window.addEventListener("phx:page-loading-stop", () => {
-  clearTimeout(topBarScheduled)
-  topBarScheduled = undefined
-  topbar.hide()
-})
+window.addEventListener("phx:page-loading-start", info => topbar.show())
+window.addEventListener("phx:page-loading-stop", info => topbar.hide())
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()

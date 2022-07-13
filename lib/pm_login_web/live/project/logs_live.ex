@@ -87,7 +87,8 @@ defmodule PmLoginWeb.Project.LogsLive do
             values_tasks_in_progress_by_month: values_tasks_in_progress_by_month,
             values_tasks_in_control_by_month: values_tasks_in_control_by_month,
             values_tasks_achieved_by_month: values_tasks_achieved_by_month,
-          }
+          },
+          loading: false
        )
 
     {:ok, socket, layout: {PmLoginWeb.LayoutView, "board_layout_live.html"}}
@@ -148,16 +149,20 @@ defmodule PmLoginWeb.Project.LogsLive do
   end
 
   def handle_event("show-task-component", _params, socket) do
-    socket =
-      socket
-      |> assign(
-          show_dashboard_component: false,
-          show_project_component: false,
-          show_task_component: true,
-          show_user_component: false
-        )
+    if not connected?(socket) do
+      {:noreply, socket |> assign(loading: true)}
+    else
+      socket =
+        socket
+        |> assign(
+            show_dashboard_component: false,
+            show_project_component: false,
+            show_task_component: true,
+            show_user_component: false
+          )
 
-    {:noreply, socket}
+      {:noreply, socket |> assign(loading: false)}
+    end
   end
 
   def handle_event("show-dashboard-component", _params, socket) do
@@ -213,6 +218,10 @@ defmodule PmLoginWeb.Project.LogsLive do
   end
 
   def render(assigns) do
-    PmLoginWeb.ProjectView.render("logs.html", assigns)
+    if connected?(assigns.socket) do
+      PmLoginWeb.ProjectView.render("logs.html", assigns)
+    else
+      PmLoginWeb.ProjectView.render("loading.html", assigns)
+    end
   end
 end
