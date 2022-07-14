@@ -10,6 +10,15 @@
               width: -webkit-fill-available;
               width: -moz-available;"
           >
+          <%= if @list_notifications_updated_today == [] and @list_notifications_updated_yesterday == [] do %>
+            <div style="position: relative; animation: fadeInDownBig; animation-duration: 1s;">
+              <div style="position: absolute; top: 19.5rem; left: 50%; transform: translate(-50%,-50%);">
+                <img src={Routes.static_path(@socket, "/images/14.jpg")} alt="">
+                <p style="text-align: center;">Aucune notification</p> 
+              </div>
+            </div>
+          <% else %>
+
             <table style="font-size: 1.2rem; width: 90%; margin: 0 auto;">
               <tbody>
                 <tr
@@ -154,11 +163,11 @@
                     </tr>
                   <% end %>
                 <% end %>
-
-
-
               </tbody>
             </table>
+          
+          <% end %>
+            
           </div>
         </div>
       </div>
