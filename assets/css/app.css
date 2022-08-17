@@ -39,6 +39,7 @@
 @import "./image.css";
 @import "./chart.css";
 @import "./loader.css";
+@import "../node_modules/animate.css/animate.css";
 
 @font-face {
   font-family: "Axiforma";
