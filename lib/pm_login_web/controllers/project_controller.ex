@@ -266,7 +266,7 @@ end
   def logs(conn, _params) do
     if Login.is_connected?(conn) do
       cond do
-        Login.is_admin?(conn) ->
+        Login.is_admin?(conn) or Login.is_attributor?(conn) ->
           LiveView.Controller.live_render(
             conn,
             PmLoginWeb.Project.LogsLive,
