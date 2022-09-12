@@ -12,6 +12,7 @@ defmodule PmLogin.Services.ClientsRequest do
     field :seen, :boolean
     field :ongoing, :boolean
     field :done, :boolean
+    field :finished, :boolean
     field :file_urls, {:array, :string}, default: []
     # field :active_client_id, :id
     belongs_to :active_client, ActiveClient
@@ -25,14 +26,14 @@ defmodule PmLogin.Services.ClientsRequest do
   @doc false
   def changeset(clients_request, attrs) do
     clients_request
-    |> cast(attrs, [:title ,:content, :date_post, :seen, :ongoing, :done, :active_client_id, :task_id, :project_id])
+    |> cast(attrs, [:title ,:content, :date_post, :seen, :ongoing, :done, :finished, :active_client_id, :task_id, :project_id])
     # |> unique_constraint(:title, message: "Titre de requête déjà existant")
     # |> validate_required(:content, message: "Entrez le contenu de votre requête")
   end
 
   def create_changeset(clients_request, attrs) do
     clients_request
-    |> cast(attrs, [:title ,:content, :date_post, :seen, :ongoing, :done, :active_client_id])
+    |> cast(attrs, [:title ,:content, :date_post, :seen, :ongoing, :done, :finished, :active_client_id])
     |> foreign_key_constraint(:active_client_id)
     |> validate_required(:title, message: "Entrez l'intitulé de votre requête.")
     |> unique_constraint(:title, message: "Titre de requête déjà existant.")
@@ -41,6 +42,7 @@ defmodule PmLogin.Services.ClientsRequest do
     |> put_change(:seen, false)
     |> put_change(:ongoing, false)
     |> put_change(:done, false)
+    |> put_change(:finished, false)
   end
 
   def upload_changeset(clients_request, attrs) do
