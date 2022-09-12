@@ -62,8 +62,9 @@
           <div class="card-text-username">
             <%= request.title %>
           </div>
-          <div class="column">
-            <img class="profile-pic-header request__pp" src={Routes.static_path(@socket, "/#{request.active_client.company.logo}")} alt="" style="float: right;">
+          <div class="column" style="float: right; transform: scale(1.25)">
+            <img class="profile-pic-header request__pp" src={Routes.static_path(@socket, "/#{request.active_client.company.logo}")} alt="">
+            <p><%= PmLogin.Services.get_active_client!(request.active_client_id).user.username %></p>
           </div>
           <div class="card-text-content">
             <%= request.content %>
@@ -134,7 +135,7 @@
         </div>
 
         <div class="card-text-date">
-          <%= Utilities.letters_date_format_with_hours request.date_post %>
+          <%= Utilities.letters_date_format_with_only_month_and_hours request.date_post %>
         </div>
       </div>
 
