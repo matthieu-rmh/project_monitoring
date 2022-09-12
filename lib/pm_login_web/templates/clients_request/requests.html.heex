@@ -56,16 +56,22 @@
       <div class="card-avatar">
         <i class="bi bi-person"></i>
       </div>
-
       <div class="col">
         <div class="card-info-text">
           <div class="card-text-username">
+            <%= PmLogin.Services.get_active_client!(request.active_client_id).user.username %>
+          </div>
+          <div>
             <%= request.title %>
           </div>
-          <div class="column" style="float: right; transform: scale(1.25)">
-            <img class="profile-pic-header request__pp" src={Routes.static_path(@socket, "/#{request.active_client.company.logo}")} alt="">
-            <p><%= PmLogin.Services.get_active_client!(request.active_client_id).user.username %></p>
+          <div class="card-text-date">
+            créé le, <%= Utilities.letters_date_format_with_only_month_and_hours request.date_post %>
           </div>
+          <!--
+          <div class="column">
+            <img class="profile-pic-header request__pp" src={Routes.static_path(@socket, "/#{request.active_client.company.logo}")} alt="">
+          </div>
+          -->
           <div class="card-text-content">
             <%= request.content %>
           </div>
@@ -83,60 +89,53 @@
           </div>
         </div>
 
-        <div style="margin-left: 300px">
-          <div 
-            class="card-button" 
-            style="background-color: #2980b9; 
-            cursor: inherit;"
-          >
-            Vue
-            <input 
-              id="vu" 
-              type="checkbox" 
-              phx-click="switch-seen" 
-              phx-value-id={request.id} 
-              checked={request.seen}
-              style="margin: 0 0 0 5;" 
-              disabled
-            >
-          </div>
-          <div 
-            class="card-button" 
-            style="background-color: #e67e22; 
-            cursor: inherit;"
-          >
-            En cours
-            <input
-              id="encours" 
-              type="checkbox" 
-              phx-click="switch-ongoing"
-              phx-value-id={request.id} 
-              checked={request.ongoing}
-              style="margin: 0 0 0 5;" 
-              disabled
-            >
-          </div>
-          <div 
-            class="card-button" 
-            style="background-color: #27ae60; 
-            cursor: inherit;"
-          >
-            Accomplie
-            <input 
-              id="accomplie" 
-              type="checkbox" 
-              phx-click="switch-done" 
-              phx-value-id={request.id } 
-              checked={request.done}
-              style="margin: 0 0 0 5;" 
-              disabled
-            >
-          </div>
+        <div>
+
+          <%= cond do %>
+            <%= request.seen and not request.ongoing and not request.done -> %>
+              <div 
+                class="card-button" 
+                style="background-color: #2980b9; width: 150px; border-radius: 0px;  
+                cursor: inherit;"
+              >
+                <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Vue
+              </div>
+
+            <%= request.seen and request.ongoing and not request.done -> %>
+              <div 
+                class="card-button" 
+                style="background-color: #e67e22; width: 150px; border-radius: 0px; 
+                cursor: inherit;"
+              >
+                <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
+                En cours
+              </div>
+
+            <%= request.seen and request.ongoing and request.done -> %>  
+              <div 
+                class="card-button" 
+                style="background-color: #27ae60; width: 150px; border-radius: 0px;  
+                cursor: inherit;"
+              >
+                <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Accomplie
+              </div>
+
+            <% true -> %>
+              <div 
+                class="card-button" 
+                style="background-color: #cb4331ea; width: 150px; border-radius: 0px; 
+                cursor: inherit;"
+              >
+                <i class="bi bi-eye-slash" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Pas encore vue
+              </div>
+
+          <% end %>
         </div>
 
-        <div class="card-text-date">
-          <%= Utilities.letters_date_format_with_only_month_and_hours request.date_post %>
-        </div>
+
       </div>
 
     
