@@ -1,16 +1,17 @@
 <div>
 
-<div class="card-info" style="max-width: 750px;">
+<div class="card-info" style="max-width: 750px; cursor: pointer; display: flex; align-items: center;">
   <span class="material-icons">
     receipt_long
   </span>Mes demandes 
-  <a id="" title="Faire une requête" phx-click="form-on" phx-hook="blurHook">
-    <i class="bi bi-pencil-square"></i>
+  <a id="" title="Faire une requête" phx-click="form-on" phx-hook="blurHook" style="margin-left: 4rem; background: #27ae60; padding: 1rem 1.25rem; color: #fff">
+    <i class="bi bi-pencil-square" style="font-size: 2rem; align-items: center;"></i>
+    Créer une nouvelle demande 
   </a>
 </div>
 
 <%= for request <- @requests do %>
-  <div style="display: flex">
+  <div style="display: flex;">
     <div class="card-info" style="width: 750px;" data-id={request.id}>
       <div class="card-avatar">
         <i class="bi bi-person"></i>
@@ -19,7 +20,13 @@
       <div class="col">
         <div class="card-info-text">
           <div class="card-text-username">
+            <%= PmLogin.Services.get_active_client!(request.active_client_id).user.username %>
+          </div>
+          <div class="card-text-username">
             <%= request.title %>
+          </div>
+          <div class="card-text-date">
+            <%= Utilities.letters_date_format_with_hours request.date_post %>
           </div>
           <div class="card-text-content">
             <%= request.content %>
@@ -30,7 +37,7 @@
                 <%= if Path.extname(url)==".jpg" or Path.extname(url)==".png" or Path.extname(url)==".jpeg" do %>
                   <a href={url} style="margin-bottom: 10px;"><img src={url} alt="" height="150"/></a>
                 <% else %>
-                  <a href={url} download style="font-size: 25px; margin: 0 0 0 15px">
+                  <a href={url} download style="font-size: 4rem; margin: 0 0 0 15px">
                     <%= cond do %>
                       <% String.ends_with?(Path.basename(url), ".pdf")   -> %> <i class="bi bi-filetype-pdf" title={Path.basename(url)} style="color: #e13f2d;"></i>
                       <% String.ends_with?(Path.basename(url), ".txt")   -> %> <i class="bi bi-filetype-txt" title={Path.basename(url)} style="color: #7f8c8d;"></i>
@@ -55,54 +62,49 @@
           </div>
         </div>
 
-        <div style="margin-left: 300px">
+        <%= cond do %>
+        <%= request.seen and not request.ongoing and not request.done -> %>
           <div 
             class="card-button" 
-            style="background-color: #2980b9; 
+            style="background-color: #2980b9; width: 150px; border-radius: 0px;  
             cursor: inherit;"
           >
+            <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 6px"></i>
             Vue
-            <input 
-              id="vu" 
-              type="checkbox" 
-              checked={request.seen} 
-              style="margin: 0 0 0 5;" 
-              disabled
-            >
           </div>
-          <div 
-            class="card-button" 
-            style="background-color: #e67e22; 
-            cursor: inherit;"
-          >
-            En cours
-            <input
-              id="encours" 
-              type="checkbox" 
-              checked={request.ongoing} 
-              style="margin: 0 0 0 5;" 
-              disabled
-            >
-          </div>
-          <div 
-            class="card-button" 
-            style="background-color: #27ae60; 
-            cursor: inherit;"
-          >
-            Accomplie
-            <input 
-              id="accomplie" 
-              type="checkbox" 
-              checked={request.done} 
-              style="margin: 0 0 0 5;" 
-              disabled
-            >
-          </div>
-        </div>
 
-        <div class="card-text-date">
-          <%= Utilities.letters_date_format_with_hours request.date_post %>
-        </div>
+        <%= request.seen and request.ongoing and not request.done -> %>
+          <div 
+            class="card-button" 
+            style="background-color: #e67e22; width: 150px; border-radius: 0px; 
+            cursor: inherit;"
+          >
+            <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
+            En cours
+          </div>
+
+        <%= request.seen and request.ongoing and request.done -> %>  
+          <div 
+            class="card-button" 
+            style="background-color: #27ae60; width: 150px; border-radius: 0px;  
+            cursor: inherit;"
+          >
+            <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+            Accomplie
+          </div>
+
+        <% true -> %>
+          <div 
+            class="card-button" 
+            style="background-color: #cb4331ea; width: 150px; border-radius: 0px; 
+            cursor: inherit;"
+          >
+            <i class="bi bi-eye-slash" style="font-size: 1.5rem; margin-right: 6px"></i>
+            Pas encore vue
+          </div>
+
+      <% end %>
+
       </div>
 
     
