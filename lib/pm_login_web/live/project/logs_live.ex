@@ -91,7 +91,12 @@ defmodule PmLoginWeb.Project.LogsLive do
           loading: false
        )
 
-    {:ok, socket, layout: {PmLoginWeb.LayoutView, "board_layout_live.html"}}
+    if {curr_user_id} in Login.list_ids_from_attributors_users do
+      {:ok, socket, layout: {PmLoginWeb.LayoutView, "attributor_layout_live.html"}}
+    else
+      {:ok, socket, layout: {PmLoginWeb.LayoutView, "board_layout_live.html"}}
+    end
+
   end
 
 

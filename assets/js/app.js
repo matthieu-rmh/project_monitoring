@@ -207,6 +207,18 @@ Hooks.MessageBody = {
 
 };
 
+// Get url location
+Hooks.urlProcess = {
+  mounted() {
+    let main = document.querySelector("#main")
+
+    var url = window.location.href 
+
+    // Ternary function
+    url.includes("/logs") ? main.classList.remove("container") :  main.classList.add("container")
+  }
+}
+
 Hooks.SpinTest = {
   mounted() {
     // console.log("tafiditra hook")
