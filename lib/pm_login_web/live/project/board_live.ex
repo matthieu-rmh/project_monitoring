@@ -967,13 +967,16 @@ defmodule PmLoginWeb.Project.BoardLive do
         # Get client_request_id by task_id and project_id
         client_request_id = Services.get_client_request_id_by_task!(card.task_id, project_id)
 
-        # Get client request by client_request_id
-        request = Services.get_request_with_user_id!(client_request_id)
+        if not is_nil(client_request_id) do
+          # Get client request by client_request_id
+          request = Services.get_request_with_user_id!(client_request_id)
 
-        if real_task.status_id == 5 do
-          # Mettre à jour la date de mise en terminée
-          Services.update_clients_request(request, %{"date_done" => NaiveDateTime.local_now()})
+          if real_task.status_id == 5 do
+            # Mettre à jour la date de mise en terminée
+            Services.update_clients_request(request, %{"date_done" => NaiveDateTime.local_now()})
+          end
         end
+
 
 
         # IO.puts "after"
