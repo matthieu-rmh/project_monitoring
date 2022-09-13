@@ -835,6 +835,14 @@ defmodule PmLogin.Monitoring do
     Repo.one!(project_query)
   end
 
+  def get_project_id_by_task!(task_id) do
+    query = from t in Task,
+            where: t.id == ^task_id,
+            select: t.project_id
+
+    Repo.one(query)
+  end
+
   def get_loading_stage_id_from_project_id!(id) do
     stages_query = from(sta in Stage)
 
@@ -1517,6 +1525,14 @@ defmodule PmLogin.Monitoring do
         preload: [card: ^card_query]
 
     Repo.one!(query)
+  end
+
+  def get_status_by_task!(task_id) do
+    query = from t in Task,
+            where: t.id == ^task_id,
+            select: t.status_id
+
+    Repo.one(query)
   end
 
   # def set_parent do

@@ -821,6 +821,14 @@ defmodule PmLogin.Services do
   """
   def get_clients_request!(id), do: Repo.get!(ClientsRequest, id)
 
+  def get_client_request_id_by_task!(task_id, project_id) do
+    query = from cr in ClientsRequest,
+            where: cr.task_id == ^task_id and cr.project_id == ^project_id,
+            select: cr.id
+
+    Repo.one(query)
+  end
+
   def get_request_with_user_id!(id) do
     ac_request = from ac in ActiveClient
     query = from req in ClientsRequest,
