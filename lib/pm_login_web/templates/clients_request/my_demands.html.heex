@@ -97,6 +97,10 @@
                     Vue
                   </div>
 
+                  <div class="date-seen clients_requests">
+                    <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
+                  </div>
+
                 <% request.seen and request.ongoing and not request.done -> %>
                   <div class="card-button clients_requests" style="background-color: #e67e22;">
                     <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
@@ -124,6 +128,10 @@
               <div class="card-button clients_requests" style="background-color: #2980b9;">
                 <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 6px"></i>
                 Vue
+              </div>
+
+              <div class="date-seen clients_requests">
+                <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
               </div>
 
             <% request.seen and request.ongoing and not request.done -> %>
