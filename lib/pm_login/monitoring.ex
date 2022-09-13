@@ -1218,6 +1218,24 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  # Récupérer la liste des tâches par task_id et project_id
+  def list_tasks_by_project_and_task!(task_id, project_id) do
+    query = from t in Task,
+            where: t.id == ^task_id and t.project_id == ^project_id,
+            select: t.status_id
+
+    Repo.one(query)
+  end
+
+  # Récupérer la liste des tâches par task_id
+  def list_tasks_by_project_and_task!(task_id) do
+    query = from t in Task,
+            where: t.id == ^task_id,
+            select: t.status_id
+
+    Repo.one(query)
+  end
+
   # Récupérer la liste des tâches par contributor_id
   def list_tasks_by_contributor_id(contributor_id) do
     card_query =
