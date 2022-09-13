@@ -192,10 +192,10 @@
 }
 
 .date-seen.clients_requests {
-  position: relative;
-  left: 31.8rem;
-  top: 3.5rem;
+  position: absolute;
+  left: 57.4rem;
   font-size: 1.155rem;
+  margin-top: 7rem;
 }
 
 @media (max-width: 875px) {
