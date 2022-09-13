@@ -193,9 +193,9 @@
 
 .date-seen.clients_requests {
   position: absolute;
-  left: 57.4rem;
-  font-size: 1.155rem;
-  margin-top: 7rem;
+  left: 58.4rem;
+  font-size: 1rem;
+  margin-top: 6rem;
 }
 
 @media (max-width: 875px) {
