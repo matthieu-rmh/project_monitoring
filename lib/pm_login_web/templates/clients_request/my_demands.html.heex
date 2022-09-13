@@ -80,6 +80,12 @@
                   <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
                   En cours
                 </div>
+
+                <%= if not is_nil(request.date_ongoing) do %>
+                  <div class="date-seen clients_requests">
+                    <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
+                  </div>
+                <% end %>
               <% end %>
             <% end %>
 
@@ -97,15 +103,23 @@
                     Vue
                   </div>
 
-                  <div class="date-seen clients_requests">
-                    <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
-                  </div>
+                  <%= if not is_nil(request.date_seen) do %>
+                    <div class="date-seen clients_requests">
+                      <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
+                    </div>
+                  <% end %>
 
                 <% request.seen and request.ongoing and not request.done -> %>
                   <div class="card-button clients_requests" style="background-color: #e67e22;">
                     <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
                     En cours
                   </div>
+
+                  <%= if not is_nil(request.date_ongoing) do %>
+                    <div class="date-seen clients_requests">
+                      <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
+                    </div>
+                  <% end %>
 
                 <% request.seen and request.ongoing and request.done -> %>
                   <div class="card-button clients_requests" style="background-color: #27ae60;">
@@ -130,15 +144,23 @@
                 Vue
               </div>
 
-              <div class="date-seen clients_requests">
-                <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
-              </div>
+              <%= if not is_nil(request.date_seen) do %>
+                <div class="date-seen clients_requests">
+                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
+                </div>
+              <% end %>
 
             <% request.seen and request.ongoing and not request.done -> %>
               <div class="card-button clients_requests" style="background-color: #e67e22;">
                 <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
                 En cours
               </div>
+
+              <%= if not is_nil(request.date_ongoing) do %>
+                <div class="date-seen clients_requests">
+                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
+                </div>
+              <% end %>
 
             <% request.seen and request.ongoing and request.done -> %>
               <div class="card-button clients_requests" style="background-color: #27ae60;">

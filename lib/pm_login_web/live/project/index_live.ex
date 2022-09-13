@@ -89,6 +89,9 @@ defmodule PmLoginWeb.Project.IndexLive do
     request = Services.get_request_with_user_id!(id)
     Services.update_request_bool(request, %{"seen" => true})
 
+    # Mettre à jour la date de vue
+    Services.update_clients_request(request, %{"date_seen" => NaiveDateTime.local_now()})
+
     {:noreply, socket |> assign(show_client_request_modal: true, client_request: client_request)}
   end
 
@@ -110,6 +113,9 @@ defmodule PmLoginWeb.Project.IndexLive do
 
     request = Services.get_request_with_user_id!(id)
     Services.update_request_bool(request, %{"seen" => true})
+
+    # Mettre à jour la date de vue
+    Services.update_clients_request(request, %{"date_seen" => NaiveDateTime.local_now()})
 
     {:noreply, socket |> assign(show_project_modal: true, client_request: client_request)}
   end
@@ -135,6 +141,9 @@ defmodule PmLoginWeb.Project.IndexLive do
         # Mettre la requête en vue
         request = Services.get_request_with_user_id!(project_params["client_request_id"])
         Services.update_request_bool(request, %{"ongoing" => true})
+
+        # Mettre à jour la date de de mise en cours du requête
+        Services.update_clients_request(request, %{"date_ongoing" => NaiveDateTime.local_now()})
 
         clients_request = Services.get_clients_request!(project_params["client_request_id"])
 
@@ -239,6 +248,9 @@ defmodule PmLoginWeb.Project.IndexLive do
         # Mettre la requête en vue
         request = Services.get_request_with_user_id!(params["client_request_id"])
         Services.update_request_bool(request, %{"ongoing" => true})
+
+        # Mettre à jour la date de de mise en cours du requête
+        Services.update_clients_request(request, %{"date_ongoing" => NaiveDateTime.local_now()})
 
 
         # Mettre à jour task_id et project_id à partir de la tâche créée
