@@ -649,6 +649,10 @@ defmodule PmLoginWeb.Project.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_info({PmLogin.Monitoring, [:request, :created], :clients_requests}, socket) do
+    {:noreply, socket}
+  end
+
   def handle_info({Monitoring, [:planified, _], _}, socket) do
     project_id = socket.assigns.board.project.id
     planified_list = Monitoring.list_planified_by_project(project_id)
