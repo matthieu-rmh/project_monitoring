@@ -124,17 +124,25 @@
               <th>Nom</th>
               <th>Description</th>
               <th>Progression</th>
-              <th style="width: 10rem;">Date de début</th>
+              <th style="width: 12rem;">Date de début</th>
               <th>Date fin</th>
-              <th style="width: 10rem;">Durée estimée</th>
-              <th style="width: 12rem;">Durée accomplie</th>
-              <th style="width: 12rem;">Date d'échéance</th>
+              <th style="width: 12rem;">Durée estimée</th>
+              <th style="width: 13rem;">Durée accomplie</th>
+              <th style="width: 13rem;">Date d'échéance</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             <%= for project <- @projects do %>
-              <tr>
+              <tr style={"background: #{
+                case project.status_id do
+                  1 -> ""
+                  2 -> "#e74c3c36"
+                  3 -> "#f1c40f4d"
+                  4 -> "#be5e0a5c"
+                  _ -> "#1abc9c47"
+                end
+              }"}>
                 <td>
                   <a href={Routes.project_path(@socket, :board, project)}>
                     <%= "#{project.title}" %>
@@ -167,9 +175,9 @@
                 <td>
                   <%=
                     cond do
-                      i_hour == 0 and i_minutes >= 0 -> if i_minutes > 1, do: "#{i_minutes} minutes", else: "#{i_minutes} minute"
-                      i_hour >= 0 and i_minutes == 0 -> if i_hour > 1, do: "#{i_hour} heures", else: "#{i_hour} heure"
-                      i_hour > 0  and i_minutes > 0  -> "#{i_hour} h #{i_minutes} m"
+                      i_hour == 0 and i_minutes >= 0 -> if i_minutes > 1, do: "#{i_minutes} mn", else: "#{i_minutes} mn"
+                      i_hour >= 0 and i_minutes == 0 -> if i_hour > 1, do: "#{i_hour} h", else: "#{i_hour} h"
+                      i_hour > 0  and i_minutes > 0  -> "#{i_hour} h #{i_minutes} mn"
                       true                           -> ""
                     end
                   %>
@@ -177,9 +185,9 @@
                 <td>
                   <%=
                     cond do
-                      hour_p == 0 and minutes_p >= 0 -> if minutes_p > 1, do: "#{minutes_p} minutes", else: "#{minutes_p} minute"
-                      hour_p >= 0 and minutes_p == 0 -> if hour_p > 1, do: "#{hour_p} heures", else: "#{hour_p} heure"
-                      hour_p > 0  and minutes_p > 0  -> "#{hour_p} h #{minutes_p} m"
+                      hour_p == 0 and minutes_p >= 0 -> if minutes_p > 1, do: "#{minutes_p} mn", else: "#{minutes_p} mn"
+                      hour_p >= 0 and minutes_p == 0 -> if hour_p > 1, do: "#{hour_p} h", else: "#{hour_p} h"
+                      hour_p > 0  and minutes_p > 0  -> "#{hour_p} h #{minutes_p} mn"
                       true                           -> ""
                     end
                   %>
