@@ -7,7 +7,7 @@
 </style>
 
 <%= for request <- @list_clients_requests do %>
-  <div class="card-info" data-id={request.id} id="card-drop" style="margin-bottom: 0;">
+  <div class="card-info" data-id={request.id} id="card-drop" style="margin-bottom: -3rem;">
     <div class="row" style="margin-left: 0; align-items: center;">
       
       <div class="col card-avatar-resize" style="padding-top: 0;">
@@ -69,7 +69,7 @@
     <%= if PmLogin.Login.get_user!(@curr_user_id).right_id==1 or PmLogin.Login.get_user!(@curr_user_id).right_id==2 do
       %>
       <span>
-        <a href={ Routes.project_path(@socket, :new) } class="btn btn-lg btn-primary" style="margin-top: -6rem; margin-left: 10rem; position: relative">
+        <a href={ Routes.project_path(@socket, :new) } class="btn btn-lg btn-primary" style="margin-top: -4rem; margin-left: 10rem; position: relative">
           <i class="bi bi-plus-circle"></i> Nouveau projet
         </a>
       </span>
@@ -80,11 +80,11 @@
               <th>Nom</th>
               <th>Description</th>
               <th>Progression</th>
-              <th>Date de début</th>
+              <th style="width: 10rem;">Date de début</th>
               <th>Date fin</th>
-              <th>Durée estimée</th>
-              <th>Durée accomplie</th>
-              <th>Date d'échéance</th>
+              <th style="width: 10rem;">Durée estimée</th>
+              <th style="width: 12rem;">Durée accomplie</th>
+              <th style="width: 12rem;">Date d'échéance</th>
               <th></th>
             </tr>
           </thead>
