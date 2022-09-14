@@ -340,6 +340,15 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  # Get title and id of status
+  def list_statuses_title do
+    query = from s in Status,
+            select: {s.title, s.id},
+            order_by: [asc: :id]
+
+    Repo.all(query)
+  end
+
   def list_statuses_for_tasks_table do
     query =
       from s in Status,
