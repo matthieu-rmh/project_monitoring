@@ -142,8 +142,10 @@ end
           ac_list = Services.list_active_clients
           ac_ids = Enum.map(ac_list, fn(%ActiveClient{} = ac) -> {ac.user.username, ac.id} end )
 
+          status = Monitoring.list_statuses_title()
+
           # render(conn, "edit.html", project: project, changeset: changeset, ac_ids: ac_ids, layout: {PmLoginWeb.LayoutView, "admin_layout.html"})
-          LiveView.Controller.live_render(conn, PmLoginWeb.Project.EditLive, session: %{"curr_user_id" => get_session(conn, :curr_user_id), "project" => project, "changeset" => changeset, "ac_ids" => ac_ids}, router: PmLoginWeb.Router)
+          LiveView.Controller.live_render(conn, PmLoginWeb.Project.EditLive, session: %{"curr_user_id" => get_session(conn, :curr_user_id), "project" => project, "changeset" => changeset, "ac_ids" => ac_ids, "status" => status}, router: PmLoginWeb.Router)
 
         true ->
           conn
@@ -157,6 +159,9 @@ end
   end
 
   def update(conn, %{"id" => id, "project" => project_params}) do
+    IO.puts("NANDALA TAAO")
+    IO.inspect(project_params)
+
     project = Monitoring.get_project!(id)
 
     case Monitoring.update_project(project, project_params) do
