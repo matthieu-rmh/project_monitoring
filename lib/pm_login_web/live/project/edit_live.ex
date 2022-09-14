@@ -2,12 +2,12 @@ defmodule PmLoginWeb.Project.EditLive do
   use Phoenix.LiveView
   alias PmLogin.Services
 
-  def mount(_params, %{"curr_user_id"=>curr_user_id, "project" => project, "changeset" => changeset, "ac_ids" => ac_ids}, socket) do
+  def mount(_params, %{"curr_user_id"=>curr_user_id, "project" => project, "changeset" => changeset, "ac_ids" => ac_ids, "status" => status}, socket) do
     Services.subscribe()
 
     {:ok,
        socket
-       |> assign(changeset: changeset, ac_ids: ac_ids, project: project,curr_user_id: curr_user_id, show_notif: false, notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)),
+       |> assign(changeset: changeset, status: status, ac_ids: ac_ids, project: project,curr_user_id: curr_user_id, show_notif: false, notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)),
        layout: {PmLoginWeb.LayoutView, "admin_layout_live.html"}
        }
   end
