@@ -36,7 +36,7 @@ defmodule PmLogin.Monitoring.Project do
 
   def update_changeset(project, attrs) do
     project
-    |> cast(attrs, [:title, :description,:date_start, :date_end, :estimated_duration, :deadline, :active_client_id])
+    |> cast(attrs, [:title, :description,:date_start, :date_end, :estimated_duration, :deadline, :active_client_id, :status_id])
     |> foreign_key_constraint(:active_client_id)
     |> unique_constraint(:title, message: "Ce nom de projet existe déjà")
     |> validate_required(:estimated_duration, message: "Entrez la durée estimée du projet")
