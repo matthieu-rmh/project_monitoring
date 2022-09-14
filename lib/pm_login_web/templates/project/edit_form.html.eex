@@ -58,6 +58,12 @@
       <%= select f, :active_client_id, @ac_ids, style: "width: -moz-available;" %>
       <%= error_tag f, :active_client_id %>
     </div>
+
+    <div class="column">
+      <%= label f, "Status" %>
+      <%= select f, :status_id, @status, style: "width: -moz-available;" %>
+      <%= error_tag f, :status_id %>
+    </div>
   </div>
   <div>
     <%= submit "Valider projet",class: "btn btn-lg btn-primary" %>
