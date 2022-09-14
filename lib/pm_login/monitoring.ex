@@ -532,6 +532,16 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  def list_project_by_title!(project_title) do
+    project_search = "%#{project_title}%"
+
+    query = from p in Project,
+            where: ilike(p.title, ^project_search) or ilike(p.description, ^project_search),
+            order_by: [desc: :inserted_at]
+
+    Repo.all(query)
+  end
+
   def list_projects_by_contributor(con_id) do
     tasks_query =
       from t in Task,

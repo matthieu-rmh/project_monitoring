@@ -69,11 +69,22 @@
     <%= if PmLogin.Login.get_user!(@curr_user_id).right_id==1 or PmLogin.Login.get_user!(@curr_user_id).right_id==2 do
       %>
       <span>
-        <a href={ Routes.project_path(@socket, :new) } class="btn btn-lg btn-primary" style="margin-top: -4rem; margin-left: 10rem; position: relative">
+        <a href={ Routes.project_path(@socket, :new) } class="btn btn-lg btn-primary" style="margin-top: -3.5rem; margin-left: 9rem; position: relative;padding: 0.85rem 1.5rem;">
           <i class="bi bi-plus-circle"></i> Nouveau projet
         </a>
       </span>
+
+
+      <form phx-change="search-project">
+        <div class="project-search" style="margin: -5rem 0px 0rem 24rem;">
+          <i class="bi bi-search" style="position: relative;top: 0.2rem;left: 21rem;"></i>
+          
+          <input type="text" name="project_search" id="projectSearch" placeholder="Rechercher un projet" style="width: 22rem;">
+        </div>
+      </form>
+    
       <% end %>
+
         <table id="tb-auth" style="margin-top: 10px; font-size: 13px">
           <thead>
             <tr>
