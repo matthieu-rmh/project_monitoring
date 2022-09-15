@@ -37,6 +37,10 @@
   <div class="card-info" data-id={request.id} id="card-drop" style="margin-bottom: -3rem; margin-right: 3rem;">
     <div class="row" style="margin-left: 0; align-items: center;">
       
+      <div phx-click="random-request" style="cursor: pointer;">
+        <i class="bi bi-chevron-left customer-request-prev"></i>
+      </div>
+
       <div class="col card-avatar-resize" style="padding-top: 0;">
         <div class="card-avatar" style="width: 55px; height: 55px;">
           <i class="bi bi-info-circle" style="font-size: 25px"></i>
@@ -61,7 +65,7 @@
       </div>
 
       <div class="col card-button-select-resize" style="padding-top: 0;">
-        <div class="card-button-select">
+        <div class="card-button-select" style="margin-left: -2rem;">
           <div 
             class="card-button" 
             type="button" 
@@ -69,7 +73,8 @@
             phx-value-id={request.id}
             style="background-color: #1a9e51;"
           >
-            Voir les détails
+            <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 5px"></i>
+            Voir
           </div>
           <div 
             class="card-button"
@@ -89,6 +94,11 @@
           </div>
         </div>
       </div>
+
+      <div phx-click="random-request" style="cursor: pointer;">
+        <i class="bi bi-chevron-right customer-request-next"></i>
+      </div>
+      
     </div>
   </div>
   <% end %>

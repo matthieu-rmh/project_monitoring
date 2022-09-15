@@ -17,3 +17,18 @@
   margin-bottom: 0;
   font-size: 15px;
 }
+
+.customer-request-next,
+.customer-request-prev {
+  font-size: 21px;
+  padding: 10px;
+  display: flex;
+  clip-path: circle();
+  transition: 0.2s;
+}
+
+.customer-request-prev:hover, 
+.customer-request-next:hover {
+  background: #0069d9;
+  color: #fff;
+}
