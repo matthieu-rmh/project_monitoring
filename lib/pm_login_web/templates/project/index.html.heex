@@ -34,7 +34,7 @@
 </style>
 
 <%= for request <- @list_clients_requests do %>
-  <div class="card-info" data-id={request.id} id="card-drop" style="margin-bottom: -3rem;">
+  <div class="card-info" data-id={request.id} id="card-drop" style="margin-bottom: -3rem; margin-right: 3rem;">
     <div class="row" style="margin-left: 0; align-items: center;">
       
       <div class="col card-avatar-resize" style="padding-top: 0;">
@@ -98,8 +98,10 @@
 
       <div style={"margin-top: #{if @list_clients_requests == [], do: "8rem;", else: "0"}"}>
         <div style={"display: flex; margin-left: 6rem; margin-top: #{if @list_clients_requests == [], do: "-8rem", else: "-6rem"}; margin-bottom: #{if @list_clients_requests == [], do: "1rem", else: "3.5rem"};"}>
-          <a href={ Routes.project_path(@socket, :new) } class="btn btn-lg btn-primary">
-            <i class="bi bi-plus-circle"></i> Nouveau projet
+          <a href={ Routes.project_path(@socket, :new) } class="btn btn-lg btn-primary" style="    height: 3.8rem;
+          display: flex;
+          align-items: center; gap: 1rem">
+            <i class="bi bi-plus-circle" style="font-size: 1.7rem;"></i> Nouveau projet
           </a>
 
           <form phx-change="search-project" style="margin-bottom: -2rem;">
@@ -108,6 +110,19 @@
               
               <input type="text" name="project_search" id="projectSearch" placeholder="Rechercher un projet" style="width: 22rem;">
             </div>
+          </form>
+
+          <form phx-change="status-project" style="margin-bottom: -2rem;">
+            <select id="project_status_id" name="status_id" style="width: -moz-available;
+            margin-left: 2rem;
+            height: 3.8rem;">
+              <option value="0">Tout</option>
+              <option value="1">A faire</option>
+              <option value="2">En blocage</option>
+              <option value="3">En cours</option>
+              <option value="4">En contrôle</option>
+              <option value="5">Achevée(s)</option>
+            </select>
           </form>
         </div>
   
@@ -125,7 +140,7 @@
               <th>Description</th>
               <th>Progression</th>
               <th style="width: 12rem;">Date de début</th>
-              <th>Date fin</th>
+              <th style="width: 10rem;">Date fin</th>
               <th style="width: 12rem;">Durée estimée</th>
               <th style="width: 13rem;">Durée accomplie</th>
               <th style="width: 13rem;">Date d'échéance</th>

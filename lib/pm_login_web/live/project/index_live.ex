@@ -66,6 +66,18 @@ defmodule PmLoginWeb.Project.IndexLive do
     {:noreply, socket |> assign(projects: projects)}
   end
 
+  def handle_event("status-project", params, socket) do
+    status_id = params["status_id"]
+
+    if status_id != "0" do
+      {:noreply, socket |> assign(projects: Monitoring.list_project_by_status!(status_id))}
+    else
+      {:noreply, socket |> assign(projects: Monitoring.list_projects(),)}
+    end
+
+
+  end
+
   def handle_event("switch-notif", %{}, socket) do
     notifs_length = socket.assigns.notifs |> length
     curr_user_id = socket.assigns.curr_user_id

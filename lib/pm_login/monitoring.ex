@@ -551,6 +551,14 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  def list_project_by_status!(status_id) do
+    query = from p in Project,
+            where: p.status_id == ^status_id,
+            order_by: [desc: :inserted_at]
+
+    Repo.all(query)
+  end
+
   def list_projects_by_contributor(con_id) do
     tasks_query =
       from t in Task,
