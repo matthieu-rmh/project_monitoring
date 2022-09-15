@@ -1,9 +1,46 @@
-<h3><i class="bi bi-kanban"></i> Les projets</h3>
+<!--<h3><i class="bi bi-kanban"></i> Les projets</h3>-->
+
+<style>
+  th, td {
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  th {
+    cursor: pointer !important;
+  }
+
+  .table-sortable th {
+  cursor: pointer;
+}
+
+.table-sortable .th-sort-asc::after {
+  content: "\25b4";
+}
+
+.table-sortable .th-sort-desc::after {
+  content: "\25be";
+}
+
+.table-sortable .th-sort-asc::after,
+.table-sortable .th-sort-desc::after {
+  margin-left: 5px;
+}
+
+.table-sortable .th-sort-asc,
+.table-sortable .th-sort-desc {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+</style>
 
 <%= for request <- @list_clients_requests do %>
-  <div class="card-info" data-id={request.id} id="card-drop">
+  <div class="card-info" data-id={request.id} id="card-drop" style="margin-bottom: -3rem; margin-right: 3rem;">
     <div class="row" style="margin-left: 0; align-items: center;">
       
+      <div phx-click="random-request" style="cursor: pointer;">
+        <i class="bi bi-chevron-left customer-request-prev"></i>
+      </div>
+
       <div class="col card-avatar-resize" style="padding-top: 0;">
         <div class="card-avatar" style="width: 55px; height: 55px;">
           <i class="bi bi-info-circle" style="font-size: 25px"></i>
@@ -28,7 +65,7 @@
       </div>
 
       <div class="col card-button-select-resize" style="padding-top: 0;">
-        <div class="card-button-select">
+        <div class="card-button-select" style="margin-left: -2rem;">
           <div 
             class="card-button" 
             type="button" 
@@ -36,7 +73,8 @@
             phx-value-id={request.id}
             style="background-color: #1a9e51;"
           >
-            Voir les détails
+            <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 5px"></i>
+            Voir
           </div>
           <div 
             class="card-button"
@@ -56,35 +94,81 @@
           </div>
         </div>
       </div>
+
+      <div phx-click="random-request" style="cursor: pointer;">
+        <i class="bi bi-chevron-right customer-request-next"></i>
+      </div>
+      
     </div>
   </div>
   <% end %>
 
     <%= if PmLogin.Login.get_user!(@curr_user_id).right_id==1 or PmLogin.Login.get_user!(@curr_user_id).right_id==2 do
       %>
-      <span>
-        <a href={ Routes.project_path(@socket, :new) } class="btn btn-lg btn-primary">
-          <i class="bi bi-plus-circle"></i> Nouveau projet
-        </a>
-      </span>
+
+      <div style={"margin-top: #{if @list_clients_requests == [], do: "8rem;", else: "0"}"}>
+        <div style={"display: flex; margin-left: 6rem; margin-top: #{if @list_clients_requests == [], do: "-8rem", else: "-6rem"}; margin-bottom: #{if @list_clients_requests == [], do: "1rem", else: "3.5rem"};"}>
+          <a href={ Routes.project_path(@socket, :new) } class="btn btn-lg btn-primary" style="    height: 3.8rem;
+          display: flex;
+          align-items: center; gap: 1rem">
+            <i class="bi bi-plus-circle" style="font-size: 1.7rem;"></i> Nouveau projet
+          </a>
+
+          <form phx-change="search-project" style="margin-bottom: -2rem;">
+            <div class="project-search">
+              <i class="bi bi-search" style="position: relative;top: 0.2rem;left: 21rem;"></i>
+              
+              <input type="text" name="project_search" id="projectSearch" placeholder="Rechercher un projet" style="width: 22rem;">
+            </div>
+          </form>
+
+          <form phx-change="status-project" style="margin-bottom: -2rem;">
+            <select id="project_status_id" name="status_id" style="width: -moz-available;
+            margin-left: 2rem;
+            height: 3.8rem;">
+              <option value="0">Tout</option>
+              <option value="1">A faire</option>
+              <option value="2">En blocage</option>
+              <option value="3">En cours</option>
+              <option value="4">En contrôle</option>
+              <option value="5">Achevée(s)</option>
+            </select>
+          </form>
+        </div>
+  
+  
+       
+      </div>
+     
+    
       <% end %>
-        <table id="tb-auth" style="margin-top: 10px; font-size: 13px">
+
+        <table id="tb-auth" class="table-sortable" style="margin-top: 10px; font-size: 13px">
           <thead>
             <tr>
               <th>Nom</th>
               <th>Description</th>
-              <th>Progression</th>
-              <th>Date de début</th>
-              <th>Date fin</th>
-              <th>Durée estimée</th>
-              <th>Durée accomplie</th>
-              <th>Date d'échéance</th>
+              <th>Prog.</th>
+              <th style="width: 12rem;">Date de début</th>
+              <th style="width: 10rem;">Date fin</th>
+              <th style="width: 12rem;">Durée est.</th>
+              <th style="width: 13rem;">Durée acc.</th>
+              <th style="width: 13rem;">Date d'échéance</th>
+              <th style="width: 13rem;">Client</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             <%= for project <- @projects do %>
-              <tr>
+              <tr style={"background: #{
+                case project.status_id do
+                  1 -> ""
+                  2 -> "#e74c3c"
+                  3 -> "#f1c40f91"
+                  4 -> "#be5e0aad"
+                  _ -> "#1abc9c"
+                end
+              }"}>
                 <td>
                   <a href={Routes.project_path(@socket, :board, project)}>
                     <%= "#{project.title}" %>
@@ -117,9 +201,9 @@
                 <td>
                   <%=
                     cond do
-                      i_hour == 0 and i_minutes >= 0 -> if i_minutes > 1, do: "#{i_minutes} minutes", else: "#{i_minutes} minute"
-                      i_hour >= 0 and i_minutes == 0 -> if i_hour > 1, do: "#{i_hour} heures", else: "#{i_hour} heure"
-                      i_hour > 0  and i_minutes > 0  -> "#{i_hour} h #{i_minutes} m"
+                      i_hour == 0 and i_minutes >= 0 -> if i_minutes > 1, do: "#{i_minutes} mn", else: "#{i_minutes} mn"
+                      i_hour >= 0 and i_minutes == 0 -> if i_hour > 1, do: "#{i_hour} h", else: "#{i_hour} h"
+                      i_hour > 0  and i_minutes > 0  -> "#{i_hour} h #{i_minutes} mn"
                       true                           -> ""
                     end
                   %>
@@ -127,9 +211,9 @@
                 <td>
                   <%=
                     cond do
-                      hour_p == 0 and minutes_p >= 0 -> if minutes_p > 1, do: "#{minutes_p} minutes", else: "#{minutes_p} minute"
-                      hour_p >= 0 and minutes_p == 0 -> if hour_p > 1, do: "#{hour_p} heures", else: "#{hour_p} heure"
-                      hour_p > 0  and minutes_p > 0  -> "#{hour_p} h #{minutes_p} m"
+                      hour_p == 0 and minutes_p >= 0 -> if minutes_p > 1, do: "#{minutes_p} mn", else: "#{minutes_p} mn"
+                      hour_p >= 0 and minutes_p == 0 -> if hour_p > 1, do: "#{hour_p} h", else: "#{hour_p} h"
+                      hour_p > 0  and minutes_p > 0  -> "#{hour_p} h #{minutes_p} mn"
                       true                           -> ""
                     end
                   %>
@@ -138,6 +222,9 @@
                   <%= Utilities.simple_date_format(project.deadline) %>
                 </td>
                 <td>
+                  <%= PmLogin.Login.get_username(PmLogin.Services.get_active_client!(project.active_client_id).user_id) %>
+                </td>
+                <td style="display: flex; gap: 0.75rem;">
                   <span>
                     <a href={ Routes.project_path(@socket, :show, project) }>
                       <i class="bi bi-info-circle btn btn-info btn-lg" style="font-size: 20px;"></i>
@@ -216,3 +303,46 @@
           client_request: @client_request
           ) 
         %>
+
+
+<script>
+  function sortTableByColumn(table, column, asc = true) {
+    const dirModifier = asc ? 1 : -1;
+    const tBody = table.tBodies[0];
+
+    console.log(tBody)
+    const rows = Array.from(tBody.querySelectorAll("tr"));
+
+    // Sort each row
+    const sortedRows = rows.sort((a, b) => {
+        const aColText = a.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
+        const bColText = b.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
+
+        return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
+    });
+
+    // Remove all existing TRs from the table
+    while (tBody.firstChild) {
+        tBody.removeChild(tBody.firstChild);
+    }
+
+    // Re-add the newly sorted rows
+    tBody.append(...sortedRows);
+
+    // Remember how the column is currently sorted
+    table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
+    table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-asc", asc);
+    table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-desc", !asc);
+}
+
+document.querySelectorAll(".table-sortable th").forEach(headerCell => {
+    headerCell.addEventListener("click", () => {
+        const tableElement = headerCell.parentElement.parentElement.parentElement;
+        const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+        const currentIsAscending = headerCell.classList.contains("th-sort-asc");
+
+        sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
+    });
+});
+
+</script>

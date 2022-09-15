@@ -57,6 +57,32 @@ defmodule PmLoginWeb.Project.IndexLive do
     }
   end
 
+  def handle_event("search-project", params, socket) do
+
+    project_title = params["project_search"]
+
+    projects = Monitoring.list_project_by_title!(project_title)
+
+    {:noreply, socket |> assign(projects: projects)}
+  end
+
+  def handle_event("status-project", params, socket) do
+    status_id = params["status_id"]
+
+    if status_id != "0" do
+      {:noreply, socket |> assign(projects: Monitoring.list_project_by_status!(status_id))}
+    else
+      {:noreply, socket |> assign(projects: Monitoring.list_projects())}
+    end
+
+  end
+
+  def handle_event("random-request", _params, socket) do
+    list_clients_requests = Services.list_random_clients_requests_with_client_name()
+
+    {:noreply, socket |> assign(list_clients_requests: [list_clients_requests])}
+  end
+
   def handle_event("switch-notif", %{}, socket) do
     notifs_length = socket.assigns.notifs |> length
     curr_user_id = socket.assigns.curr_user_id
@@ -89,6 +115,9 @@ defmodule PmLoginWeb.Project.IndexLive do
     request = Services.get_request_with_user_id!(id)
     Services.update_request_bool(request, %{"seen" => true})
 
+    # Mettre à jour la date de vue
+    Services.update_clients_request(request, %{"date_seen" => NaiveDateTime.local_now()})
+
     {:noreply, socket |> assign(show_client_request_modal: true, client_request: client_request)}
   end
 
@@ -98,6 +127,10 @@ defmodule PmLoginWeb.Project.IndexLive do
     request = Services.get_request_with_user_id!(id)
 
     Services.update_request_bool(request, %{"seen" => true})
+
+    # Mettre à jour la date de vue
+    Services.update_clients_request(request, %{"date_seen" => NaiveDateTime.local_now()})
+
     {:noreply, socket |> assign(show_detail_request_modal: true, client_request: client_request)}
   end
 
@@ -106,6 +139,9 @@ defmodule PmLoginWeb.Project.IndexLive do
 
     request = Services.get_request_with_user_id!(id)
     Services.update_request_bool(request, %{"seen" => true})
+
+    # Mettre à jour la date de vue
+    Services.update_clients_request(request, %{"date_seen" => NaiveDateTime.local_now()})
 
     {:noreply, socket |> assign(show_project_modal: true, client_request: client_request)}
   end
@@ -131,6 +167,9 @@ defmodule PmLoginWeb.Project.IndexLive do
         # Mettre la requête en vue
         request = Services.get_request_with_user_id!(project_params["client_request_id"])
         Services.update_request_bool(request, %{"ongoing" => true})
+
+        # Mettre à jour la date de de mise en cours du requête
+        Services.update_clients_request(request, %{"date_ongoing" => NaiveDateTime.local_now()})
 
         clients_request = Services.get_clients_request!(project_params["client_request_id"])
 
@@ -235,6 +274,9 @@ defmodule PmLoginWeb.Project.IndexLive do
         # Mettre la requête en vue
         request = Services.get_request_with_user_id!(params["client_request_id"])
         Services.update_request_bool(request, %{"ongoing" => true})
+
+        # Mettre à jour la date de de mise en cours du requête
+        Services.update_clients_request(request, %{"date_ongoing" => NaiveDateTime.local_now()})
 
 
         # Mettre à jour task_id et project_id à partir de la tâche créée

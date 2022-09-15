@@ -751,6 +751,26 @@ defmodule PmLogin.Services do
     Repo.all(query)
   end
 
+  def list_random_clients_requests_with_client_name do
+    user_query = from u in User
+    ac_query = from ac in ActiveClient,
+            preload: [user: ^user_query]
+    query = from req in ClientsRequest,
+            preload: [active_client: ^ac_query],
+            where: req.ongoing == false
+
+
+    pick_random_value = 0..length(Repo.all(query)) - 1 |> Enum.to_list() |> Enum.random()
+
+    IO.inspect(0..length(Repo.all(query)))
+    IO.inspect(pick_random_value)
+
+    # IO.inspect(length)
+
+    Repo.all(query)
+    |> Enum.fetch!(pick_random_value)
+  end
+
   def list_clients_requests_with_client_name_and_id(id) do
     user_query = from u in User
     ac_query = from ac in ActiveClient,
@@ -820,6 +840,14 @@ defmodule PmLogin.Services do
 
   """
   def get_clients_request!(id), do: Repo.get!(ClientsRequest, id)
+
+  def get_client_request_id_by_task!(task_id, project_id) do
+    query = from cr in ClientsRequest,
+            where: cr.task_id == ^task_id and cr.project_id == ^project_id,
+            select: cr.id
+
+    Repo.one(query)
+  end
 
   def get_request_with_user_id!(id) do
     ac_request = from ac in ActiveClient

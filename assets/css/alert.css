@@ -32,7 +32,7 @@
 .card-button-orange {
   align-items: center;
   border: 0;
-  border-radius: 100px;
+  border-radius: 3px;
   box-sizing: border-box;
   color: #ffffff;
   cursor: pointer;
@@ -119,8 +119,6 @@
 
 .card-text-date {
   font-size: 10px;
-  float: right;
-  margin: 10 0 -10 0;
   opacity: 0.65;
 }
 
@@ -132,9 +130,15 @@
 }
 
 .card-text-content {
-  max-width: 600px;
+  max-width: 425px;
+  width: auto;
   word-break: break-word;
   opacity: 0.65;
+}
+
+.card-text-username {
+  max-width: 425px;
+  word-break: break-word;
 }
 
 .card-image {
@@ -177,6 +181,21 @@
 
 .card-button-select-resize {
   width: 61%;
+}
+
+.card-button.clients_requests {
+  width: 150px;
+  border-radius: 0px;
+  position: absolute;
+  right: 7rem;
+  cursor: inherit;
+}
+
+.date-seen.clients_requests {
+  position: absolute;
+  left: 58.4rem;
+  font-size: 1rem;
+  margin-top: 6rem;
 }
 
 @media (max-width: 875px) {

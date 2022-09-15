@@ -1,7 +1,7 @@
   <h1 style="text-align: center;">ACCUEIL</h1>
   <h1 style="text-align: center;"><span class="material-icons">home</span></h1>
 
-  <div class="container">
+  <div class="container" style="max-width: 60rem;">
     <div class="row">
 
         <a href={Routes.company_path(@socket, :services)}  class="column">
@@ -10,7 +10,7 @@
               class="image-fit-cover" 
               src={ Routes.static_path(@socket, "/images/6.jpg" )}
             />
-            <div style="padding: 20px; display: block ruby">
+            <div>
               <span class="material-icons mat__ico">miscellaneous_services</span>
               <p style="margin-top: revert;">Services</p>
             </div>
@@ -23,7 +23,7 @@
               class="image-fit-cover"
               src={ Routes.static_path(@socket, "/images/3.jpg" )}
             />
-            <div style="padding: 20px; display: block ruby">
+            <div>
               <span class="material-icons mat__ico">admin_panel_settings</span>
               <p style="margin-top: revert;">Espace administrateur</p>
             </div>
@@ -40,7 +40,7 @@
             class="image-fit-cover"
             src={ Routes.static_path(@socket, "/images/12.jpg" )}
           />
-          <div style="padding: 20px; display: block ruby">
+          <div>
             <span class="material-icons mat__ico">stacked_line_chart</span>
             <p style="margin-top: revert;">Récapitulatifs</p>
           </div>
@@ -53,7 +53,7 @@
             class="image-fit-cover"
             src={ Routes.static_path(@socket, "/images/13.jpg" )}
           />
-          <div style="padding: 20px; display: block ruby">
+          <div>
             <span class="material-icons mat__ico">stacked_line_chart</span>
             <p style="margin-top: revert;">Tableau de bord</p>
           </div>

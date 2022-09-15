@@ -1,36 +1,47 @@
 <div>
 
-<div class="card-info" style="max-width: 750px;">
-  <span class="material-icons">
-    receipt_long
-  </span>Mes demandes 
-  <a id="" title="Faire une requête" phx-click="form-on" phx-hook="blurHook">
-    <i class="bi bi-pencil-square"></i>
-  </a>
-</div>
+  <div class="card-info" style="max-width: 750px; cursor: pointer; display: flex; align-items: center;">
+    <span class="material-icons">
+      receipt_long
+    </span>Mes demandes
+    <a id="" title="Faire une requête" phx-click="form-on" phx-hook="blurHook"
+      style="margin-left: 4rem; background: #27ae60; padding: 1rem 1.25rem; color: #fff">
+      <i class="bi bi-pencil-square" style="font-size: 2rem; align-items: center;"></i>
+      Créer une nouvelle demande
+    </a>
+  </div>
 
-<%= for request <- @requests do %>
-  <div style="display: flex">
+  <%= for request <- @requests do %>
+  <div style="display: flex;">
     <div class="card-info" style="width: 750px;" data-id={request.id}>
       <div class="card-avatar">
         <i class="bi bi-person"></i>
       </div>
 
-      <div class="col">
+      <div class="col" style="display: flex; align-items: center;">
         <div class="card-info-text">
+          <div class="card-text-username">
+            <%= PmLogin.Services.get_active_client!(request.active_client_id).user.username %>
+          </div>
           <div class="card-text-username">
             <%= request.title %>
           </div>
+          <!--
           <div class="card-text-content">
             <%= request.content %>
           </div>
+          -->
+          <div class="card-text-date">
+            <%= Utilities.letters_date_format_with_hours request.date_post %>
+          </div>
           <div class="card-image">
+            <!--
            <div class="column" style="margin: 10px 0 20px 0; display: flex;">
               <%= for url <- request.file_urls do %>
                 <%= if Path.extname(url)==".jpg" or Path.extname(url)==".png" or Path.extname(url)==".jpeg" do %>
                   <a href={url} style="margin-bottom: 10px;"><img src={url} alt="" height="150"/></a>
                 <% else %>
-                  <a href={url} download style="font-size: 25px; margin: 0 0 0 15px">
+                  <a href={url} download style="font-size: 4rem; margin: 0 0 0 15px">
                     <%= cond do %>
                       <% String.ends_with?(Path.basename(url), ".pdf")   -> %> <i class="bi bi-filetype-pdf" title={Path.basename(url)} style="color: #e13f2d;"></i>
                       <% String.ends_with?(Path.basename(url), ".txt")   -> %> <i class="bi bi-filetype-txt" title={Path.basename(url)} style="color: #7f8c8d;"></i>
@@ -52,65 +63,153 @@
                 <% end %>
               <% end %>
             </div>
+          -->
           </div>
         </div>
 
-        <div style="margin-left: 300px">
-          <div 
-            class="card-button" 
-            style="background-color: #2980b9; 
-            cursor: inherit;"
-          >
-            Vue
-            <input 
-              id="vu" 
-              type="checkbox" 
-              checked={request.seen} 
-              style="margin: 0 0 0 5;" 
-              disabled
-            >
-          </div>
-          <div 
-            class="card-button" 
-            style="background-color: #e67e22; 
-            cursor: inherit;"
-          >
-            En cours
-            <input
-              id="encours" 
-              type="checkbox" 
-              checked={request.ongoing} 
-              style="margin: 0 0 0 5;" 
-              disabled
-            >
-          </div>
-          <div 
-            class="card-button" 
-            style="background-color: #27ae60; 
-            cursor: inherit;"
-          >
-            Accomplie
-            <input 
-              id="accomplie" 
-              type="checkbox" 
-              checked={request.done} 
-              style="margin: 0 0 0 5;" 
-              disabled
-            >
-          </div>
-        </div>
+        <!-- Vérifier si task_id ou project_id est nul ou non dans les requêtes -->
+        <%= cond do %>
+          <% not is_nil(request.task_id) and is_nil(request.project_id) -> %>
+            <%= if PmLogin.Monitoring.list_tasks_by_project_and_task!(request.task_id) == 5 do %>
+              <div class="card-button clients_requests" style="background-color: #27ae60">
+                <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Accomplie
+              </div>
 
-        <div class="card-text-date">
-          <%= Utilities.letters_date_format_with_hours request.date_post %>
-        </div>
+              <%= if not is_nil(request.date_done) do %>
+                <div class="date-seen clients_requests">
+                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
+                </div>
+              <% end %>
+
+            <% else %>
+              <%= if request.seen and request.ongoing and not request.date_done do %>
+                <div class="card-button clients_requests" style="background-color: #e67e22;">
+                  <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
+                  En cours
+                </div>
+
+                <%= if not is_nil(request.date_ongoing) do %>
+                  <div class="date-seen clients_requests">
+                    <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
+                  </div>
+                <% end %>
+              <% end %>
+            <% end %>
+
+          <% not is_nil(request.task_id) and not is_nil(request.project_id) -> %>
+            <%= if PmLogin.Monitoring.list_tasks_by_project_and_task!(request.task_id, request.project_id) == 5 do %>
+              <div class="card-button clients_requests" style="background-color: #27ae60;">
+                <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Accomplie
+              </div>
+
+              <%= if not is_nil(request.date_done) do %>
+                <div class="date-seen clients_requests">
+                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
+                </div>
+              <% end %>
+            <% else %>
+              <%= cond do %>
+                <% request.seen and not request.ongoing and not request.date_done -> %>
+                  <div class="card-button clients_requests" style="background-color: #2980b9;">
+                    <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 6px"></i>
+                    Vue
+                  </div>
+
+                  <%= if not is_nil(request.date_seen) do %>
+                    <div class="date-seen clients_requests">
+                      <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
+                    </div>
+                  <% end %>
+
+                <% request.seen and request.ongoing -> %>
+                  <div class="card-button clients_requests" style="background-color: #e67e22;">
+                    <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
+                    En cours
+                  </div>
+
+                  <%= if not is_nil(request.date_ongoing) do %>
+                    <div class="date-seen clients_requests">
+                      <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
+                    </div>
+                  <% end %>
+
+                <% request.seen and request.ongoing and request.date_done -> %>
+                  <div class="card-button clients_requests" style="background-color: #27ae60;">
+                    <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+                    Accomplie
+                  </div>
+
+                  <%= if not is_nil(request.date_done) do %>
+                    <div class="date-seen clients_requests">
+                      <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
+                    </div>
+                  <% end %>
+
+              <% true -> %>
+                <div class="card-button clients_requests" style="background-color: #cb4331ea;">
+                  <i class="bi bi-eye-slash" style="font-size: 1.5rem; margin-right: 6px"></i>
+                  Pas encore vue
+                </div>
+            <% end %>
+          <% end %>
+
+        <% true -> %>
+
+          <%= cond do %>
+            <% request.seen -> %>
+              <div class="card-button clients_requests" style="background-color: #2980b9;">
+                <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Vue
+              </div>
+
+              <%= if not is_nil(request.date_seen) do %>
+                <div class="date-seen clients_requests">
+                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
+                </div>
+              <% end %>
+
+            <% request.seen and request.ongoing and not request.date_done -> %>
+              <div class="card-button clients_requests" style="background-color: #e67e22;">
+                <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
+                En cours
+              </div>
+
+              <%= if not is_nil(request.date_ongoing) do %>
+                <div class="date-seen clients_requests">
+                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
+                </div>
+              <% end %>
+
+            <% request.seen and request.ongoing and request.date_done -> %>
+              <div class="card-button clients_requests" style="background-color: #27ae60;">
+                <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Accomplie
+              </div>
+
+              <%= if not is_nil(request.date_done) do %>
+                <div class="date-seen clients_requests">
+                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
+                </div>
+              <% end %>
+
+            <% true -> %>
+              <div class="card-button clients_requests" style="background-color: #cb4331ea;">
+                <i class="bi bi-eye-slash" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Pas encore vue
+              </div>
+          <% end %>
+        <% end %>
       </div>
 
-    
+
     </div>
   </div>
   <% end %>
 
-  <div class="request__form__container" style={"visibility: #{if @display_form, do: 'visible', else: 'hidden'}; opacity: #{ if @display_form, do: '1 !important', else: '0' };"}>
+  <div class="request__form__container" style={"visibility: #{if @display_form, do: 'visible' , else: 'hidden' };
+    opacity: #{ if @display_form, do: '1 !important' , else: '0' };"}>
     <div id="the_request_form" phx-window-keydown="cancel-request" class="basecontents__without__radius request__form">
       <div class="column">
         <a class="form__close" title="Fermer" phx-click="form-off"><i class="bi bi-x"></i></a>
@@ -118,38 +217,42 @@
         <div class="request__form__content">
           <.form let={f} for={@changeset} phx-change="change-request" phx-submit="send-request">
 
-          <label for="title"><h3>Titre</h3></label>
-          <%= text_input f, :title %>
-          <%= error_tag f, :title %>
-          <%= hidden_input f, :active_client_id, value: Services.get_active_client_from_userid!(@curr_user_id).id %>
-          <label for="content"><h3>Contenu</h3></label>
+            <label for="title">
+              <h3>Titre</h3>
+            </label>
+            <%= text_input f, :title %>
+            <%= error_tag f, :title %>
+            <%= hidden_input f, :active_client_id, value: Services.get_active_client_from_userid!(@curr_user_id).id %>
+            <label for="content">
+              <h3>Contenu</h3>
+            </label>
             <%= textarea f, :content, style: "max-width: auto; resize: none;" %>
             <%= error_tag f, :content %>
-          <label class="btn btn-lg btn-primary file_input_btn">
-          <%=  live_file_input(@uploads.file, class: "file_inputs") %>
-          <i class="bi bi-upload"></i>
-          Charger fichiers
-          </label>
-          <%= for {_ref, msg} <- @uploads.file.errors do %>
-          <%= if Phoenix.Naming.humanize(msg)=="Too many files" do %>
-          <p class="alert alert-danger"><%= "Nombre de fichiers max : 5." %></p>
-          <% end %>
-          <% end %>
+            <label class="btn btn-lg btn-primary file_input_btn">
+              <%=  live_file_input(@uploads.file, class: "file_inputs") %>
+              <i class="bi bi-upload"></i>
+              Charger fichiers
+            </label>
+            <%= for {_ref, msg} <- @uploads.file.errors do %>
+            <%= if Phoenix.Naming.humanize(msg)=="Too many files" do %>
+            <p class="alert alert-danger"><%= "Nombre de fichiers max : 5." %></p>
+            <% end %>
+            <% end %>
 
 
-          <%= for entry <- @uploads.file.entries do %>
-          <div class="row">
-            <div class="column">
+            <%= for entry <- @uploads.file.entries do %>
+            <div class="row">
+              <div class="column">
 
-              <%= if Path.extname(entry.client_name)==".jpg" or Path.extname(entry.client_name)==".png" or Path.extname(entry.client_name)==".jpeg" do %>
-              <%= live_img_preview entry, height: 50 %>
-              <% else %>
-              <p class="file__name__upload"><%= entry.client_name %></p>
-              <% end %>
+                <%= if Path.extname(entry.client_name)==".jpg" or Path.extname(entry.client_name)==".png" or Path.extname(entry.client_name)==".jpeg" do %>
+                <%= live_img_preview entry, height: 50 %>
+                <% else %>
+                <p class="file__name__upload"><%= entry.client_name %></p>
+                <% end %>
 
-            </div>
-            <div class="column">
-              <progress value={entry.progress } max="100"/>
+              </div>
+              <div class="column">
+                <progress value={entry.progress } max="100" />
               </div>
               <div class="column">
                 <a href="#" phx-click="cancel-entry" phx-value-ref={entry.ref}>annuler</a>
@@ -157,7 +260,8 @@
             </div>
             <% end %>
             <div class="column">
-              <button type="submit" style="float: right;" class="bt__com__form"><span class="material-icons bt__com__form__ico">send</span></button>
+              <button type="submit" style="float: right;" class="bt__com__form"><span
+                  class="material-icons bt__com__form__ico">send</span></button>
             </div>
 
           </.form>

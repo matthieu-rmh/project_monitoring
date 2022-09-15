@@ -340,6 +340,15 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  # Get title and id of status
+  def list_statuses_title do
+    query = from s in Status,
+            select: {s.title, s.id},
+            order_by: [asc: :id]
+
+    Repo.all(query)
+  end
+
   def list_statuses_for_tasks_table do
     query =
       from s in Status,
@@ -528,6 +537,24 @@ defmodule PmLogin.Monitoring do
     query =
       from p in Project,
         order_by: [desc: :inserted_at]
+
+    Repo.all(query)
+  end
+
+  def list_project_by_title!(project_title) do
+    project_search = "%#{project_title}%"
+
+    query = from p in Project,
+            where: ilike(p.title, ^project_search) or ilike(p.description, ^project_search),
+            order_by: [desc: :inserted_at]
+
+    Repo.all(query)
+  end
+
+  def list_project_by_status!(status_id) do
+    query = from p in Project,
+            where: p.status_id == ^status_id,
+            order_by: [desc: :inserted_at]
 
     Repo.all(query)
   end
@@ -833,6 +860,14 @@ defmodule PmLogin.Monitoring do
         where: p.id == ^id
 
     Repo.one!(project_query)
+  end
+
+  def get_project_id_by_task!(task_id) do
+    query = from t in Task,
+            where: t.id == ^task_id,
+            select: t.project_id
+
+    Repo.one(query)
   end
 
   def get_loading_stage_id_from_project_id!(id) do
@@ -1218,6 +1253,24 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  # Récupérer la liste des tâches par task_id et project_id
+  def list_tasks_by_project_and_task!(task_id, project_id) do
+    query = from t in Task,
+            where: t.id == ^task_id and t.project_id == ^project_id,
+            select: t.status_id
+
+    Repo.one(query)
+  end
+
+  # Récupérer la liste des tâches par task_id
+  def list_tasks_by_project_and_task!(task_id) do
+    query = from t in Task,
+            where: t.id == ^task_id,
+            select: t.status_id
+
+    Repo.one(query)
+  end
+
   # Récupérer la liste des tâches par contributor_id
   def list_tasks_by_contributor_id(contributor_id) do
     card_query =
@@ -1499,6 +1552,14 @@ defmodule PmLogin.Monitoring do
         preload: [card: ^card_query]
 
     Repo.one!(query)
+  end
+
+  def get_status_by_task!(task_id) do
+    query = from t in Task,
+            where: t.id == ^task_id,
+            select: t.status_id
+
+    Repo.one(query)
   end
 
   # def set_parent do

@@ -43,6 +43,14 @@ defmodule PmLogin.Login do
     Repo.all(query)
   end
 
+  def list_ids_from_attributors_users do
+    query = from u in User,
+            where: u.right_id == 2,
+            select: {u.id}
+
+    Repo.all((query))
+  end
+
   def list_attributor_and_contributor_users do
     query =
       from u in User,

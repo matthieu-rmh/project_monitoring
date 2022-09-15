@@ -649,6 +649,10 @@ defmodule PmLoginWeb.Project.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_info({PmLogin.Monitoring, [:request, :created], :clients_requests}, socket) do
+    {:noreply, socket}
+  end
+
   def handle_info({Monitoring, [:planified, _], _}, socket) do
     project_id = socket.assigns.board.project.id
     planified_list = Monitoring.list_planified_by_project(project_id)
@@ -956,6 +960,24 @@ defmodule PmLoginWeb.Project.BoardLive do
         # IO.inspect real_task
         # IO.inspect Monitoring.get_task!(real_task.id)
         this_board = socket.assigns.board
+
+        # Get project_id by task_id
+        project_id = Monitoring.get_project_id_by_task!(card.task_id)
+
+        # Get client_request_id by task_id and project_id
+        client_request_id = Services.get_client_request_id_by_task!(card.task_id, project_id)
+
+        if not is_nil(client_request_id) do
+          # Get client request by client_request_id
+          request = Services.get_request_with_user_id!(client_request_id)
+
+          if real_task.status_id == 5 do
+            # Mettre à jour la date de mise en terminée
+            Services.update_clients_request(request, %{"date_done" => NaiveDateTime.local_now()})
+          end
+        end
+
+
 
         # IO.puts "after"
         # IO.inspect card
