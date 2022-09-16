@@ -2,10 +2,10 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
   use Phoenix.LiveView
   alias PmLogin.Services
   alias PmLogin.Monitoring
-  alias PmLoginWeb.LiveComponent.ModalLive
   alias PmLogin.Services
   alias PmLogin.Services.ClientsRequest
   alias PmLoginWeb.Router.Helpers, as: Routes
+  alias PmLoginWeb.LiveComponent.DetailModalRequestLive
 
   def mount(_params, %{"curr_user_id" => curr_user_id}, socket) do
     Monitoring.subscribe()
@@ -23,13 +23,40 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
        curr_user_id: curr_user_id,
        show_notif: false,
        notifs: Services.list_my_notifications_with_limit(curr_user_id, 4),
-       requests: Services.list_my_requests(curr_user_id)
+       requests: Services.list_my_requests(curr_user_id),
+       show_detail_request_modal: false,
+       client_request: nil
      )
      |> allow_upload(:file,
        accept:
          ~w(.png .jpeg .jpg .pdf .txt .odt .ods .odp .csv .xml .xls .xlsx .ppt .pptx .doc .docx),
        max_entries: 5
      ), layout: {PmLoginWeb.LayoutView, "active_client_layout_live.html"}}
+  end
+
+  def handle_event("modal_close", _params, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_event("show_detail_request_modal", %{"id" => id}, socket) do
+    client_request = Services.list_clients_requests_with_client_name_and_id(id)
+
+    {:noreply, socket |> assign(show_detail_request_modal: true, client_request: client_request)}
+  end
+
+  def handle_event("cloture-request", %{"id" => id}, socket) do
+    request = Services.get_request_with_user_id!(id)
+
+    Services.update_request_bool(request, %{"finished" => true})
+
+    # Mettre à jour la date de cloture du requête
+    Services.update_clients_request(request, %{"date_finished" => NaiveDateTime.local_now()})
+
+    {:noreply, socket |> put_flash(:info, "La requête #{request.title} a été cloturée")}
+  end
+
+  def handle_info({DetailModalRequestLive, :button_clicked, %{action: "cancel", param: nil}}, socket) do
+    {:noreply, assign(socket, show_detail_request_modal: false)}
   end
 
   def handle_event("cancel-entry", %{"ref" => ref}, socket) do

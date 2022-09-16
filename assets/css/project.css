@@ -32,3 +32,138 @@
   background: #0069d9;
   color: #fff;
 }
+
+.button-cr-see, 
+.button-cr-modify {
+  width: auto;
+  border-radius: 0px;
+  text-transform: capitalize;
+  border: none;
+}
+
+.button-cr {
+  display: flex;
+  gap: 1rem;
+  margin-left: 4rem;
+  margin-top: 1rem;
+}
+
+.button-cr > button:nth-child(1):focus {
+  background: #297fb9a5;
+  color: #fff;
+}
+
+.button-cr > button:nth-child(2):focus {
+  background: #16a084b3;
+  color: #fff;
+}
+
+.button-cr i {
+  font-size: 1.25rem;
+}
+
+.button-cr-see {
+  background: #2980b9;
+  color: #fff;
+}
+
+.button-cr-see:hover {
+  background: #297fb9a5;
+  color: #fff;
+}
+
+.button-cr-modify {
+  background: #16a085;
+  color: #fff;
+}
+
+.button-cr-modify:hover {
+  background: #16a084b3;
+  color: #fff;
+}
+
+
+@media (max-width: 1560px) {
+  .responsive-customer-request {
+    transform: scale(0.95) !important;
+  }  
+
+  .responsive-customer-request .card-info {
+    margin-right: -1rem !important;
+  }
+
+  .responsive-customer-request .button-project-list {
+    margin-left: 0rem !important;
+  }
+}
+
+@media (max-width: 1450px) {
+  .responsive-customer-request {
+    transform: scale(0.92) !important;
+  }  
+
+  .responsive-customer-request .card-info {
+    margin-right: -4rem !important;
+  }
+
+  .responsive-customer-request .button-project-list {
+    margin-left: -4rem !important;
+  }
+}
+
+@media (max-width: 1368px) {
+  .responsive-customer-request {
+    transform: scale(0.9) !important;
+  }  
+
+  .responsive-customer-request .card-info {
+    margin-right: -5rem !important;
+  }
+
+  .responsive-customer-request .button-project-list {
+    margin-left: -5rem !important;
+  }
+}
+
+@media (max-width: 1350px) {
+  .responsive-customer-request {
+    transform: scale(0.85) !important;
+  }  
+
+  .responsive-customer-request .card-info {
+    margin-right: -9rem !important;
+  }
+
+  .responsive-customer-request .button-project-list {
+    margin-left: -9rem !important;
+  }
+}
+
+@media (max-width: 1280px) {
+  .responsive-customer-request {
+    transform: scale(0.82) !important;
+  }  
+
+  .responsive-customer-request .card-info {
+    margin-right: -11rem !important;
+  }
+
+  .responsive-customer-request .button-project-list {
+    margin-left: -11rem !important;
+  }
+}
+
+@media (max-width: 1240px) {
+  .responsive-customer-request {
+    transform: scale(0.72) !important;
+  }  
+
+  .responsive-customer-request .card-info {
+    margin-right: -18rem !important;
+  }
+
+  .responsive-customer-request .button-project-list {
+    margin-left: -18rem !important;
+  }
+}
+

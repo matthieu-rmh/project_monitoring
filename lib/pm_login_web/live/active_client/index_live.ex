@@ -1,6 +1,6 @@
 defmodule PmLogin.ActiveClient.IndexLive do
   use Phoenix.LiveView
-  alias PmLogin.Services
+  alias PmLogin.{Services, Login}
 
   def mount(_params, %{"curr_user_id" => curr_user_id,"active_clients" => active_clients}, socket) do
     Services.subscribe()
@@ -10,6 +10,16 @@ defmodule PmLogin.ActiveClient.IndexLive do
        |> assign(active_clients: active_clients, curr_user_id: curr_user_id, show_notif: false, notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)),
        layout: {PmLoginWeb.LayoutView, "admin_layout_live.html"}
        }
+  end
+
+  def handle_event("filter-client", params, socket) do
+    case params["client_selection"] do
+      "1" ->
+        {:noreply, socket |> assign(active_clients: Services.list_active_clients())}
+
+      _ ->
+        {:noreply, socket |> assign(active_clients: Login.list_non_active_clients())}
+    end
   end
 
   def handle_event("switch-notif", %{}, socket) do

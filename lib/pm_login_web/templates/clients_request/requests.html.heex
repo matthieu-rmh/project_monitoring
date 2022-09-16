@@ -106,110 +106,42 @@
         </div>
       </div>
 
+      <div class="button-cr">
+        <button 
+          class="button-cr-see"
+          phx-click="show_detail_request_modal" 
+          phx-value-id={request.id}
+        >
+          <i class="bi bi-eye-fill"></i>
+          Voir 
+        </button>
+      </div>
+
+      <!-- Vérifier si task_id ou project_id est nul ou non dans les requêtes -->
       <!-- Vérifier si task_id ou project_id est nul ou non dans les requêtes -->
       <%= cond do %>
-        <% not is_nil(request.task_id) and is_nil(request.project_id) -> %>
-          <%= if PmLogin.Monitoring.list_tasks_by_project_and_task!(request.task_id) == 5 do %>
-            <div class="card-button clients_requests" style="background-color: #27ae60">
-              <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
-              Accomplie
-            </div>
-
-            <%= if not is_nil(request.date_done) do %>
-              <div class="date-seen clients_requests">
-                <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
-              </div>
-            <% end %>
-
-          <% else %>
-            <%= if request.seen and request.ongoing and not request.date_done do %>
-              <div class="card-button clients_requests" style="background-color: #e67e22;">
-                <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
-                En cours
-              </div>
-
-              <%= if not is_nil(request.date_ongoing) do %>
-                <div class="date-seen clients_requests">
-                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
-                </div>
-              <% end %>
-            <% end %>
-          <% end %>
-
-        <% not is_nil(request.task_id) and not is_nil(request.project_id) -> %>
-          <%= if PmLogin.Monitoring.list_tasks_by_project_and_task!(request.task_id, request.project_id) == 5 do %>
+      <% not is_nil(request.task_id) and is_nil(request.project_id) -> %>
+        <%= if PmLogin.Monitoring.list_tasks_by_project_and_task!(request.task_id) == 5 do %>
+          <%= if request.seen and request.ongoing and request.done and request.finished do %>
             <div class="card-button clients_requests" style="background-color: #27ae60;">
               <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+              Cloturée
+            </div>  
+          <% else %>
+            <div class="card-button clients_requests" style="background-color: #cbba21;">
+              <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
               Accomplie
             </div>
+          <% end %>  
 
-            <%= if not is_nil(request.date_done) do %>
-              <div class="date-seen clients_requests">
-                <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
-              </div>
-            <% end %>
-          <% else %>
-            <%= cond do %>
-              <% request.seen and not request.ongoing and not request.date_done -> %>
-                <div class="card-button clients_requests" style="background-color: #2980b9;">
-                  <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 6px"></i>
-                  Vue
-                </div>
-
-                <%= if not is_nil(request.date_seen) do %>
-                  <div class="date-seen clients_requests">
-                    <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
-                  </div>
-                <% end %>
-
-              <% request.seen and request.ongoing -> %>
-                <div class="card-button clients_requests" style="background-color: #e67e22;">
-                  <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
-                  En cours
-                </div>
-
-                <%= if not is_nil(request.date_ongoing) do %>
-                  <div class="date-seen clients_requests">
-                    <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
-                  </div>
-                <% end %>
-
-              <% request.seen and request.ongoing and request.date_done -> %>
-                <div class="card-button clients_requests" style="background-color: #27ae60;">
-                  <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
-                  Accomplie
-                </div>
-
-                <%= if not is_nil(request.date_done) do %>
-                  <div class="date-seen clients_requests">
-                    <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
-                  </div>
-                <% end %>
-
-            <% true -> %>
-              <div class="card-button clients_requests" style="background-color: #cb4331ea;">
-                <i class="bi bi-eye-slash" style="font-size: 1.5rem; margin-right: 6px"></i>
-                Pas encore vue
-              </div>
-          <% end %>
-        <% end %>
-
-      <% true -> %>
-
-        <%= cond do %>
-          <% request.seen -> %>
-            <div class="card-button clients_requests" style="background-color: #2980b9;">
-              <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 6px"></i>
-              Vue
+          <%= if not is_nil(request.date_done) do %>
+            <div class="date-seen clients_requests">
+              <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
             </div>
+          <% end %>
 
-            <%= if not is_nil(request.date_seen) do %>
-              <div class="date-seen clients_requests">
-                <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
-              </div>
-            <% end %>
-
-          <% request.seen and request.ongoing and not request.date_done -> %>
+        <% else %>
+          <%= if request.seen and request.ongoing and not request.done do %>
             <div class="card-button clients_requests" style="background-color: #e67e22;">
               <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
               En cours
@@ -220,18 +152,71 @@
                 <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
               </div>
             <% end %>
+          <% end %>
+        <% end %>
 
-          <% request.seen and request.ongoing and request.date_done -> %>
+      <% not is_nil(request.task_id) and not is_nil(request.project_id) -> %>
+        <%= if PmLogin.Monitoring.list_tasks_by_project_and_task!(request.task_id, request.project_id) == 5 do %>
+          <%= if request.seen and request.ongoing and request.done and request.finished do %>
             <div class="card-button clients_requests" style="background-color: #27ae60;">
+              <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+              Cloturée
+            </div>  
+          <% else %>
+            <div class="card-button clients_requests" style="background-color: #cbba21;">
               <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
               Accomplie
             </div>
+          <% end %>           
 
-            <%= if not is_nil(request.date_done) do %>
-              <div class="date-seen clients_requests">
-                <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
+          <%= if not is_nil(request.date_done) do %>
+            <div class="date-seen clients_requests">
+              <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
+            </div>
+          <% end %>
+        <% else %>
+          <%= cond do %>
+            <% request.seen and not request.ongoing and not request.done and not request.finished -> %>
+              <div class="card-button clients_requests" style="background-color: #2980b9;">
+                <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Vue
               </div>
-            <% end %>
+
+              <%= if not is_nil(request.date_seen) do %>
+                <div class="date-seen clients_requests">
+                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
+                </div>
+              <% end %>
+
+            <% request.seen and request.ongoing and not request.done and not request.finished -> %>
+              <div class="card-button clients_requests" style="background-color: #e67e22;">
+                <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
+                En cours
+              </div>
+
+              <%= if not is_nil(request.date_ongoing) do %>
+                <div class="date-seen clients_requests">
+                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
+                </div>
+              <% end %>
+
+            <% request.seen and request.ongoing and request.done and not request.finished -> %>
+              <div class="card-button clients_requests" style="background-color: #cbba21;">
+                <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Accomplie
+              </div>
+
+              <%= if not is_nil(request.date_done) do %>
+                <div class="date-seen clients_requests">
+                  <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
+                </div>
+              <% end %>
+
+            <% request.seen and request.ongoing and request.done and request.finished -> %>
+              <div class="card-button clients_requests" style="background-color: #27ae60;">
+                <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+                Cloturée
+              </div>
 
           <% true -> %>
             <div class="card-button clients_requests" style="background-color: #cb4331ea;">
@@ -240,6 +225,59 @@
             </div>
         <% end %>
       <% end %>
+
+    <% true -> %>
+
+      <%= cond do %>
+        <% request.seen and not request.ongoing and not request.done and not request.finished -> %>
+          <div class="card-button clients_requests" style="background-color: #2980b9;">
+            <i class="bi bi-eye" style="font-size: 1.5rem; margin-right: 6px"></i>
+            Vue
+          </div>
+
+          <%= if not is_nil(request.date_seen) do %>
+            <div class="date-seen clients_requests">
+              <%= Utilities.letters_date_format_with_only_month_and_hours request.date_seen %>
+            </div>
+          <% end %>
+
+        <% request.seen and request.ongoing and not request.done and not request.finished -> %>
+          <div class="card-button clients_requests" style="background-color: #e67e22;">
+            <i class="bi bi-clock-history" style="font-size: 1.5rem; margin-right: 6px"></i>
+            En cours
+          </div>
+
+          <%= if not is_nil(request.date_ongoing) do %>
+            <div class="date-seen clients_requests">
+              <%= Utilities.letters_date_format_with_only_month_and_hours request.date_ongoing %>
+            </div>
+          <% end %>
+
+        <% request.seen and request.ongoing and request.done and not request.finished -> %>
+          <div class="card-button clients_requests" style="background-color: #cbba21;">
+            <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+            Accomplie
+          </div>
+
+          <%= if not is_nil(request.date_done) do %>
+            <div class="date-seen clients_requests">
+              <%= Utilities.letters_date_format_with_only_month_and_hours request.date_done %>
+            </div>
+          <% end %>
+
+        <% request.seen and request.ongoing and request.done and request.finished -> %>
+          <div class="card-button clients_requests" style="background-color: #27ae60;">
+            <i class="bi bi-check-circle" style="font-size: 1.5rem; margin-right: 6px"></i>
+            Cloturée
+          </div>
+
+        <% true -> %>
+          <div class="card-button clients_requests" style="background-color: #cb4331ea;">
+            <i class="bi bi-eye-slash" style="font-size: 1.5rem; margin-right: 6px"></i>
+            Pas encore vue
+          </div>
+      <% end %>
+    <% end %>
     </div>
 
 
@@ -249,3 +287,24 @@
 
 <br>
 <span><a href={Routes.company_path(@socket, :services)} class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i> Services</a></span>
+
+<%= live_component(
+  PmLoginWeb.LiveComponent.DetailModalRequestLive, 
+  id: "confirm-arch", 
+  title: "Détails du requête", 
+  body: nil, 
+  right_button: nil, 
+  right_button_action: nil, 
+  right_button_param: nil, 
+  left_button: "Retour", 
+  left_button_action: "cancel",
+  task_changeset: nil, 
+  contributors: nil, 
+  attributors: nil,
+  show_detail_request_modal: @show_detail_request_modal, 
+  is_contributor: nil, 
+  curr_user_id: nil, 
+  list_projects: nil, 
+  client_request: @client_request
+  ) 
+%>
