@@ -1202,6 +1202,24 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  def list_all_tasks_with_card_by_active_client_id(active_client_id) do
+    card_query = from c in Card,
+                 select: c.id
+
+    project_query = from p in Project,
+                    where: p.active_client_id == ^active_client_id,
+                    select: p.id
+
+    project_id = Repo.all(project_query)
+
+    query = from t in Task,
+            where: t.project_id in ^project_id,
+            preload: [:project, :status, :priority, card: ^card_query],
+            order_by: [desc: t.updated_at]
+
+    Repo.all(query)
+  end
+
   # Récupérer la liste des tâches par mise à jour d'ordre décroissant
   def list_tasks_order_by_updated_at do
     query =

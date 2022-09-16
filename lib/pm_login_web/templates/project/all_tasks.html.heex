@@ -46,6 +46,26 @@
           </form>
         </th>
         <th></th>
+        <th>
+          <form phx-change="tasks_filtered_by_customer"  style="margin-bottom: -2rem;">
+            <select
+              id="task_filter"
+              name="customer_select"
+              style="margin-bottom: O;  color: #fff !important;"
+            >
+              <option value="" selected disabled hidden style="background: #1F2937; color: #fff;">Clients</option>
+              <option value="9000" style="background: #1F2937; color: #fff;">Tout</option>
+
+              <%= for active_client <- @active_clients do %>
+                <option value={active_client.id} style="background: #1F2937; color: #fff;">
+                  <%= PmLogin.Login.get_username(active_client.user_id) %>
+                </option>
+              <% end %>
+
+              <option value="-1" style="background: #1F2937; color: #fff;">Sans client</option>
+            </select>
+          </form>
+        </th>
       </tr>
       <tr>
         <th>Projet</th>
@@ -56,10 +76,11 @@
         <th>Attributeur</th>
         <th>Contributeur</th>
         <th>Progression</th>
+        <th>Client</th>
       </tr>
     </thead>
     <tbody>
-      <%= for task <- @tasks do %>
+      <%= for task <- @tasks do %>        
         <!-- Afficher les tâches si son statut est différent de Achevée(s) et que c'est pas archivé -->
         <%= if task.hidden == false do %>
           <tr>
@@ -137,6 +158,7 @@
                   disabled
                 />
               </td>
+              <td><%= PmLogin.Login.get_username(PmLogin.Services.get_active_client!(task.project.active_client_id).user_id) %></td>
               <td data-label="Actions" class="d-action">
                 <div style="display: flex;
                             margin-top: 40px;

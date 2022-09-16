@@ -57,11 +57,28 @@ defmodule PmLoginWeb.Project.AllTasksLive do
         card: nil,
         showing_my_attributes: false,
         showing_my_tasks: true,
-        notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)
+        notifs: Services.list_my_notifications_with_limit(curr_user_id, 4),
+        active_clients: Services.list_active_clients()
       )
 
 
     {:ok, socket, layout: {PmLoginWeb.LayoutView, "admin_layout_live.html"}}
+  end
+
+  def handle_event("tasks_filtered_by_customer", params, socket) do
+    IO.inspect(params)
+
+    active_client_id = params["customer_select"]
+
+    tasks =
+      case active_client_id do
+        "9000" -> Monitoring.list_all_tasks_with_card()
+        "-1" -> Monitoring.list_all_tasks_with_card()
+        _ ->
+          Monitoring.list_all_tasks_with_card_by_active_client_id(active_client_id)
+      end
+
+    {:noreply, socket |> assign(tasks: tasks)}
   end
 
   def handle_event("delete_card", %{"id" => id}, socket) do
