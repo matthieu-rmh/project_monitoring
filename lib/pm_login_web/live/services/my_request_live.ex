@@ -34,6 +34,10 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
      ), layout: {PmLoginWeb.LayoutView, "active_client_layout_live.html"}}
   end
 
+  def handle_event("modal_close", _params, socket) do
+    {:noreply, socket}
+  end
+
   def handle_event("show_detail_request_modal", %{"id" => id}, socket) do
     client_request = Services.list_clients_requests_with_client_name_and_id(id)
 
