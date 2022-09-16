@@ -5,7 +5,15 @@
       receipt_long
     </span>Mes demandes
     <a id="" title="Faire une requête" phx-click="form-on" phx-hook="blurHook"
-      style="margin-left: 4rem; background: #27ae60; padding: 1rem 1.25rem; color: #fff">
+      style="
+      margin-left: 4rem;
+      background: #16a085;
+      padding: 1rem 1.25rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 1rem;"
+    >
       <i class="bi bi-pencil-square" style="font-size: 2rem; align-items: center;"></i>
       Créer une nouvelle demande
     </a>
@@ -66,6 +74,24 @@
           -->
           </div>
         </div>
+
+        <div class="button-cr">
+          <button 
+            class="button-cr-see"
+            phx-click="show_detail_request_modal" 
+            phx-value-id={request.id}
+          >
+            <i class="bi bi-eye-fill"></i>
+            Voir 
+          </button>
+  
+          <button class="button-cr-modify">
+            <i class="bi bi-pencil"></i>
+            Modifier 
+          </button>
+        </div>
+
+    
 
         <!-- Vérifier si task_id ou project_id est nul ou non dans les requêtes -->
         <%= cond do %>
@@ -275,5 +301,26 @@
 
 
 </div>
+
+<%= live_component(
+  PmLoginWeb.LiveComponent.DetailModalRequestLive, 
+  id: "confirm-arch", 
+  title: "Détails du requête", 
+  body: nil, 
+  right_button: nil, 
+  right_button_action: nil, 
+  right_button_param: nil, 
+  left_button: "Retour", 
+  left_button_action: "cancel",
+  task_changeset: nil, 
+  contributors: nil, 
+  attributors: nil,
+  show_detail_request_modal: @show_detail_request_modal, 
+  is_contributor: nil, 
+  curr_user_id: nil, 
+  list_projects: nil, 
+  client_request: @client_request
+  ) 
+%>
 
 <br>
