@@ -35,9 +35,6 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
   end
 
   def handle_event("show_detail_request_modal", %{"id" => id}, socket) do
-    IO.puts("IDDDS")
-    IO.inspect(id)
-
     client_request = Services.list_clients_requests_with_client_name_and_id(id)
 
     IO.inspect(client_request)
