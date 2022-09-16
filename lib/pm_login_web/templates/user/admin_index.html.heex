@@ -45,11 +45,49 @@
   </div>
 
   <div class="row">
+    <!--
+    <a href={Routes.project_path(@socket, :logs)} class="column">
+      <div class="card-style">
+        <img 
+          class="image-fit-cover"
+          src={ Routes.static_path(@socket, "/images/13.jpg" )}
+        />
+        <div>
+          <span class="material-icons mat__ico">stacked_line_chart</span>
+          <p style="margin-top: revert;">Tableau de bord</p>
+        </div>
+      </div>
+    </a>
+  -->
+
     <a href={Routes.active_client_path(@socket, :index)} class="column basecontents__without__radius esp__adm__col">
       <h3 class="header__link__title">
-        <p id="adm">Clients <br /><i class="bi bi-people-fill"></i></p>
+        <p id="adm">Clients <br /><i class="bi bi-people-fill mat__ico"></i></p>
       </h3>
     </a>
+
+    <a href={Routes.project_path(@socket, :logs)} class="column basecontents__without__radius esp__adm__col">
+      <h3 class="header__link__title">
+        <p id="adm">Tableau de bord <br /><span class="material-icons mat__ico">stacked_line_chart</span></p>
+      </h3>
+    </a>
+
+ 
+
+    <!--
+    <a href={Routes.active_client_path(@socket, :index)} class="column">
+      <div class="card-style">
+        <img 
+          class="image-fit-cover"
+          src="https://static.vecteezy.com/system/resources/previews/006/230/301/non_2x/illustration-of-a-woman-doing-a-presentation-or-training-to-a-client-free-vector.jpg"
+        />
+        <div>
+          <i class="bi bi-people-fill mat__ico"></i>
+          <p style="margin-top: revert;">Clients</p>
+        </div>
+      </div>
+    </a>
+  -->
     <!--
     <a href={Routes.active_client_path(@socket, :new)} class="column basecontents__without__radius esp__adm__col">
       <h3 class="header__link__title">
@@ -57,6 +95,28 @@
       </h3>
     </a>
     -->
+  </div>
+
+  <div class="row">
+    <a href={Routes.company_path(@socket, :services)} class="column basecontents__without__radius esp__adm__col">
+      <h3 class="header__link__title">
+        <p id="adm">Services <br /><span class="material-icons mat__ico">miscellaneous_services</span></p>
+      </h3>
+    </a>
+    <!--
+    <a href={Routes.company_path(@socket, :services)}  class="column">
+      <div class="card-style">
+        <img
+          class="image-fit-cover" 
+          src={ Routes.static_path(@socket, "/images/6.jpg" )}
+        />
+        <div>
+          <span class="material-icons mat__ico">miscellaneous_services</span>
+          <p style="margin-top: revert;">Services</p>
+        </div>
+      </div>
+    </a>
+  -->
   </div>
 
   <!--
