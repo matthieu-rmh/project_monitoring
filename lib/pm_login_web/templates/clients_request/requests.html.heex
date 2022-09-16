@@ -106,6 +106,17 @@
         </div>
       </div>
 
+      <div class="button-cr">
+        <button 
+          class="button-cr-see"
+          phx-click="show_detail_request_modal" 
+          phx-value-id={request.id}
+        >
+          <i class="bi bi-eye-fill"></i>
+          Voir 
+        </button>
+      </div>
+
       <!-- Vérifier si task_id ou project_id est nul ou non dans les requêtes -->
       <%= cond do %>
         <% not is_nil(request.task_id) and is_nil(request.project_id) -> %>
@@ -249,3 +260,24 @@
 
 <br>
 <span><a href={Routes.company_path(@socket, :services)} class="btn btn-lg btn-secondary"><i class="bi bi-arrow-bar-left"></i> Services</a></span>
+
+<%= live_component(
+  PmLoginWeb.LiveComponent.DetailModalRequestLive, 
+  id: "confirm-arch", 
+  title: "Détails du requête", 
+  body: nil, 
+  right_button: nil, 
+  right_button_action: nil, 
+  right_button_param: nil, 
+  left_button: "Retour", 
+  left_button_action: "cancel",
+  task_changeset: nil, 
+  contributors: nil, 
+  attributors: nil,
+  show_detail_request_modal: @show_detail_request_modal, 
+  is_contributor: nil, 
+  curr_user_id: nil, 
+  list_projects: nil, 
+  client_request: @client_request
+  ) 
+%>

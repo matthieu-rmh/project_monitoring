@@ -37,8 +37,6 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
   def handle_event("show_detail_request_modal", %{"id" => id}, socket) do
     client_request = Services.list_clients_requests_with_client_name_and_id(id)
 
-    IO.inspect(client_request)
-
     {:noreply, socket |> assign(show_detail_request_modal: true, client_request: client_request)}
   end
 

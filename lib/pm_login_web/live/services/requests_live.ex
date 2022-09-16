@@ -2,6 +2,7 @@ defmodule PmLoginWeb.Services.RequestsLive do
   use Phoenix.LiveView
   alias PmLogin.Services
   alias PmLoginWeb.LiveComponent.ModalLive
+  alias PmLoginWeb.LiveComponent.DetailModalRequestLive
 
   def mount(_params, %{"curr_user_id"=>curr_user_id}, socket) do
     Services.subscribe()
@@ -9,7 +10,7 @@ defmodule PmLoginWeb.Services.RequestsLive do
 
     {:ok,
        socket
-       |> assign(requests: Services.list_requests,
+       |> assign(requests: Services.list_requests, show_detail_request_modal: false, client_request: nil,
        show_modal: false, service_id: nil,curr_user_id: curr_user_id,show_notif: false, notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)),
        layout: {PmLoginWeb.LayoutView, "admin_layout_live.html"}
        }
@@ -34,6 +35,16 @@ defmodule PmLoginWeb.Services.RequestsLive do
     Services.send_notif_to_one(curr_user_id, request.active_client.user_id, notif_text, 8)
 
     {:noreply, socket |> put_flash(:info, notif_text) |> push_event("AnimateAlert", %{})}
+  end
+
+  def handle_event("show_detail_request_modal", %{"id" => id}, socket) do
+    client_request = Services.list_clients_requests_with_client_name_and_id(id)
+
+    {:noreply, socket |> assign(show_detail_request_modal: true, client_request: client_request)}
+  end
+
+  def handle_info({DetailModalRequestLive, :button_clicked, %{action: "cancel", param: nil}}, socket) do
+    {:noreply, assign(socket, show_detail_request_modal: false)}
   end
 
   def handle_event("switch-ongoing", params, socket) do
