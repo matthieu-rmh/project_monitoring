@@ -49,12 +49,12 @@
 }
 
 .button-cr > button:nth-child(1):focus {
-  background: #16a084b3;
+  background: #297fb9a5;
   color: #fff;
 }
 
 .button-cr > button:nth-child(2):focus {
-  background: #297fb9a5;
+  background: #16a084b3;
   color: #fff;
 }
 
@@ -63,22 +63,22 @@
 }
 
 .button-cr-see {
-  background: #16a085;
-  color: #fff;
-}
-
-.button-cr-see:hover {
-  background: #16a084b3;
-  color: #fff;
-}
-
-.button-cr-modify {
   background: #2980b9;
   color: #fff;
 }
 
-.button-cr-modify:hover {
+.button-cr-see:hover {
   background: #297fb9a5;
+  color: #fff;
+}
+
+.button-cr-modify {
+  background: #16a085;
+  color: #fff;
+}
+
+.button-cr-modify:hover {
+  background: #16a084b3;
   color: #fff;
 }
 

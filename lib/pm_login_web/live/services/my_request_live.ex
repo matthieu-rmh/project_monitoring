@@ -44,6 +44,17 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
     {:noreply, socket |> assign(show_detail_request_modal: true, client_request: client_request)}
   end
 
+  def handle_event("cloture-request", %{"id" => id}, socket) do
+    request = Services.get_request_with_user_id!(id)
+
+    Services.update_request_bool(request, %{"finished" => true})
+
+    # Mettre à jour la date de cloture du requête
+    Services.update_clients_request(request, %{"date_finished" => NaiveDateTime.local_now()})
+
+    {:noreply, socket |> put_flash(:info, "La requête #{request.title} a été cloturée")}
+  end
+
   def handle_info({DetailModalRequestLive, :button_clicked, %{action: "cancel", param: nil}}, socket) do
     {:noreply, assign(socket, show_detail_request_modal: false)}
   end

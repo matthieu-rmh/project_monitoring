@@ -189,6 +189,7 @@
   position: absolute;
   right: 7rem;
   cursor: inherit;
+  height: 38px;
 }
 
 .date-seen.clients_requests {
