@@ -77,10 +77,22 @@ defmodule PmLoginWeb.Project.IndexLive do
 
   end
 
-  def handle_event("random-request", _params, socket) do
-    list_clients_requests = Services.list_random_clients_requests_with_client_name()
+  def handle_event("previous-client-request", %{"date_post" => date_post}, socket) do
+    # Convertir la date de publication en NaiveDateTime
+    date_post = NaiveDateTime.from_iso8601!(date_post)
 
-    {:noreply, socket |> assign(list_clients_requests: [list_clients_requests])}
+    list_clients_requests = Services.list_clients_requests_with_client_name_previous(date_post)
+
+    {:noreply, socket |> assign(list_clients_requests: list_clients_requests)}
+  end
+
+  def handle_event("next-client-request", %{"date_post" => date_post}, socket) do
+    # Convertir la date de publication en NaiveDateTime
+    date_post = NaiveDateTime.from_iso8601!(date_post)
+
+    list_clients_requests = Services.list_clients_requests_with_client_name_next(date_post)
+
+    {:noreply, socket |> assign(list_clients_requests: list_clients_requests)}
   end
 
   def handle_event("switch-notif", %{}, socket) do

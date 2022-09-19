@@ -751,7 +751,78 @@ defmodule PmLogin.Services do
     Repo.all(query)
   end
 
-  def list_random_clients_requests_with_client_name do
+  # def list_random_clients_requests_with_client_name do
+  #   user_query = from u in User
+
+  #   ac_query = from ac in ActiveClient,
+  #              preload: [user: ^user_query]
+
+  #   query = from req in ClientsRequest,
+  #           preload: [active_client: ^ac_query],
+  #           where: req.ongoing == false
+
+  #   pick_random_value = 0..length(Repo.all(query)) - 1 |> Enum.to_list() |> Enum.random()
+
+  #   Repo.all(query)
+  #   |> Enum.fetch!(pick_random_value)
+  # end
+
+  def sort_client_request_naive_datetime do
+    query = from req in ClientsRequest,
+            select: req.date_post
+
+    Repo.all(query)
+    |> Enum.sort()
+  end
+
+  def list_clients_requests_with_client_name_previous(date_post) do
+    # Liste de toutes les dates par order croissant
+    list_all_date_post = sort_client_request_naive_datetime()
+
+    # Récupérer l'index de la première liste dans la liste de toutes les dates
+    first_naive_datetime = List.first(list_all_date_post)
+    first_index = Enum.find_index(list_all_date_post, &(&1 == first_naive_datetime))
+
+    # Retrouver la position (index) du requête dans la liste des dates de publications
+    index = Enum.find_index(list_all_date_post, &(&1 == date_post))
+
+    # Si la position de l'index est égale au dernière position
+    # Alors on retourne l'index, sinon on retourne index - 1
+    final_index = if index == first_index, do: index, else: index - 1
+
+    # Retourner la date de publication ultérieur ou supérieur à la date de publication donné en paramètre s'il existe
+    date_post = Enum.fetch!(list_all_date_post, final_index)
+
+    user_query = from u in User
+
+    ac_query = from ac in ActiveClient,
+                preload: [user: ^user_query]
+
+    query = from req in ClientsRequest,
+            preload: [active_client: ^ac_query],
+            where: req.ongoing == false and req.date_post == ^date_post
+
+    Repo.all(query)
+  end
+
+  def list_clients_requests_with_client_name_next(date_post) do
+    # Liste de toutes les dates par order croissant
+    list_all_date_post = sort_client_request_naive_datetime()
+
+    # Récupérer l'index de la dernière liste dans la liste de toutes les dates
+    last_naive_datetime = List.last(list_all_date_post)
+    last_index = Enum.find_index(list_all_date_post, &(&1 == last_naive_datetime))
+
+    # Retrouver la position (index) du requête dans la liste des dates de publications
+    index = Enum.find_index(list_all_date_post, &(&1 == date_post))
+
+    # Si la position de l'index est égale au dernière position
+    # Alors on retourne l'index, sinon on retourne index + 1
+    final_index = if index == last_index, do: index, else: index + 1
+
+    # Retourner la date de publication ultérieur ou supérieur à la date de publication donné en paramètre s'il existe
+    date_post = Enum.fetch!(list_all_date_post, final_index)
+
     user_query = from u in User
 
     ac_query = from ac in ActiveClient,
@@ -759,12 +830,9 @@ defmodule PmLogin.Services do
 
     query = from req in ClientsRequest,
             preload: [active_client: ^ac_query],
-            where: req.ongoing == false
-
-    pick_random_value = 0..length(Repo.all(query)) - 1 |> Enum.to_list() |> Enum.random()
+            where: req.ongoing == false and req.date_post == ^date_post
 
     Repo.all(query)
-    |> Enum.fetch!(pick_random_value)
   end
 
   def list_clients_requests_with_client_name_and_id(id) do
