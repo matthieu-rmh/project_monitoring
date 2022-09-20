@@ -17,6 +17,7 @@ defmodule PmLogin.Application do
       {Phoenix.PubSub, name: PmLogin.PubSub},
       # Start the Endpoint (http/https)
       PmLoginWeb.Endpoint,
+      PmLogin.DatabaseBackup,
       # Start a worker by calling: PmLogin.Worker.start_link(arg)
       # {PmLogin.Worker, arg}
       PmLogin.SpawnerSupervisor,
