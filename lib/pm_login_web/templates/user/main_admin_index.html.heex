@@ -35,15 +35,10 @@
       </h3>
     </a>
 
-    <a href={Routes.company_path(@socket, :index)} class="column basecontents__without__radius esp__adm__col">
+    <a href={Routes.project_path(@socket, :all_tasks)}
+      class="column basecontents__without__radius esp__adm__col hover__growing">
       <h3 class="header__link__title">
-        <p id="adm">Sociétés / Financeurs <br /><span class="material-icons mat__ico">maps_home_work</span></p>
-      </h3>
-    </a>
-
-    <a href={Routes.user_path(@socket, :list)} class="column basecontents__without__radius esp__adm__col">
-      <h3 class="header__link__title">
-        <p id="adm">Utilisateurs <br /><span class="material-icons mat__ico">supervisor_account</span></p>
+        <p id="adm">Tâches <br /><span class="material-icons mat__ico">checklist_rtl</span></p>
       </h3>
     </a>
   </div>
@@ -55,15 +50,15 @@
       </h3>
     </a>
 
-    <a href={Routes.active_client_path(@socket, :index)} class="column basecontents__without__radius esp__adm__col">
-      <h3 class="header__link__title">
-        <p id="adm">Clients <br /><i class="bi bi-people-fill mat__ico"></i></p>
-      </h3>
-    </a>
-
     <a href={Routes.project_path(@socket, :logs)} class="column basecontents__without__radius esp__adm__col">
       <h3 class="header__link__title">
         <p id="adm">Tableau de bord <br /><span class="material-icons mat__ico">stacked_line_chart</span></p>
+      </h3>
+    </a>
+
+    <a href={Routes.company_path(@socket, :index)} class="column basecontents__without__radius esp__adm__col">
+      <h3 class="header__link__title">
+        <p id="adm">Sociétés / Financeurs <br /><span class="material-icons mat__ico">maps_home_work</span></p>
       </h3>
     </a>
   </div>
@@ -111,6 +106,18 @@
   </div>
 
   <div class="row">
+    <a href={Routes.user_path(@socket, :list)} class="column basecontents__without__radius esp__adm__col">
+      <h3 class="header__link__title">
+        <p id="adm">Utilisateurs <br /><span class="material-icons mat__ico">supervisor_account</span></p>
+      </h3>
+    </a>
+
+    <a href={Routes.active_client_path(@socket, :index)} class="column basecontents__without__radius esp__adm__col">
+      <h3 class="header__link__title">
+        <p id="adm">Clients <br /><i class="bi bi-people-fill mat__ico"></i></p>
+      </h3>
+    </a>
+
     <a href={Routes.company_path(@socket, :services)} class="column basecontents__without__radius esp__adm__col">
       <h3 class="header__link__title">
         <p id="adm">Services <br /><span class="material-icons mat__ico">miscellaneous_services</span></p>

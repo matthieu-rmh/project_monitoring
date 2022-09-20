@@ -173,3 +173,11 @@
   }
 }
 
+.all-tasks-project-title {
+  color: #fff !important;
+}
+
+.all-tasks-project-title:hover {
+  color: #0069d9 !important;
+}
+
