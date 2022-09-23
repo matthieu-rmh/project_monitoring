@@ -6,6 +6,7 @@ defmodule PmLogin.Services.ClientsRequest do
   alias PmLogin.Monitoring.Project
 
   schema "clients_requests" do
+    field :uuid, :string
     field :title, :string
     field :content, :string
     field :date_post, :naive_datetime
@@ -30,17 +31,19 @@ defmodule PmLogin.Services.ClientsRequest do
   @doc false
   def changeset(clients_request, attrs) do
     clients_request
-    |> cast(attrs, [:title ,:content, :date_post, :seen, :date_seen, :ongoing, :date_ongoing, :done, :date_done, :finished, :date_finished, :active_client_id, :task_id, :project_id])
+    |> cast(attrs, [:title ,:content, :date_post, :seen, :date_seen, :ongoing, :date_ongoing, :done, :date_done, :finished, :date_finished, :active_client_id, :task_id, :project_id, :uuid])
     # |> unique_constraint(:title, message: "Titre de requête déjà existant")
+    |> unique_constraint(:uuid, message: "Identifiant du requête déja existant.")
     # |> validate_required(:content, message: "Entrez le contenu de votre requête")
   end
 
   def create_changeset(clients_request, attrs) do
     clients_request
-    |> cast(attrs, [:title ,:content, :date_post, :seen, :ongoing, :done, :finished, :active_client_id])
+    |> cast(attrs, [:title ,:content, :date_post, :seen, :ongoing, :done, :finished, :active_client_id, :uuid])
     |> foreign_key_constraint(:active_client_id)
     |> validate_required(:title, message: "Entrez l'intitulé de votre requête.")
     |> unique_constraint(:title, message: "Titre de requête déjà existant.")
+    |> unique_constraint(:uuid, message: "Identifiant du requête déja existant.")
     |> validate_required(:content, message: "Entrez le contenu de votre requête.")
     |> put_change(:date_post, NaiveDateTime.local_now)
     |> put_change(:seen, false)

@@ -7,6 +7,8 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
   alias PmLoginWeb.Router.Helpers, as: Routes
   alias PmLoginWeb.LiveComponent.DetailModalRequestLive
 
+  alias PmLogin.Uuid
+
   def mount(_params, %{"curr_user_id" => curr_user_id}, socket) do
     Monitoring.subscribe()
 
@@ -94,7 +96,8 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
   end
 
   def handle_event("send-request", %{"clients_request" => params}, socket) do
-    # IO.inspect params
+    # Added uuid to the current params
+    params = Map.put_new(params, "uuid", Uuid.generate)
 
     {entries, []} = uploaded_entries(socket, :file)
     # IO.inspect(entries)
