@@ -326,7 +326,7 @@
   <% end %>
 
   <div class="request__form__container" style={"visibility: #{if @display_form, do: 'visible' , else: 'hidden' };
-    opacity: #{ if @display_form, do: '1 !important' , else: '0' }; display: #{ if @display_form, do: 'block !important' , else: 'none' };"}>
+    opacity: #{ if @display_form, do: '1 !important' , else: '0' }; display: #{ if @display_form, do: 'flex !important' , else: 'none' };"}>
     <div id="the_request_form" phx-window-keydown="cancel-request" class="basecontents__without__radius request__form">
       <div class="column">
         <a class="form__close" title="Fermer" phx-click="form-off"><i class="bi bi-x"></i></a>
