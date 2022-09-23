@@ -44,6 +44,15 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# Configure Swoosh for mail composing and delivering
+config :pm_login, PmLogin.Mailer,
+  adapter: Swoosh.Adapters.SMTP,
+  relay: "ssl0.ovh.net",
+  username: "bbmay@mgbi.mg",
+  password: "Mgbi@261!-",
+  port: 587,
+  retries: 1
+
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 

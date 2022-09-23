@@ -85,7 +85,7 @@
         <%= if task.hidden == false do %>
           <tr>
             <td data-label="Projet" style="word-wrap: anywhere; min-width: 125px;">
-              <%= link "#{task.project.title}", to: Routes.project_path(@socket, :board, task.project_id) %>
+              <%= link "#{task.project.title}", to: Routes.project_path(@socket, :board, task.project_id), class: "all-tasks-project-title" %>
             </td>
             <td data-label="Nom" style="word-wrap: anywhere; min-width: 150px;">
               <%= task.title %>
