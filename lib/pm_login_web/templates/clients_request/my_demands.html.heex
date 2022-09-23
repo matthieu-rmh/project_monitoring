@@ -4,7 +4,7 @@
     <span class="material-icons">
       receipt_long
     </span>Mes demandes
-    <a id="" title="Faire une requête" phx-click="form-on" phx-hook="blurHook"
+    <a id="" title="Faire une requête" phx-click="form-on"
       style="
       margin-left: 4rem;
       background: #16a085;
@@ -19,20 +19,50 @@
     </a>
   </div>
 
+  <div style="display: flex; align-items: center; margin-bottom: 2rem;">
+    <form phx-change="request-search" style="margin-bottom: -2rem;">
+      <div class="request-search">
+        <i class="bi bi-search" style="position: relative;top: 0.2rem;left: 21rem;"></i>
+        
+        <input type="text" name="request_search" id="requestSearch" placeholder="Rechercher une requête" style="width: 22rem;" value={if not is_nil(@search_text), do: "#{@search_text}"}>
+      </div>
+    </form>
+
+    <form phx-change="request-status" style="margin-bottom: -2rem;">
+      <select id="request_status_id" name="status_id" style="width: -moz-available;
+      margin-left: 2rem;
+      height: 3.8rem;">
+        <option value="-1" selected>Filter des requêtes</option>
+        <option value="0">Tout</option>
+        <option value="1">Vue</option>
+        <option value="2">En cours</option>
+        <option value="3">Accomplie</option>
+        <option value="4">Cloturée</option>
+      </select>
+    </form>
+  </div>
+
   <%= for request <- @requests do %>
   <div style="display: flex;">
     <div class="card-info" style="width: 750px;" data-id={request.id}>
+      <!--
       <div class="card-avatar">
         <i class="bi bi-person"></i>
       </div>
+      -->
 
       <div class="col" style="display: flex; align-items: center;">
         <div class="card-info-text">
+          <!--
           <div class="card-text-username">
             <%= PmLogin.Services.get_active_client!(request.active_client_id).user.username %>
           </div>
+          -->
           <div class="card-text-username">
             <%= request.title %>
+          </div>
+          <div class="card-text-content">
+            #<%= request.uuid %>
           </div>
           <!--
           <div class="card-text-content">
@@ -295,7 +325,7 @@
   <% end %>
 
   <div class="request__form__container" style={"visibility: #{if @display_form, do: 'visible' , else: 'hidden' };
-    opacity: #{ if @display_form, do: '1 !important' , else: '0' };"}>
+    opacity: #{ if @display_form, do: '1 !important' , else: '0' }; display: #{ if @display_form, do: 'block !important' , else: 'none' };"}>
     <div id="the_request_form" phx-window-keydown="cancel-request" class="basecontents__without__radius request__form">
       <div class="column">
         <a class="form__close" title="Fermer" phx-click="form-off"><i class="bi bi-x"></i></a>

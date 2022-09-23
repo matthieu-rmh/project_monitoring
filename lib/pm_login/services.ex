@@ -859,6 +859,22 @@ defmodule PmLogin.Services do
     Repo.all(query)
   end
 
+  def search_my_request!(search) do
+    search = "%#{search}%"
+
+    company_query = from c in Company
+    user_query = from u in User
+    ac_query = from ac in ActiveClient,
+               preload: [user: ^user_query, company: ^company_query]
+
+    query = from req in ClientsRequest,
+            preload: [active_client: ^ac_query],
+            where: ilike(req.title, ^search) or ilike(req.content, ^search) or ilike(req.uuid, ^search),
+            order_by: [desc: req.date_post]
+
+    Repo.all(query)
+  end
+
   def count_list_client_request(user_id) do
     company_query = from c in Company
     user_query = from u in User

@@ -27,13 +27,27 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
        notifs: Services.list_my_notifications_with_limit(curr_user_id, 4),
        requests: Services.list_my_requests(curr_user_id),
        show_detail_request_modal: false,
-       client_request: nil
+       client_request: nil,
+       search_text: nil
      )
      |> allow_upload(:file,
        accept:
          ~w(.png .jpeg .jpg .pdf .txt .odt .ods .odp .csv .xml .xls .xlsx .ppt .pptx .doc .docx),
        max_entries: 5
      ), layout: {PmLoginWeb.LayoutView, "active_client_layout_live.html"}}
+  end
+
+  def handle_event("request-search", params, socket) do
+    search = params["request_search"]
+
+    requests = Services.search_my_request!(search)
+
+    socket =
+      socket
+      |> assign(requests: requests)
+      |> assign(search_text: search)
+
+    {:noreply, socket}
   end
 
   def handle_event("modal_close", _params, socket) do
