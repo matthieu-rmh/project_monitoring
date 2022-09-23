@@ -50,6 +50,20 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
     {:noreply, socket}
   end
 
+  def handle_event("request-status", params, socket) do
+    IO.inspect(params)
+
+    status = params["status_id"]
+
+    requests = Services.list_my_requests_by_status(status)
+
+    socket =
+      socket
+      |> assign(requests: requests)
+
+    {:noreply, socket}
+  end
+
   def handle_event("modal_close", _params, socket) do
     {:noreply, socket}
   end

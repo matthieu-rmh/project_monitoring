@@ -875,6 +875,53 @@ defmodule PmLogin.Services do
     Repo.all(query)
   end
 
+  def list_my_requests_by_status(status) do
+    company_query = from c in Company
+    user_query = from u in User
+    ac_query = from ac in ActiveClient,
+               preload: [user: ^user_query, company: ^company_query]
+
+    query =
+      case status do
+        "1" ->
+          query = from req in ClientsRequest,
+                  preload: [active_client: ^ac_query],
+                  where: req.seen == true,
+                  order_by: [desc: req.date_post]
+
+        "2" ->
+          query = from req in ClientsRequest,
+                  preload: [active_client: ^ac_query],
+                  where: req.ongoing == true,
+                  order_by: [desc: req.date_post]
+
+        "3" ->
+          query = from req in ClientsRequest,
+                  preload: [active_client: ^ac_query],
+                  where: req.done == true,
+                  order_by: [desc: req.date_post]
+
+        "4" ->
+          query = from req in ClientsRequest,
+                  preload: [active_client: ^ac_query],
+                  where: req.finished == true,
+                  order_by: [desc: req.date_post]
+
+        "5" ->
+          query = from req in ClientsRequest,
+                  preload: [active_client: ^ac_query],
+                  where: req.seen == false,
+                  order_by: [desc: req.date_post]
+
+        _ ->
+          query = from req in ClientsRequest,
+                  preload: [active_client: ^ac_query],
+                  order_by: [desc: req.date_post]
+      end
+
+      Repo.all(query)
+  end
+
   def count_list_client_request(user_id) do
     company_query = from c in Company
     user_query = from u in User
