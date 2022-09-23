@@ -44,6 +44,7 @@ defmodule PmLogin.MixProject do
       {:phoenix_live_dashboard, "~> 0.6"},
       {:esbuild, "~> 0.3", runtime: Mix.env() == :prod},
       {:swoosh, "~> 1.3"},
+      {:gen_smtp, "~> 1.1"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.18"},
