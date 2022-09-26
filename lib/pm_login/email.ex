@@ -40,15 +40,15 @@ defmodule PmLogin.Email do
     date_ongoing =
       case request.date_ongoing do
         nil -> ""
-        _ -> Utilities.simple_date_format_with_hours request.date_ongoing
+        _ -> "Le #{Utilities.simple_date_format_with_hours request.date_ongoing}"
       end
 
     client = Services.get_active_client!(request.active_client_id)
 
     content = "
       <p> Bonjour #{client.user.username}, <br/> <p>
-      <p> Votre ayant l'identifiant N°#{request.uuid}, #{state} <br /></p>
-      <p> Le #{date_ongoing} </p>
+      <p> Votre demande ayant l'identifiant N°#{request.uuid}, #{state} <br /></p>
+      <p> #{date_ongoing} </p>
     "
 
     new()
