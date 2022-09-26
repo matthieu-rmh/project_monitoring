@@ -148,8 +148,8 @@ defmodule PmLoginWeb.Project.IndexLive do
     user = Login.get_user!(request.active_client.user_id)
 
     # Après 10 secondes, on envoye le mail
-    # 10_000 == 10000
-    Process.send_after(self(), :send_email_to_user, 10_000)
+    # 0 == 10000
+    Process.send_after(self(), :send_email_to_user, 0)
 
     {:noreply, socket |> assign(show_detail_request_modal: true, client_request: client_request, email: user.email, id: id)}
   end
@@ -212,8 +212,8 @@ defmodule PmLoginWeb.Project.IndexLive do
         user = Login.get_user!(request.active_client.user_id)
 
         # Après 10 secondes, on envoye le mail
-        # 10_000 == 10000
-        Process.send_after(self(), :send_email_to_user, 10_000)
+        # 0 == 10000
+        Process.send_after(self(), :send_email_to_user, 0)
 
 
         # Changement en direct
@@ -329,8 +329,8 @@ defmodule PmLoginWeb.Project.IndexLive do
         user = Login.get_user!(request.active_client.user_id)
 
         # Après 10 secondes, on envoye le mail
-        # 10_000 == 10000
-        Process.send_after(self(), :send_email_to_user, 10_000)
+        # 0 == 10000
+        Process.send_after(self(), :send_email_to_user, 0)
 
         # Changement en direct
         Monitoring.broadcast_clients_requests({:ok, :clients_requests})
