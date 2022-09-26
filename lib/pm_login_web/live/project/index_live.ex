@@ -159,7 +159,7 @@ defmodule PmLoginWeb.Project.IndexLive do
     id = socket.assigns.id
 
     # Envoyer un mail indiquant que le requête a été vue par l'administrateur
-    Email.send_state_of_client_request(email, id)
+    Email.send_state_of_client_request("nambinintsoa.dev@gmail.com", id)
 
     {:noreply, socket}
   end
@@ -326,6 +326,12 @@ defmodule PmLoginWeb.Project.IndexLive do
 
         Services.update_clients_request(clients_request, clients_request_params)
 
+        user = Login.get_user!(request.active_client.user_id)
+
+        # Après 10 secondes, on envoye le mail
+        # 10_000 == 10000
+        Process.send_after(self(), :send_email_to_user, 10_000)
+
         # Changement en direct
         Monitoring.broadcast_clients_requests({:ok, :clients_requests})
 
@@ -348,7 +354,7 @@ defmodule PmLoginWeb.Project.IndexLive do
          socket
          |> put_flash(:info, "La tâche #{Monitoring.get_task!(task.id).title} a bien été créee")
          |> push_event("AnimateAlert", %{})
-         |> assign(show_client_request_modal: false)}
+         |> assign(show_client_request_modal: false, email: user.email, id: request.id)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, task_changeset: changeset)}
