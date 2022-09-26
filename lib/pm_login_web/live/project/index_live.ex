@@ -159,7 +159,7 @@ defmodule PmLoginWeb.Project.IndexLive do
     id = socket.assigns.id
 
     # Envoyer un mail indiquant que le requête a été vue par l'administrateur
-    Email.send_state_of_client_request("nambinintsoa.dev@gmail.com", id)
+    Email.send_state_of_client_request(email, id)
 
     {:noreply, socket}
   end
