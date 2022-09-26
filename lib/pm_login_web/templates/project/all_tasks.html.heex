@@ -93,22 +93,13 @@
             <!-- <td data-label="Description" style="word-wrap: anywhere"><%= task.description %></td> -->
             <form phx-submit="status_and_progression_changed" style="margin-top: 23px;">
               <td data-label="Status">
-                <input type="hidden" value={task.id} name="task_id"/>
-                <input type="hidden" value={task.card} name="card_id" />
-                <select name="status_id" id="status_change_id" style="color: #fff; min-width: 115px" disabled>
-                    <%= for status <- @statuses do %>
-                      <%= if status.id == task.status.id do %>
-                        <option value={status.id} style="background: #1F2937; color: #fff;" selected>
-                          <%= status.title %>
-                        </option>
-                      <% else %>
-                        <option value={status.id} style="background: #1F2937; color: #fff;">
-                          <%= status.title %>
-                        </option>
-                      <% end %>
-                    <% end %>
-                </select>
+                <%= for status <- @statuses do %>
+                  <%= if status.id == task.status.id do %>
+                      <%= status.title %>
+                  <% end %>
+                <% end %>
               </td>
+    
               <td data-label="Priorité" style="min-width: 130px;">
                 <%= case task.priority_id do %>
                   <% 1 -> %>
@@ -137,9 +128,11 @@
                     </div>
                 <% end %>
               </td>
+
               <td data-label="Attributeur" style="min-width: 125px"> 
                 <%= PmLogin.Login.get_user!(task.attributor_id).username %>
               </td>
+
               <td data-label="Contributeur">
                 <%= if is_nil(task.contributor_id) do %>
                   <%= PmLogin.Login.get_user!(task.attributor_id).username %>
@@ -147,16 +140,9 @@
                   <%= PmLogin.Login.get_user!(task.contributor_id).username %>
                 <% end %>
               </td>
+
               <td data-label="Progression">
-                <input
-                  name="progression_change"
-                  type="number"
-                  value={task.progression}
-                  style="width: 75px; color: #fff;"
-                  min="0"
-                  max="100"
-                  disabled
-                />
+                <%= task.progression %> %
               </td>
               <td><%= PmLogin.Login.get_username(PmLogin.Services.get_active_client!(task.project.active_client_id).user_id) %></td>
               <td data-label="Actions" class="d-action">

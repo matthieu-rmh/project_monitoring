@@ -114,6 +114,14 @@
   .responsive-customer-request .button-project-list {
     margin-left: -4rem !important;
   }
+
+  .button-project-list {
+    margin-bottom: 1.92rem !important;
+  }
+
+  .boardcontainer {
+    padding-top: 37px !important;
+  }
 }
 
 @media (max-width: 1368px) {
@@ -128,6 +136,14 @@
 
   .responsive-customer-request .button-project-list {
     margin-left: -5rem !important;
+  }
+
+  .button-project-list {
+    margin-bottom: 1.82rem !important;
+  }
+
+  .boardcontainer {
+    padding-top: 32px !important;
   }
 }
 
@@ -144,6 +160,14 @@
   .responsive-customer-request .button-project-list {
     margin-left: -9rem !important;
   }
+
+  .button-project-list {
+    margin-bottom: 1.65rem !important;
+  }
+
+  .boardcontainer {
+    padding-top: 30px !important;
+  }
 }
 
 @media (max-width: 1280px) {
@@ -159,6 +183,14 @@
   .responsive-customer-request .button-project-list {
     margin-left: -11rem !important;
   }
+
+  .button-project-list {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .boardcontainer {
+    padding-top: 30px !important;
+  }
 }
 
 @media (max-width: 1240px) {
@@ -173,6 +205,14 @@
 
   .responsive-customer-request .button-project-list {
     margin-left: -18rem !important;
+  }
+
+  .button-project-list {
+    margin-bottom: 1.25rem !important;
+  }
+
+  .boardcontainer {
+    padding-top: 27px !important;
   }
 }
 
