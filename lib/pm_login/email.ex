@@ -3,6 +3,7 @@ defmodule PmLogin.Email do
 
   alias PmLogin.Mailer
   alias PmLogin.Services
+  alias PmLogin.Utilities
 
   def send_state_of_client_request(send_to, request_id) do
     request = Services.get_clients_request!(request_id)
@@ -10,16 +11,18 @@ defmodule PmLogin.Email do
     state =
       cond do
         request.seen and not request.ongoing and not request.done and not request.finished ->
-          "a été vue, le #{request.date_seen} par l'administrateur."
+          "a été vue, le #{Utilities.simple_date_format_with_hours request.date_seen} par l'administrateur."
 
         request.seen and request.ongoing and not request.done and not request.finished ->
-          "a été mise en traitement, le #{request.date_ongoing}."
+          type = if is_nil(request.task_id) and not is_nil(request.project_id), do: "Projet", else: "Tâche"
+
+          "a été mise en traitement en tant que #{type}, le #{Utilities.simple_date_format_with_hours request.date_ongoing}."
 
         request.seen and request.ongoing and request.done and not request.finished ->
-          "a été accomplie, le #{request.date_done}."
+          "a été accomplie, le #{Utilities.simple_date_format_with_hours request.date_done}."
 
         request.seen and request.ongoing and request.done and request.finished ->
-          "a été cloturée, le #{request.date_finished}."
+          "a été cloturée, le #{Utilities.simple_date_format_with_hours request.date_finished}."
 
         true ->
           "n'a pas encore été vue"
@@ -29,7 +32,7 @@ defmodule PmLogin.Email do
 
     content = "
       <p> Bonjour #{client.user.username}, <br/> <p>
-      <p> Votre demande nommée #{request.title} #{state} </p>
+      <p> Votre demande nommée #{request.title}, ayant l'identifiant N°#{request.uuid}, #{state} </p>
     "
 
     new()
