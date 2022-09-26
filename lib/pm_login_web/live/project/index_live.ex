@@ -209,12 +209,19 @@ defmodule PmLoginWeb.Project.IndexLive do
 
         Services.update_clients_request(clients_request, clients_request_params)
 
+        user = Login.get_user!(request.active_client.user_id)
+
+        # Après 10 secondes, on envoye le mail
+        # 10_000 == 10000
+        Process.send_after(self(), :send_email_to_user, 10_000)
+
+
         # Changement en direct
         Monitoring.broadcast_clients_requests({:ok, :clients_requests})
 
         {:noreply,
           socket
-          |> assign(show_project_modal: false)
+          |> assign(show_project_modal: false, email: user.email, id: request.id)
           |> put_flash(:info, "Le projet #{Monitoring.get_project!(project.id).title} a été créé avec succès")
           # |> push_redirect(to: "/boards/#{Monitoring.get_project!(project.id).id}")
         }
