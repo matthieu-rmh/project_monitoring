@@ -8,6 +8,7 @@ defmodule PmLoginWeb.Project.IndexLive do
   alias PmLogin.Login.User
   alias PmLogin.Monitoring.{Task, Project}
   alias PmLoginWeb.LiveComponent.{ClientModalRequestLive, DetailModalRequestLive, ProjectModalLive}
+  alias PmLogin.Email
 
   def mount(_params, %{"curr_user_id" => curr_user_id}, socket) do
     Services.subscribe()
@@ -133,6 +134,7 @@ defmodule PmLoginWeb.Project.IndexLive do
     {:noreply, socket |> assign(show_client_request_modal: true, client_request: client_request)}
   end
 
+  # Afficher les détails du requête client dans la liste des projets
   def handle_event("show_detail_request_modal", %{"id" => id}, socket) do
     client_request = Services.list_clients_requests_with_client_name_and_id(id)
 
@@ -143,7 +145,23 @@ defmodule PmLoginWeb.Project.IndexLive do
     # Mettre à jour la date de vue
     Services.update_clients_request(request, %{"date_seen" => NaiveDateTime.local_now()})
 
-    {:noreply, socket |> assign(show_detail_request_modal: true, client_request: client_request)}
+    user = Login.get_user!(request.active_client.user_id)
+
+    # Après 10 secondes, on envoye le mail
+    # 10_000 == 10000
+    Process.send_after(self(), :send_email_to_user, 10_000)
+
+    {:noreply, socket |> assign(show_detail_request_modal: true, client_request: client_request, email: user.email, id: id)}
+  end
+
+  def handle_info(:send_email_to_user, socket) do
+    email = socket.assigns.email
+    id = socket.assigns.id
+
+    # Envoyer un mail indiquant que le requête a été vue par l'administrateur
+    Email.send_state_of_client_request(email, id)
+
+    {:noreply, socket}
   end
 
   def handle_event("show_project_modal", %{"id" => id}, socket) do
