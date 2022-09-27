@@ -5,12 +5,19 @@ defmodule PmLogin.Email do
   alias PmLogin.{Services, Utilities, Monitoring, Login}
 
   def send_state_of_client_request(send_to, request_id) do
+
     request = Services.get_clients_request!(request_id)
 
-    state =
+    client = Services.get_active_client!(request.active_client_id)
+
+    content =
       cond do
         request.seen and not request.ongoing and not request.done and not request.finished ->
-          "a été vue, le #{Utilities.simple_date_format_with_hours request.date_seen} par l'administrateur."
+          "
+            <p> Bonjour #{client.user.username}, <br/> <p>
+            <p> Votre demande ayant l'identifiant N°#{request.uuid}, a été vue par l'administrateur. <br /></p>
+            <p> Le #{Utilities.simple_date_format_with_hours request.date_seen} </p>
+          "
 
         request.seen and request.ongoing and not request.done and not request.finished ->
           type = if is_nil(request.task_id) and not is_nil(request.project_id), do: "Projet", else: "Tâche"
@@ -21,35 +28,37 @@ defmodule PmLogin.Email do
 
               username = Login.get_username(contributor_id)
 
-              "a été mise en traitement en tant que #{type},et sera traité(e) par #{username}."
+              "
+                <p> Bonjour #{client.user.username}, <br/> <p>
+                <p> Votre demande ayant l'identifiant N°#{request.uuid}, a été mise en traitement en tant que Tâche, et sera traité(e) par #{username}. <br /></p>
+                <p> Le #{Utilities.simple_date_format_with_hours request.date_ongoing} </p>
+              "
 
             _ ->
-              "a été mise en traitement en tant que #{type}."
+              "
+                <p> Bonjour #{client.user.username}, <br/> <p>
+                <p> Votre demande ayant l'identifiant N°#{request.uuid}, a été mise en traitement en tant que Projet. <br /></p>
+                <p> Le #{Utilities.simple_date_format_with_hours request.date_ongoing} </p>
+              "
           end
 
         request.seen and request.ongoing and request.done and not request.finished ->
-          "a été accomplie, le #{Utilities.simple_date_format_with_hours request.date_done}."
+          "
+            <p> Bonjour #{client.user.username}, <br/> <p>
+            <p> Votre demande ayant l'identifiant N°#{request.uuid}, a été accomplie. <br /></p>
+            <p> Le #{Utilities.simple_date_format_with_hours request.date_done}. </p>
+          "
 
         request.seen and request.ongoing and request.done and request.finished ->
-          "a été cloturée, le #{Utilities.simple_date_format_with_hours request.date_finished}."
+          "
+            <p> Bonjour #{client.user.username}, <br/> <p>
+            <p> Votre demande ayant l'identifiant N°#{request.uuid}, a été cloturée. <br /></p>
+            <p> Le #{Utilities.simple_date_format_with_hours request.date_finished}. </p>
+          "
 
         true ->
           "n'a pas encore été vue"
       end
-
-    date_ongoing =
-      case request.date_ongoing do
-        nil -> ""
-        _ -> "Le #{Utilities.simple_date_format_with_hours request.date_ongoing}"
-      end
-
-    client = Services.get_active_client!(request.active_client_id)
-
-    content = "
-      <p> Bonjour #{client.user.username}, <br/> <p>
-      <p> Votre demande ayant l'identifiant N°#{request.uuid}, #{state} <br /></p>
-      <p> #{date_ongoing} </p>
-    "
 
     new()
     |> from("monitoring@mgbi.mg")
