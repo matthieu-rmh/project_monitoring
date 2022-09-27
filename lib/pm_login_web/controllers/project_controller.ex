@@ -7,6 +7,8 @@ defmodule PmLoginWeb.ProjectController do
   alias PmLogin.Services.ActiveClient
   alias Phoenix.LiveView
   alias PmLogin.Login
+  alias PmLogin.Email
+  alias PmLogin.Services
 
   def board(conn, %{"id" => id}) do
 
@@ -159,13 +161,68 @@ end
   end
 
   def update(conn, %{"id" => id, "project" => project_params}) do
-    IO.puts("NANDALA TAAO")
-    IO.inspect(project_params)
-
     project = Monitoring.get_project!(id)
 
     case Monitoring.update_project(project, project_params) do
       {:ok, project} ->
+
+        email =
+          if project.status_id == 5 do
+            client_request_id = Services.get_client_request_id_by_project!(project.id)
+
+            if not is_nil(client_request_id) do
+              request = Services.get_request_with_user_id!(client_request_id)
+
+              Login.get_user!(request.active_client.user_id).email
+            end
+          else
+            nil
+          end
+
+        id =
+          if project.status_id == 5 do
+            client_request_id = Services.get_client_request_id_by_project!(project.id)
+
+            if not is_nil(client_request_id) do
+              request = Services.get_request_with_user_id!(client_request_id)
+
+              request.id
+            end
+          else
+            nil
+          end
+
+        if project.status_id == 5 do
+          client_request_id = Services.get_client_request_id_by_project!(project.id)
+
+          if not is_nil(client_request_id) do
+            request = Services.get_request_with_user_id!(client_request_id)
+
+            params = %{
+              "date_done" => NaiveDateTime.local_now(),
+              "done" => true
+            }
+
+            Services.update_clients_request(request, params)
+          end
+        else
+          client_request_id = Services.get_client_request_id_by_project!(project.id)
+
+          if not is_nil(client_request_id) do
+            request = Services.get_request_with_user_id!(client_request_id)
+
+            params = %{
+              "date_done" => nil,
+              "done" => nil
+            }
+
+            Services.update_clients_request(request, params)
+          end
+        end
+
+        # Envoyer l'email immédiatement
+        if not is_nil(email) and not is_nil(id), do: Email.send_state_of_client_request("nambinintsoa.dev@gmail.com", id)
+
         Services.send_notifs_to_admins_and_attributors(Login.get_curr_user_id(conn), "Le projet \"#{project.title}\" a été mise à jour par #{Login.get_curr_user(conn).username}", 7)
         conn
         |> put_flash(:info, "Projet mis à jour.")
