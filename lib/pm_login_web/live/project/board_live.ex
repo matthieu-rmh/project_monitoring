@@ -20,6 +20,7 @@ defmodule PmLoginWeb.Project.BoardLive do
   alias PmLogin.Services
   alias PmLogin.Monitoring.Comment
   alias PmLoginWeb.Router.Helpers, as: Routes
+  alias PmLogin.Email
 
   def mount(_params, %{"curr_user_id" => curr_user_id, "pro_id" => pro_id}, socket) do
     if connected?(socket), do: Kanban.subscribe()
@@ -972,12 +973,21 @@ defmodule PmLoginWeb.Project.BoardLive do
           request = Services.get_request_with_user_id!(client_request_id)
 
           if real_task.status_id == 5 do
-            # Mettre à jour la date de mise en terminée
-            Services.update_clients_request(request, %{"date_done" => NaiveDateTime.local_now()})
+            params = %{
+              "date_done" => NaiveDateTime.local_now(),
+              "done" => true
+            }
+
+            Services.update_clients_request(request, params)
+          else
+            params = %{
+              "date_done" => nil,
+              "done" => false
+            }
+
+            Services.update_clients_request(request, params)
           end
         end
-
-
 
         # IO.puts "after"
         # IO.inspect card
