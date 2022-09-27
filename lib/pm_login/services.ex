@@ -884,39 +884,39 @@ defmodule PmLogin.Services do
     query =
       case status do
         "1" ->
-          query = from req in ClientsRequest,
-                  preload: [active_client: ^ac_query],
-                  where: req.seen == true,
-                  order_by: [desc: req.date_post]
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          where: req.seen and not req.ongoing and not req.done and not req.finished,
+          order_by: [desc: req.date_post]
 
         "2" ->
-          query = from req in ClientsRequest,
-                  preload: [active_client: ^ac_query],
-                  where: req.ongoing == true,
-                  order_by: [desc: req.date_post]
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          where: req.ongoing and not req.done and not req.finished,
+          order_by: [desc: req.date_post]
 
         "3" ->
-          query = from req in ClientsRequest,
-                  preload: [active_client: ^ac_query],
-                  where: req.done == true,
-                  order_by: [desc: req.date_post]
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          where: req.done and not req.finished,
+          order_by: [desc: req.date_post]
 
         "4" ->
-          query = from req in ClientsRequest,
-                  preload: [active_client: ^ac_query],
-                  where: req.finished == true,
-                  order_by: [desc: req.date_post]
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          where: req.finished,
+          order_by: [desc: req.date_post]
 
         "5" ->
-          query = from req in ClientsRequest,
-                  preload: [active_client: ^ac_query],
-                  where: req.seen == false,
-                  order_by: [desc: req.date_post]
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          where: not req.seen,
+          order_by: [desc: req.date_post]
 
         _ ->
-          query = from req in ClientsRequest,
-                  preload: [active_client: ^ac_query],
-                  order_by: [desc: req.date_post]
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          order_by: [desc: req.date_post]
       end
 
       Repo.all(query)
