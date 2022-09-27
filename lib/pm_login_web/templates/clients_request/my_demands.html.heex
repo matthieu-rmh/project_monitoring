@@ -401,6 +401,25 @@
 
 </div>
 
+<%= if @is_open_survey do %>
+  <%= 
+    live_component(
+      PmLoginWeb.LiveComponent.SurveyLiveComponent,
+      request: @request_for_survey,
+      is_selected_created_tools: @is_selected_created_tools,
+      is_selected_time_saved: @is_selected_time_saved,
+      is_selected_deadline_commmunicated: @is_selected_deadline_commmunicated,
+      is_selected_team_response: @is_selected_team_response,
+      client_comments_created_tools: @client_comments_created_tools,
+      client_comments_time_saved: @client_comments_time_saved,
+      client_comments_deadline_commmunicated: @client_comments_deadline_commmunicated,
+      client_comments_team_response: @client_comments_team_response
+    )
+  %>
+<% end %>
+
+
+
 <%= live_component(
   PmLoginWeb.LiveComponent.DetailModalRequestLive, 
   id: "confirm-arch", 

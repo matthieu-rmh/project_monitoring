@@ -7,6 +7,7 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
   alias PmLoginWeb.LiveComponent.DetailModalRequestLive
   alias PmLogin.Login
   alias PmLogin.Email
+  alias PmLogin.Utilities
 
   alias PmLogin.Uuid
 
@@ -29,7 +30,17 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
        requests: Services.list_my_requests(curr_user_id),
        show_detail_request_modal: false,
        client_request: nil,
-       search_text: nil
+       search_text: nil,
+       is_open_survey: false,
+       request_for_survey: nil,
+       client_comments_created_tools: nil,
+       client_comments_time_saved: nil,
+       client_comments_deadline_commmunicated: nil,
+       client_comments_team_response: nil,
+       is_selected_created_tools: false,
+       is_selected_time_saved: false,
+       is_selected_deadline_commmunicated: false,
+       is_selected_team_response: false
      )
      |> allow_upload(:file,
        accept:
@@ -52,8 +63,6 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
   end
 
   def handle_event("request-status", params, socket) do
-    IO.inspect(params)
-
     status = params["status_id"]
 
     requests = Services.list_my_requests_by_status(status)
@@ -88,22 +97,87 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
   def handle_event("cloture-request", %{"id" => id}, socket) do
     request = Services.get_request_with_user_id!(id)
 
-    Services.update_request_bool(request, %{"finished" => true})
+    # Services.update_request_bool(request, %{"finished" => true})
 
-    # Mettre à jour la date de cloture du requête
-    Services.update_clients_request(request, %{"date_finished" => NaiveDateTime.local_now()})
+    # # Mettre à jour la date de cloture du requête
+    # Services.update_clients_request(request, %{"date_finished" => NaiveDateTime.local_now()})
 
 
-    user = Login.get_user!(request.active_client.user_id)
+    # user = Login.get_user!(request.active_client.user_id)
 
-    # Envoyer l'email immédiatement
-    if not request.finished, do: Process.send_after(self(), :send_email_to_user, 0)
+    # # Envoyer l'email immédiatement
+    # if not request.finished, do: Process.send_after(self(), :send_email_to_user, 0)
+
+    request =
+      case request.task_id do
+        nil -> Map.put_new(request, :type, "Le tâche")
+        _ -> Map.put_new(request, :type, "Le projet")
+      end
+
+    request =
+      request
+      |> Map.put(:date_post, Utilities.simple_date_format_with_hours(request.date_post))
+      |> Map.put(:date_done, Utilities.simple_date_format_with_hours(request.date_done))
 
     {:noreply,
       socket
-      |> put_flash(:info, "La requête #{request.title} a été cloturée")
-      |> assign(email: user.email, id: request.id)
+      # |> put_flash(:info, "La requête #{request.title} a été cloturée")
+      # |> assign(email: user.email, id: request.id)
+      |> assign(is_open_survey: true)
+      |> assign(request_for_survey: request)
     }
+  end
+
+  def handle_event("close-survey", _params, socket) do
+    {:noreply, socket |> assign(is_open_survey: false)}
+  end
+
+  def handle_event("send-survey", params, socket) do
+    IO.inspect(params)
+
+
+    {:noreply, socket}
+  end
+
+  def handle_event("change-survey", params, socket) do
+    IO.inspect(params)
+
+    is_selected_time_saved =
+      case params["time_saved"] do
+        "1" -> false
+        _ -> true
+      end
+
+    is_selected_created_tools =
+      case params["created_tools"] do
+        "1" -> false
+        _ -> true
+      end
+
+    is_selected_deadline_commmunicated =
+      case params["deadline_communicated"] do
+        "1" -> false
+        _ -> true
+      end
+
+    is_selected_team_response =
+      case params["team_response"] do
+        "1" -> false
+        _ -> true
+      end
+
+    {:noreply,
+      socket
+      |> assign(is_selected_time_saved: is_selected_time_saved)
+      |> assign(is_selected_created_tools: is_selected_created_tools)
+      |> assign(is_selected_deadline_commmunicated: is_selected_deadline_commmunicated)
+      |> assign(is_selected_team_response: is_selected_team_response)
+      |> assign(client_comments_team_response: params["client_comments_team_response"])
+      |> assign(client_comments_deadline_commmunicated: params["client_comments_deadline_commmunicated"])
+      |> assign(client_comments_time_saved: params["client_comments_time_saved"])
+      |> assign(client_comments_created_tools: params["client_comments_created_tools"])
+    }
+
   end
 
   def handle_info({DetailModalRequestLive, :button_clicked, %{action: "cancel", param: nil}}, socket) do
