@@ -124,7 +124,7 @@
             Voir 
           </button>
   
-          <%= if request.seen and request.ongoing and request.done do %>
+          <%= if request.seen and request.ongoing and request.done and not request.finished do %>
             <button 
               class="button-cr-modify"
               phx-click="cloture-request" 
