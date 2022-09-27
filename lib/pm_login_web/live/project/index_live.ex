@@ -147,9 +147,8 @@ defmodule PmLoginWeb.Project.IndexLive do
 
     user = Login.get_user!(request.active_client.user_id)
 
-    # Après 10 secondes, on envoye le mail
-    # 0 == 10000
-    Process.send_after(self(), :send_email_to_user, 0)
+    # Envoyer l'email immédiatement
+    if not request.seen, do: Process.send_after(self(), :send_email_to_user, 0)
 
     {:noreply, socket |> assign(show_detail_request_modal: true, client_request: client_request, email: user.email, id: id)}
   end
@@ -159,7 +158,7 @@ defmodule PmLoginWeb.Project.IndexLive do
     id = socket.assigns.id
 
     # Envoyer un mail indiquant que le requête a été vue par l'administrateur
-    Email.send_state_of_client_request(email, id)
+    Email.send_state_of_client_request("nambinintsoa.dev@gmail.com", id)
 
     {:noreply, socket}
   end
@@ -170,10 +169,15 @@ defmodule PmLoginWeb.Project.IndexLive do
     request = Services.get_request_with_user_id!(id)
     Services.update_request_bool(request, %{"seen" => true})
 
+    user = Login.get_user!(request.active_client.user_id)
+
+    # Envoyer l'email immédiatement
+    if not request.seen, do: Process.send_after(self(), :send_email_to_user, 0)
+
     # Mettre à jour la date de vue
     Services.update_clients_request(request, %{"date_seen" => NaiveDateTime.local_now()})
 
-    {:noreply, socket |> assign(show_project_modal: true, client_request: client_request)}
+    {:noreply, socket |> assign(show_project_modal: true, client_request: client_request, email: user.email, id: request.id)}
   end
 
 
@@ -211,10 +215,8 @@ defmodule PmLoginWeb.Project.IndexLive do
 
         user = Login.get_user!(request.active_client.user_id)
 
-        # Après 10 secondes, on envoye le mail
-        # 0 == 10000
-        Process.send_after(self(), :send_email_to_user, 0)
-
+        # Envoyer l'email immédiatement
+        if not request.ongoing, do: Process.send_after(self(), :send_email_to_user, 0)
 
         # Changement en direct
         Monitoring.broadcast_clients_requests({:ok, :clients_requests})
@@ -328,9 +330,8 @@ defmodule PmLoginWeb.Project.IndexLive do
 
         user = Login.get_user!(request.active_client.user_id)
 
-        # Après 10 secondes, on envoye le mail
-        # 0 == 10000
-        Process.send_after(self(), :send_email_to_user, 0)
+        # Envoyer l'email immédiatement
+        if not request.ongoing, do: Process.send_after(self(), :send_email_to_user, 0)
 
         # Changement en direct
         Monitoring.broadcast_clients_requests({:ok, :clients_requests})
