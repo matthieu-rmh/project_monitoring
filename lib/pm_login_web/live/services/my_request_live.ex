@@ -1,11 +1,12 @@
 defmodule PmLoginWeb.Services.MyRequestsLive do
   use Phoenix.LiveView
-  alias PmLogin.Services
   alias PmLogin.Monitoring
   alias PmLogin.Services
   alias PmLogin.Services.ClientsRequest
   alias PmLoginWeb.Router.Helpers, as: Routes
   alias PmLoginWeb.LiveComponent.DetailModalRequestLive
+  alias PmLogin.Login
+  alias PmLogin.Email
 
   alias PmLogin.Uuid
 
@@ -74,6 +75,16 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
     {:noreply, socket |> assign(show_detail_request_modal: true, client_request: client_request)}
   end
 
+  def handle_info(:send_email_to_user, socket) do
+    email = socket.assigns.email
+    id = socket.assigns.id
+
+    # Envoyer un mail indiquant que le requête a été vue par l'administrateur
+    Email.send_state_of_client_request(email, id)
+
+    {:noreply, socket}
+  end
+
   def handle_event("cloture-request", %{"id" => id}, socket) do
     request = Services.get_request_with_user_id!(id)
 
@@ -82,7 +93,17 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
     # Mettre à jour la date de cloture du requête
     Services.update_clients_request(request, %{"date_finished" => NaiveDateTime.local_now()})
 
-    {:noreply, socket |> put_flash(:info, "La requête #{request.title} a été cloturée")}
+
+    user = Login.get_user!(request.active_client.user_id)
+
+    # Envoyer l'email immédiatement
+    if not request.finished, do: Process.send_after(self(), :send_email_to_user, 0)
+
+    {:noreply,
+      socket
+      |> put_flash(:info, "La requête #{request.title} a été cloturée")
+      |> assign(email: user.email, id: request.id)
+    }
   end
 
   def handle_info({DetailModalRequestLive, :button_clicked, %{action: "cancel", param: nil}}, socket) do
