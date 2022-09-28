@@ -10,10 +10,36 @@ defmodule PmLoginWeb.Services.RequestsLive do
 
     {:ok,
        socket
+       |> assign(search_text: nil)
        |> assign(requests: Services.list_requests, show_detail_request_modal: false, client_request: nil,
        show_modal: false, service_id: nil,curr_user_id: curr_user_id,show_notif: false, notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)),
        layout: {PmLoginWeb.LayoutView, "admin_layout_live.html"}
        }
+  end
+
+  def handle_event("request-search", params, socket) do
+    search = params["request_search"]
+
+    requests = Services.search_my_request!(search)
+
+    socket =
+      socket
+      |> assign(requests: requests)
+      |> assign(search_text: search)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("request-status", params, socket) do
+    status = params["status_id"]
+
+    requests = Services.list_my_requests_by_status(status)
+
+    socket =
+      socket
+      |> assign(requests: requests)
+
+    {:noreply, socket}
   end
 
   def handle_event("switch-seen", params, socket) do

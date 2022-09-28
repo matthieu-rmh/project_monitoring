@@ -1,5 +1,6 @@
 defmodule PmLoginWeb.ProjectView do
   alias PmLoginWeb.LiveComponent.{
+    SurveyLiveComponent,
     TaskModalLive,
     PlusModalLive,
     ModifModalLive,

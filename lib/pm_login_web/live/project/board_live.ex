@@ -20,6 +20,7 @@ defmodule PmLoginWeb.Project.BoardLive do
   alias PmLogin.Services
   alias PmLogin.Monitoring.Comment
   alias PmLoginWeb.Router.Helpers, as: Routes
+  alias PmLogin.Email
 
   def mount(_params, %{"curr_user_id" => curr_user_id, "pro_id" => pro_id}, socket) do
     if connected?(socket), do: Kanban.subscribe()
@@ -942,6 +943,16 @@ defmodule PmLoginWeb.Project.BoardLive do
     end
   end
 
+  def handle_info(:send_email_to_user, socket) do
+    email = socket.assigns.email
+    id = socket.assigns.id
+
+    # Envoyer un mail indiquant que le requête a été vue par l'administrateur
+    Email.send_state_of_client_request(email, id)
+
+    {:noreply, socket}
+  end
+
   def handle_event("update_card", %{"card" => card_attrs}, socket) do
     card = Kanban.get_card!(card_attrs["id"])
     # IO.inspect card_attrs
@@ -972,12 +983,49 @@ defmodule PmLoginWeb.Project.BoardLive do
           request = Services.get_request_with_user_id!(client_request_id)
 
           if real_task.status_id == 5 do
-            # Mettre à jour la date de mise en terminée
-            Services.update_clients_request(request, %{"date_done" => NaiveDateTime.local_now()})
+            params = %{
+              "date_done" => NaiveDateTime.local_now(),
+              "done" => true
+            }
+
+            Services.update_clients_request(request, params)
+          else
+            params = %{
+              "date_done" => nil,
+              "done" => false
+            }
+
+            Services.update_clients_request(request, params)
           end
         end
 
 
+        email =
+          case client_request_id do
+            nil -> nil
+            _ ->
+              request = Services.get_request_with_user_id!(client_request_id)
+
+              if real_task.status_id == 5 do
+                # Envoyer l'email immédiatement
+                Login.get_user!(request.active_client.user_id).email
+              end
+          end
+
+        id =
+          case client_request_id do
+            nil -> nil
+            _ ->
+              request = Services.get_request_with_user_id!(client_request_id)
+
+              if real_task.status_id == 5 do
+                # Envoyer l'email immédiatement
+                request.id
+              end
+          end
+
+        # Envoyer l'email immédiatement
+        if not is_nil(email) and not is_nil(id), do: Process.send_after(self(), :send_email_to_user, 0)
 
         # IO.puts "after"
         # IO.inspect card
@@ -1081,7 +1129,7 @@ defmodule PmLoginWeb.Project.BoardLive do
         # current_board = Kanban.get_board!(socket.assigns.board.id)
         new_board = struct(board, stages: new_stages)
 
-        {:noreply, post_socket |> assign(board: new_board)}
+        {:noreply, post_socket |> assign(board: new_board, email: email, id: id)}
 
       # {:noreply, update(socket, :board, fn _ -> Kanban.get_board!() end)}
 

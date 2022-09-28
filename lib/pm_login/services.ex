@@ -859,6 +859,69 @@ defmodule PmLogin.Services do
     Repo.all(query)
   end
 
+  def search_my_request!(search) do
+    search = "%#{search}%"
+
+    company_query = from c in Company
+    user_query = from u in User
+    ac_query = from ac in ActiveClient,
+               preload: [user: ^user_query, company: ^company_query]
+
+    query = from req in ClientsRequest,
+            preload: [active_client: ^ac_query],
+            where: ilike(req.title, ^search) or ilike(req.content, ^search) or ilike(req.uuid, ^search),
+            order_by: [desc: req.date_post]
+
+    Repo.all(query)
+  end
+
+  def list_my_requests_by_status(status) do
+    company_query = from c in Company
+    user_query = from u in User
+    ac_query = from ac in ActiveClient,
+               preload: [user: ^user_query, company: ^company_query]
+
+    query =
+      case status do
+        "1" ->
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          where: req.seen and not req.ongoing and not req.done and not req.finished,
+          order_by: [desc: req.date_post]
+
+        "2" ->
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          where: req.ongoing and not req.done and not req.finished,
+          order_by: [desc: req.date_post]
+
+        "3" ->
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          where: req.done and not req.finished,
+          order_by: [desc: req.date_post]
+
+        "4" ->
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          where: req.finished,
+          order_by: [desc: req.date_post]
+
+        "5" ->
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          where: not req.seen,
+          order_by: [desc: req.date_post]
+
+        _ ->
+          from req in ClientsRequest,
+          preload: [active_client: ^ac_query],
+          order_by: [desc: req.date_post]
+      end
+
+      Repo.all(query)
+  end
+
   def count_list_client_request(user_id) do
     company_query = from c in Company
     user_query = from u in User
@@ -911,6 +974,21 @@ defmodule PmLogin.Services do
             select: cr.id
 
     Repo.one(query)
+  end
+
+  def get_client_request_id_by_project!(project_id) do
+    query = from cr in ClientsRequest,
+            where: cr.project_id == ^project_id,
+            select: cr.id
+
+    Repo.one(query)
+  end
+
+  def get_all_client_request_ids do
+    query = from cr in ClientsRequest,
+            select: cr.id
+
+    Repo.all(query)
   end
 
   def get_request_with_user_id!(id) do
