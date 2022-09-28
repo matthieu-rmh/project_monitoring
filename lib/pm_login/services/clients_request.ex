@@ -6,17 +6,18 @@ defmodule PmLogin.Services.ClientsRequest do
   alias PmLogin.Monitoring.Project
 
   schema "clients_requests" do
+    field :survey, :map, default: %{}
     field :uuid, :string
     field :title, :string
     field :content, :string
     field :date_post, :naive_datetime
-    field :seen, :boolean
+    field :seen, :boolean, default: false
     field :date_seen, :naive_datetime
-    field :ongoing, :boolean
+    field :ongoing, :boolean, default: false
     field :date_ongoing, :naive_datetime
-    field :done, :boolean
+    field :done, :boolean, default: false
     field :date_done, :naive_datetime
-    field :finished, :boolean
+    field :finished, :boolean, default: false
     field :date_finished, :naive_datetime
     field :file_urls, {:array, :string}, default: []
     # field :active_client_id, :id
@@ -31,7 +32,7 @@ defmodule PmLogin.Services.ClientsRequest do
   @doc false
   def changeset(clients_request, attrs) do
     clients_request
-    |> cast(attrs, [:title ,:content, :date_post, :seen, :date_seen, :ongoing, :date_ongoing, :done, :date_done, :finished, :date_finished, :active_client_id, :task_id, :project_id, :uuid])
+    |> cast(attrs, [:title ,:content, :date_post, :seen, :date_seen, :ongoing, :date_ongoing, :done, :date_done, :finished, :date_finished, :active_client_id, :task_id, :project_id, :uuid, :survey])
     # |> unique_constraint(:title, message: "Titre de requête déjà existant")
     |> unique_constraint(:uuid, message: "Identifiant du requête déja existant.")
     # |> validate_required(:content, message: "Entrez le contenu de votre requête")
@@ -39,7 +40,7 @@ defmodule PmLogin.Services.ClientsRequest do
 
   def create_changeset(clients_request, attrs) do
     clients_request
-    |> cast(attrs, [:title ,:content, :date_post, :seen, :ongoing, :done, :finished, :active_client_id, :uuid])
+    |> cast(attrs, [:title ,:content, :date_post, :seen, :ongoing, :done, :finished, :active_client_id, :uuid, :survey])
     |> foreign_key_constraint(:active_client_id)
     |> validate_required(:title, message: "Entrez l'intitulé de votre requête.")
     |> unique_constraint(:title, message: "Titre de requête déjà existant.")
