@@ -97,17 +97,6 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
   def handle_event("cloture-request", %{"id" => id}, socket) do
     request = Services.get_request_with_user_id!(id)
 
-    # Services.update_request_bool(request, %{"finished" => true})
-
-    # # Mettre à jour la date de cloture du requête
-    # Services.update_clients_request(request, %{"date_finished" => NaiveDateTime.local_now()})
-
-
-    # user = Login.get_user!(request.active_client.user_id)
-
-    # # Envoyer l'email immédiatement
-    # if not request.finished, do: Process.send_after(self(), :send_email_to_user, 0)
-
     request =
       case request.task_id do
         nil -> Map.put_new(request, :type, "Le tâche")
@@ -133,10 +122,106 @@ defmodule PmLoginWeb.Services.MyRequestsLive do
   end
 
   def handle_event("send-survey", params, socket) do
-    IO.inspect(params)
+    request_id = params["request_id"]
 
+    client_request = Services.get_request_with_user_id!(request_id)
 
-    {:noreply, socket}
+    client_comments_created_tools =
+      case params["client_comments_created_tools"] do
+        "" -> nil
+        _ ->
+          params["client_comments_created_tools"]
+      end
+
+    client_comments_deadline_commmunicated =
+      case params["client_comments_deadline_commmunicated"] do
+        "" -> nil
+        _ ->
+          params["client_comments_deadline_commmunicated"]
+      end
+
+    client_comments_team_response =
+      case params["client_comments_team_response"] do
+        "" -> nil
+        _ ->
+          params["client_comments_team_response"]
+      end
+
+    client_comments_time_saved =
+      case params["client_comments_time_saved"] do
+        "" -> nil
+        _ ->
+          params["client_comments_time_saved"]
+      end
+
+    created_tools =
+      case params["created_tools"] do
+        "0" -> "Plus ou moins"
+        "-1" -> "Non"
+        _ -> "Oui"
+      end
+
+    deadline_communicated =
+      case params["deadline_communicated"] do
+        "0" -> "Plus ou moins"
+        "-1" -> "Non"
+        _ -> "Oui"
+      end
+
+    team_response =
+      case params["team_response"] do
+        "0" -> "Plus ou moins"
+        "-1" -> "Non"
+        _ -> "Oui"
+      end
+
+    time_saved =
+      case params["time_saved"] do
+        "0" -> "Plus ou moins"
+        "-1" -> "Non"
+        _ -> "Oui"
+      end
+
+    attrs = %{
+      "survey" => %{
+        created_tools: %{
+          status: created_tools,
+          comments: client_comments_created_tools
+        },
+        deadline_communicated: %{
+          status: deadline_communicated,
+          comments: client_comments_deadline_commmunicated
+        },
+        team_response: %{
+          status: team_response,
+          comments: client_comments_team_response
+        },
+        time_saved: %{
+          status: time_saved,
+          comments: client_comments_time_saved
+        }
+      }
+    }
+
+    with {:ok, request} <- Services.update_clients_request(client_request, attrs) do
+      Services.update_request_bool(request, %{"finished" => true})
+
+      # Mettre à jour la date de cloture du requête
+      Services.update_clients_request(request, %{"date_finished" => NaiveDateTime.local_now()})
+
+      # Récupérer les données de l'utilisateur à partir du requête
+      user = Login.get_user!(request.active_client.user_id)
+
+      # Envoyer l'email immédiatement
+      if not request.finished, do: Process.send_after(self(), :send_email_to_user, 0)
+
+      {:noreply,
+        socket
+        |> put_flash(:info, "La requête #{request.title} a été cloturée")
+        |> assign(email: user.email, id: request.id)
+        |> assign(is_open_survey: false)
+      }
+    end
   end
 
   def handle_event("change-survey", params, socket) do
