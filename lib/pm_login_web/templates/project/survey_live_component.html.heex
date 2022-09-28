@@ -60,7 +60,8 @@
                 <div class="modal-body">
 
                     <!--------------- Form Begin ------------------>
-                    <form action="#" method="post" phx-submit="send-survey" phx-change="change-survey">
+                    <form phx-submit="send-survey" phx-change="change-survey">
+                        <input type="hidden" name="request_id" value={@request.id}>
 
                         <!------------------ One ---------------------->
                         <div class="row">
