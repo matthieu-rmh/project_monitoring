@@ -984,6 +984,42 @@ defmodule PmLogin.Services do
     Repo.one(query)
   end
 
+  #===========================================#
+  # Get all client request between given date #
+  #===========================================#
+  def get_all_client_request_between_date(date_begin, date_end) do
+    ac_request = from ac in ActiveClient
+
+    query = from cr in ClientsRequest,
+            preload: [active_client: ^ac_request]
+
+    request = Repo.all(query)
+
+    #=======================================================================#
+    # On filtre la requête                                                  #
+    # On récupère la valeur où date_ongoing et date_finished n'est pas null #
+    # Puis on récupère la requête entre les dates données                   #
+    # date_begin <= date_ongoing et date_end >= date_finished
+    #=======================================================================#
+    Enum.filter(request,
+      fn r ->
+        if not is_nil(r.date_ongoing) and not is_nil(r.date_finished) do
+          date_ongoing =
+            r.date_ongoing
+            |> NaiveDateTime.to_date()
+            |> Date.to_string()
+
+          date_finished =
+            r.date_finished
+            |> NaiveDateTime.to_date()
+            |> Date.to_string()
+
+          date_begin <= date_ongoing and date_end >= date_finished
+        end
+      end
+    )
+  end
+
   def get_all_client_request_ids do
     query = from cr in ClientsRequest,
             select: cr.id
