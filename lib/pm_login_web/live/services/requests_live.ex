@@ -3,6 +3,7 @@ defmodule PmLoginWeb.Services.RequestsLive do
   alias PmLogin.Services
   alias PmLoginWeb.LiveComponent.ModalLive
   alias PmLoginWeb.LiveComponent.DetailModalRequestLive
+  alias PmLoginWeb.Router.Helpers, as: Routes
 
   def mount(_params, %{"curr_user_id"=>curr_user_id}, socket) do
     Services.subscribe()
@@ -15,6 +16,13 @@ defmodule PmLoginWeb.Services.RequestsLive do
        show_modal: false, service_id: nil,curr_user_id: curr_user_id,show_notif: false, notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)),
        layout: {PmLoginWeb.LayoutView, "admin_layout_live.html"}
        }
+  end
+
+  #==============================#
+  # Showing Survey Request Event #
+  #==============================#
+  def handle_event("show_survey_request", _params, socket) do
+    {:noreply, socket |> redirect(to: Routes.clients_request_path(socket, :survey))}
   end
 
   def handle_event("modal_close", _params, socket) do

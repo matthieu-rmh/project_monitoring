@@ -75,6 +75,13 @@
       <option value="5">Pas encore vue</option>
     </select>
   </form>
+
+  <button 
+    phx-click="show_survey_request" 
+  >
+    <i class="bi bi-eye-fill"></i>
+    Voir 
+  </button>
 </div>
 
 <%= for request <- @requests do %>
