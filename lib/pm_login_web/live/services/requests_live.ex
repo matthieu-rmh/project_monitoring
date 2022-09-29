@@ -17,6 +17,10 @@ defmodule PmLoginWeb.Services.RequestsLive do
        }
   end
 
+  def handle_event("modal_close", _params, socket) do
+    {:noreply, socket}
+  end
+
   def handle_event("request-search", params, socket) do
     search = params["request_search"]
 
