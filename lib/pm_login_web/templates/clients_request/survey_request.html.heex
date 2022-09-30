@@ -463,15 +463,35 @@
                                         <td>Demande</td>
                                         -->
                                         <td>
+                                            <%= case req.survey["created_tools"]["status"] do %>
+                                                <% nil -> %>
+                                                <% "" -> %>
+                                                <% _ -> %>  <strong><%= req.survey["created_tools"]["status"] %></strong>,
+                                            <% end %>
                                             <%= req.survey["created_tools"]["comments"] %>
                                         </td>
                                         <td>
+                                            <%= case req.survey["time_saved"]["status"] do %>
+                                                <% nil -> %>
+                                                <% "" -> %>
+                                                <% _ -> %>  <strong><%= req.survey["time_saved"]["status"] %></strong>,
+                                            <% end %>
                                             <%= req.survey["time_saved"]["comments"] %>
                                         </td>
                                         <td>
+                                            <%= case req.survey["deadline_communicated"]["status"] do %>
+                                                <% nil -> %>
+                                                <% "" -> %>
+                                                <% _ -> %>  <strong><%= req.survey["deadline_communicated"]["status"] %></strong>,
+                                            <% end %>
                                             <%= req.survey["deadline_communicated"]["comments"] %>
                                         </td>
                                         <td>
+                                            <%= case req.survey["team_response"]["status"] do %>
+                                                <% nil -> %>
+                                                <% "" -> %>
+                                                <% _ -> %>  <strong><%= req.survey["team_response"]["status"] %></strong>,
+                                            <% end %>
                                             <%= req.survey["team_response"]["comments"] %>
                                         </td>
                                     </tr>
