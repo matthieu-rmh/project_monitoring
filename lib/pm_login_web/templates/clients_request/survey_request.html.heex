@@ -42,14 +42,14 @@
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .container header {
+    .container .header {
         position: relative;
         font-size: 20px;
         font-weight: 600;
         color: #333;
     }
 
-    .container header::before {
+    .container .header::before {
         content: "";
         position: absolute;
         left: 0;
@@ -63,7 +63,6 @@
     .container form {
         position: relative;
         margin-top: 16px;
-        min-height: 490px;
         background-color: #fff;
         overflow: hidden;
     }
@@ -108,6 +107,7 @@
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
+        gap: 1rem;
     }
 
     form .fields .input-field {
@@ -161,11 +161,10 @@
         outline: none;
         color: #fff;
         border-radius: 5px;
-        margin: 25px 0;
         background-color: #4070f4;
         transition: all 0.2s linear;
         cursor: pointer;
-        text-transform: capitalize;
+        text-transform: initial;
     }
 
     .container form .btnText {
@@ -223,6 +222,7 @@
         border-radius: 10px;
         width: 1300px !important;
         margin-left: -8rem;
+        min-height: 600px;
     }
 
     .survey__content {
@@ -248,14 +248,19 @@
     .survey__empty,
     .survey__nil {
         position: absolute;
-        top: 60%;
-        left: 20%;
-        width: 80%;
+        top: 50%;
+        left: 0%;
+        width: 100%;
         text-align: center;
     }
 
     button:hover {
         background-color: #4070f4;
+    }
+
+    .survey__button--submit {
+        margin-bottom: -2.3rem;
+        height: 43px !important;
     }
 
     .lds-ellipsis {
@@ -330,8 +335,7 @@
 
 <body>
     <div class="survey">
-        <header>Sondage Clients</header>
-
+        <span class="header">Sondage Clients</span>
         <form phx-submit="search-survey-request">
             <div class="survey__content">
                 <div class="details personal">
@@ -340,16 +344,12 @@
                             <label>Date de début</label>
                             <input type="date" name="date_begin" value={@date_begin} required>
                         </div>
-                    </div>
 
-                    <div class="field">
                         <div class="input-field">
                             <label>Date de fin</label>
                             <input type="date" name="date_end" value={@date_end} required>
                         </div>
-                    </div>
 
-                    <div class="field">
                         <div class="input-field">
                             <label>Clients</label>
                             <select name="client_name" id="clientName" required>
@@ -360,7 +360,24 @@
                                 <% end %>
                             </select>
                         </div>
+
+                        <div class="input-field">
+                            <label>Type de demande</label>
+                            <select name="demand_type" id="demandType" required>
+                                <option value="">Tous</option>
+                                <option value="">Demande de réponse</option>
+                                <option value="">Demande d'intervention</option>
+                                <option value="">Bug</option>
+                                <option value="">Projet</option>
+                                <option value="">Tâche</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="survey__button--submit">
+                            Rechercher le sondage
+                        </button>
                     </div>
+
 
                     <!--
                     <div class="fields">
@@ -378,99 +395,93 @@
                     </div>
                     -->
 
-                    <button>
-                        Rechercher le sondage
-                    </button>
+                    
                 </div>
-
-                <%= if @loading do %>
-                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                <% else %>
-                    <%= case @request do %>
-                    <%= nil -> %>
-                        <div class="survey__nil animate animate__fadeInUp">
-                            <img
-                                src="https://img.icons8.com/external-xnimrodx-lineal-color-xnimrodx/64/000000/external-date-time-management-xnimrodx-lineal-color-xnimrodx.png" />
-                            <div class="survey__empty--text">
-                                <span>Selectionner une plage horaire pour voir le(s) sondage(s)</span>
-                            </div>
-                        </div>
-
-                    <% [] -> %>
-                        <div class="survey__empty animate animate__fadeInDown">
-                            <img src="https://img.icons8.com/officel/80/000000/empty-box.png" style="width: 60px;"/>
-                            <div class="survey__empty--text">
-                                <span>Aucun sondage n'a été faite dans ce plage horaire</span>
-                            </div>
-                        </div>
-                    <% _ -> %>
-
-                        <div>
-                            <span>
-                                <%= if Enum.count(@request) > 1 do %>
-                                    Ils existent (<%= Enum.count(@request) %>) sondages entre <%= @date_begin %> au <%= @date_end %>
-                                <% else %>
-                                    Le sondage entre <%= @date_begin %> au <%= @date_end %>
-                                <% end %>
-                            </span>
-
-                            <div class="survey__table">
-                                <table class="animate animate__fadeInUp">
-                                    <tr>
-                                        <th>Numéro</th>
-                                        <th>Client</th>
-                                        <th>Date début</th>
-                                        <th>Date fin</th>
-                                        <!--
-                                        <th>Type de demande</th>
-                                        -->
-                                        <th>Qualité du travail effectué</th>
-                                        <th>Gain du temps</th>
-                                        <th>Respect délai de livraison</th>
-                                        <th>Qualité de la communication</th>
-                                    </tr>
-                                    <%= for req <- @request do %>
-                                        <tr>
-                                            <td>
-                                                #<%= req.uuid %>
-                                            </td>
-                                            <td>
-                                                <%= req.active_client.user_id %>
-                                            </td>
-                                            <td>
-                                                <%= NaiveDateTime.to_date req.date_ongoing %>
-                                            </td>
-                                            <td>
-                                                <%= NaiveDateTime.to_date req.date_finished %>
-                                            </td>
-                                            <!--
-                                            <td>Demande</td>
-                                            -->
-                                            <td>
-                                                <%= req.survey["created_tools"]["comments"] %>
-                                            </td>
-                                            <td>
-                                                <%= req.survey["time_saved"]["comments"] %>
-                                            </td>
-                                            <td>
-                                                <%= req.survey["deadline_communicated"]["comments"] %>
-                                            </td>
-                                            <td>
-                                                <%= req.survey["team_response"]["comments"] %>
-                                            </td>
-                                        </tr>
-                                    <% end %>
-                                </table>
-                            </div>
-                        </div>
-                    <% end %>
-                <% end %>
-
             </div>
         </form>
-    </div>
 
-    <!--<script src="script.js"></script>-->
+        <%= if @loading do %>
+            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+        <% else %>
+            <%= case @request do %>
+                <%= nil -> %>
+                    <div class="survey__nil animate animate__fadeInUp">
+                        <img
+                            src="https://img.icons8.com/external-xnimrodx-lineal-color-xnimrodx/64/000000/external-date-time-management-xnimrodx-lineal-color-xnimrodx.png" />
+                        <div class="survey__empty--text">
+                            <span>Selectionner une plage horaire pour voir le(s) sondage(s)</span>
+                        </div>
+                    </div>
+
+                <% [] -> %>
+                    <div class="survey__empty animate animate__fadeInDown">
+                        <img src="https://img.icons8.com/officel/80/000000/empty-box.png" style="width: 60px;"/>
+                        <div class="survey__empty--text">
+                            <span>Aucun sondage n'a été faite dans ce plage horaire</span>
+                        </div>
+                    </div>
+                <% _ -> %>
+                    <div>
+                        <span>
+                            <%= if Enum.count(@request) > 1 do %>
+                                Ils existent (<%= Enum.count(@request) %>) sondages du <%= @date_begin_formatted %> au <%= @date_end_formatted %>
+                            <% else %>
+                                Le sondage du <%= @date_begin_formatted %> au <%= @date_end_formatted %>
+                            <% end %>
+                        </span>
+
+                        <div class="survey__table">
+                            <table class="animate animate__fadeInUp">
+                                <tr>
+                                    <th>Numéro</th>
+                                    <th>Client</th>
+                                    <th>Date début</th>
+                                    <th>Date fin</th>
+                                    <!--
+                                    <th>Type de demande</th>
+                                    -->
+                                    <th>Qualité du travail effectué</th>
+                                    <th>Gain du temps</th>
+                                    <th>Respect délai de livraison</th>
+                                    <th>Qualité de la communication</th>
+                                </tr>
+                                <%= for req <- @request do %>
+                                    <tr>
+                                        <td>
+                                            #<%= req.uuid %>
+                                        </td>
+                                        <td>
+                                            <%= req.active_client.user_id %>
+                                        </td>
+                                        <td>
+                                            <%= NaiveDateTime.to_date(req.date_ongoing) %>
+                                        </td>
+                                        <td>
+                                            <%= NaiveDateTime.to_date(req.date_finished) %>
+                                        </td>
+                                        <!--
+                                        <td>Demande</td>
+                                        -->
+                                        <td>
+                                            <%= req.survey["created_tools"]["comments"] %>
+                                        </td>
+                                        <td>
+                                            <%= req.survey["time_saved"]["comments"] %>
+                                        </td>
+                                        <td>
+                                            <%= req.survey["deadline_communicated"]["comments"] %>
+                                        </td>
+                                        <td>
+                                            <%= req.survey["team_response"]["comments"] %>
+                                        </td>
+                                    </tr>
+                                <% end %>
+                            </table>
+                        </div>
+                    </div>
+            <% end %>
+        <% end %>
+    </div>
 </body>
 
 </html>
