@@ -1,3 +1,32 @@
+<style>
+  button.survey {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    max-width: 175px;
+    width: 100%;
+    border: none;
+    outline: none;
+    color: #fff;
+    border-radius: 5px;
+    background-color: #4070f4 !important;
+    transition: all 0.1s linear;
+    cursor: pointer;
+    text-transform: initial;
+    margin-bottom: -5px;
+  }
+
+  button:hover {
+    background-color: #3a66de !important;
+  }
+
+  .bi.bi-eye-fill {
+    font-size: 17px;
+    margin-right: 5px;
+  }
+</style>
+
 <div style="transform: scale(0.8); margin-top: -15rem;">
   <div class="card-info" style="max-width: 750px;">
     <span class="material-icons mat__ico__big">
@@ -51,7 +80,7 @@
   </div>
   -->
   
-  <div style="display: flex; align-items: center; margin-bottom: 2rem;">
+  <div style="display: flex; align-items: center; margin-bottom: 2rem; gap: 1rem;">
     <form phx-change="request-search" style="margin-bottom: -2rem;">
       <div class="request-search">
         <i class="bi bi-search" style="position: relative;top: 0.2rem;left: 21rem; color: #fff !important;"></i>
@@ -63,7 +92,6 @@
     <form phx-change="request-status" style="margin-bottom: -2rem;">
       <select id="request_status_id" name="status_id" 
       style="width: -moz-available;
-      margin-left: 2rem;
       height: 3.8rem; 
       background: #1F2937;
       color: #fff;">
@@ -78,10 +106,11 @@
     </form>
   
     <button 
+      class="survey"
       phx-click="show_survey_request" 
     >
       <i class="bi bi-eye-fill"></i>
-      Voir 
+      Voir les sondages
     </button>
   </div>
   
