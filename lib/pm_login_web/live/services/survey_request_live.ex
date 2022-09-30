@@ -6,7 +6,7 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
 
   alias PmLogin.Utilities
 
-  #====== Mount ======#
+  # ====== Mount ======#
   def mount(_params, %{"curr_user_id" => curr_user_id}, socket) do
     Services.subscribe()
     Services.subscribe_to_request_topic()
@@ -21,28 +21,29 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
     socket =
       socket
       |> assign(
-      request: nil,
-      date_begin: "",
-      date_end: "",
-      date_begin_formatted: "",
-      date_end_formatted: "",
-      request_count: 0,
-      active_clients: Services.list_active_clients(),
-      loading: false,
-      search_text: nil,
-      requests: Services.list_requests(),
-      show_detail_request_modal: false,
-      client_request: nil,
-      show_modal: false,
-      service_id: nil,
-      curr_user_id: curr_user_id,
-      show_notif: false,
-      notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)
-     )
+        request: nil,
+        date_begin: "",
+        date_end: "",
+        date_begin_formatted: "",
+        date_end_formatted: "",
+        request_count: 0,
+        data_chart: %{
+          values: []
+        },
+        active_clients: Services.list_active_clients(),
+        loading: false,
+        search_text: nil,
+        requests: Services.list_requests(),
+        show_detail_request_modal: false,
+        client_request: nil,
+        show_modal: false,
+        service_id: nil,
+        curr_user_id: curr_user_id,
+        show_notif: false,
+        notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)
+      )
 
-    {:ok,
-     socket,
-     layout: {PmLoginWeb.LayoutView, "admin_layout_live.html"}}
+    {:ok, socket, layout: {PmLoginWeb.LayoutView, "admin_layout_live.html"}}
   end
 
   #================================================#
@@ -110,7 +111,8 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
 
     request = Services.get_all_client_request_between_date(date_begin, date_end)
 
-    request_count = if Enum.count(request) >= 10, do: Enum.count(request), else: "0#{Enum.count(request)}"
+    request_count =
+      if Enum.count(request) >= 10, do: Enum.count(request), else: "0#{Enum.count(request)}"
 
     if not connected?(socket) do
       Process.send_after(self(), :socket_not_connected, 0)
@@ -122,12 +124,67 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
       |> Utilities.date_to_naive()
       |> Utilities.letters_date_format_without_days()
 
-
     date_end_formatted =
       date_end
       |> Date.from_iso8601!()
       |> Utilities.date_to_naive()
       |> Utilities.letters_date_format_without_days()
+
+    created_tools_status =
+      for req <- request do
+        cond do
+          req.survey["created_tools"]["status"] in ["Non", "Plus ou moins"] ->
+            0
+
+          true ->
+            1
+        end
+      end
+
+    time_saved_status =
+      for req <- request do
+        cond do
+          req.survey["time_saved"]["status"] in ["Non", "Plus ou moins"] ->
+            0
+
+          true ->
+            1
+        end
+      end
+
+    deadline_communicated_status =
+      for req <- request do
+        cond do
+          req.survey["deadline_communicated"]["status"] in ["Non", "Plus ou moins"] ->
+            0
+
+          true ->
+            1
+        end
+      end
+
+    team_response_status =
+      for req <- request do
+        cond do
+          req.survey["team_response"]["status"] in ["Non", "Plus ou moins"] ->
+            0
+
+          true ->
+            1
+        end
+      end
+
+    values =
+      case String.to_integer(request_count) do
+        0 -> []
+        _ ->
+          [
+            trunc(Enum.sum(created_tools_status) / String.to_integer(request_count) * 100),
+            trunc(Enum.sum(time_saved_status)  / String.to_integer(request_count) * 100),
+            trunc(Enum.sum(deadline_communicated_status) / String.to_integer(request_count) * 100),
+            trunc(Enum.sum(team_response_status) / String.to_integer(request_count) * 100)
+          ]
+      end
 
     {:noreply,
       socket
@@ -137,12 +194,15 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
         date_end: date_end,
         date_begin_formatted: date_begin_formatted,
         date_end_formatted: date_end_formatted,
-        request_count: request_count
+        request_count: request_count,
+        data_chart: %{
+          values: values
+        }
       )
     }
   end
 
-  #====== Render ======#
+  # ====== Render ======#
   def render(assigns) do
     ClientsRequestView.render("survey_request.html", assigns)
   end
