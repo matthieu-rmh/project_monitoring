@@ -32,7 +32,7 @@ import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import { Sortable, Plugins } from "@shopify/draggable";
 import topbar from "../vendor/topbar"
-import { DoughNutChart, HorizontalBarChart, StackedBarChart, LineChart } from "./chart.js"
+import { DoughNutChart, HorizontalBarChart, StackedBarChart, LineChart, SurveyChart } from "./chart.js"
 
 const Hooks = {}
 
@@ -54,6 +54,15 @@ Hooks.StackedBarChart = {
   mounted() {
     const { values_tasks_todo_by_month, values_blocking_tasks_by_month, values_tasks_in_progress_by_month, values_tasks_in_control_by_month, values_tasks_achieved_by_month } = JSON.parse(this.el.dataset.chartData)
     this.chart = new StackedBarChart(this.el, values_tasks_todo_by_month, values_blocking_tasks_by_month, values_tasks_in_progress_by_month, values_tasks_in_control_by_month, values_tasks_achieved_by_month)
+  }
+}
+
+Hooks.SurveyChart = {
+  mounted () {
+    const { values } = JSON.parse(this.el.dataset.chartData)
+    this.chart = new SurveyChart(this.el, values)
+
+    console.log(values)
   }
 }
 

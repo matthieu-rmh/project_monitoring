@@ -332,7 +332,7 @@
         100% {
             transform: translate(24px, 0);
         }
-    }
+    } 
 </style>
 
 <body>
@@ -500,6 +500,13 @@
                                 <% end %>
                             </table>
                         </div>
+                    </div>
+
+                    <div class="animate animate__fadeInUp">
+                        <canvas 
+                            id="surveyChart" phx-hook="SurveyChart" 
+                            data-chart-data='{"values":[12,53,49,10]}'
+                         ></canvas>
                     </div>
             <% end %>
         <% end %>
