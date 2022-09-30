@@ -423,7 +423,7 @@
                 <% _ -> %>
                     <div>
                         <span>
-                            <%= if @request_count > 1 do %>
+                            <%= if String.to_integer(@request_count) > 1 do %>
                                 Ils existent (<%= @request_count %>) sondages du <%= @date_begin_formatted %> au <%= @date_end_formatted %>
                             <% else %>
                                 Le sondage du <%= @date_begin_formatted %> au <%= @date_end_formatted %>
