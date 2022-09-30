@@ -4,6 +4,8 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
   alias PmLogin.Services
   alias PmLoginWeb.ClientsRequestView
 
+  alias PmLogin.Utilities
+
   #====== Mount ======#
   def mount(_params, %{"curr_user_id" => curr_user_id}, socket) do
     Services.subscribe()
@@ -22,6 +24,8 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
       request: nil,
       date_begin: "",
       date_end: "",
+      date_begin_formatted: "",
+      date_end_formatted: "",
       active_clients: Services.list_active_clients(),
       loading: false,
       search_text: nil,
@@ -109,12 +113,27 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
       Process.send_after(self(), :socket_not_connected, 0)
     end
 
+    date_begin_formatted =
+      date_begin
+      |> Date.from_iso8601!()
+      |> Utilities.date_to_naive()
+      |> Utilities.letters_date_format_without_days()
+
+
+    date_end_formatted =
+      date_end
+      |> Date.from_iso8601!()
+      |> Utilities.date_to_naive()
+      |> Utilities.letters_date_format_without_days()
+
     {:noreply,
       socket
       |> assign(
         request: request,
         date_begin: date_begin,
-        date_end: date_end
+        date_end: date_end,
+        date_begin_formatted: date_begin_formatted,
+        date_end_formatted: date_end_formatted
       )
     }
   end
