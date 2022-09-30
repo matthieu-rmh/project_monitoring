@@ -26,6 +26,7 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
       date_end: "",
       date_begin_formatted: "",
       date_end_formatted: "",
+      request_count: 0,
       active_clients: Services.list_active_clients(),
       loading: false,
       search_text: nil,
@@ -109,6 +110,8 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
 
     request = Services.get_all_client_request_between_date(date_begin, date_end)
 
+    request_count = if Enum.count(request) >= 10, do: Enum.count(request), else: "0#{Enum.count(request)}"
+
     if not connected?(socket) do
       Process.send_after(self(), :socket_not_connected, 0)
     end
@@ -133,7 +136,8 @@ defmodule PmLoginWeb.Services.SurveyRequestLive do
         date_begin: date_begin,
         date_end: date_end,
         date_begin_formatted: date_begin_formatted,
-        date_end_formatted: date_end_formatted
+        date_end_formatted: date_end_formatted,
+        request_count: request_count
       )
     }
   end

@@ -423,8 +423,8 @@
                 <% _ -> %>
                     <div>
                         <span>
-                            <%= if Enum.count(@request) > 1 do %>
-                                Ils existent (<%= Enum.count(@request) %>) sondages du <%= @date_begin_formatted %> au <%= @date_end_formatted %>
+                            <%= if @request_count > 1 do %>
+                                Ils existent (<%= @request_count %>) sondages du <%= @date_begin_formatted %> au <%= @date_end_formatted %>
                             <% else %>
                                 Le sondage du <%= @date_begin_formatted %> au <%= @date_end_formatted %>
                             <% end %>
