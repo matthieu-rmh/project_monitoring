@@ -429,6 +429,13 @@
                         </div>
                     </div>
                 <% _ -> %>
+                    <div class="animate animate__fadeInUp">
+                        <canvas 
+                            id="surveyChart" phx-hook="SurveyChart" 
+                            data-chart-data={Jason.encode!(@data_chart)}
+                        ></canvas>
+                    </div>
+                    
                     <div>
                         <span>
                             <%= if String.to_integer(@request_count) > 1 do %>
@@ -459,7 +466,7 @@
                                             #<%= req.uuid %>
                                         </td>
                                         <td>
-                                            <%= req.active_client.user_id %>
+                                            <%= PmLogin.Login.get_username(req.active_client.user_id) %>
                                         </td>
                                         <td>
                                             <%= NaiveDateTime.to_date(req.date_ongoing) %>
@@ -512,12 +519,6 @@
                         </div>
                     </div>
 
-                    <div class="animate animate__fadeInUp">
-                        <canvas 
-                            id="surveyChart" phx-hook="SurveyChart" 
-                            data-chart-data={Jason.encode!(@data_chart)}
-                         ></canvas>
-                    </div>
             <% end %>
         <% end %>
     </div>
