@@ -263,6 +263,7 @@ class SurveyChart {
         ],
       },
       options: {
+        maintainAspectRatio: false,
         indexAxis: "y",
         responsive: true,
         plugins: {
