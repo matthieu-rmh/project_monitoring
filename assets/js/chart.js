@@ -252,7 +252,7 @@ class SurveyChart {
         datasets: [
           {
             axis: "x",
-            label: "Pourcentage de satisfaction",
+            label: "Pourcentage de satisfaction en %",
             data: values,
             fill: false,
             borderColor: colors,
@@ -293,5 +293,5 @@ export {
   HorizontalBarChart,
   StackedBarChart,
   LineChart,
-  SurveyChart,
+  SurveyChart
 };
