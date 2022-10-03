@@ -243,50 +243,56 @@ class LineChart {
   }
 }
 
-class SurveyChart {
-  constructor(ctx, values) {
-    this.chart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: SURVEY,
-        datasets: [
-          {
-            axis: "x",
-            label: "Pourcentage de satisfaction en %",
-            data: values,
-            fill: false,
-            borderColor: colors,
-            backgroundColor: colors,
-            borderWidth: 2,
-            color: "#fff",
-          },
-        ],
-      },
-      options: {
-        maintainAspectRatio: false,
-        indexAxis: "y",
-        responsive: true,
-        plugins: {
-          labels: {
-            render: "value",
-            fontColor: "#5c5c5c",
-            position: "outside",
-          },
-          legend: {
-            position: "bottom",
-          },
-          title: {
-            display: true,
-            text: "Taux de satisfaction du client",
-          },
-          datalabels: {
-            color: "#fff",
-          },
+let surveyChart = null;
+
+const SurveyChart = (ctx, values) => {
+  // We need destroy the chart if it is not null
+  // Before, render a new with different ID
+  if (surveyChart != null) {
+    surveyChart.destroy();
+  }
+
+  surveyChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: SURVEY,
+      datasets: [
+        {
+          axis: "x",
+          label: "Pourcentage de satisfaction en %",
+          data: values,
+          fill: false,
+          borderColor: colors,
+          backgroundColor: colors,
+          borderWidth: 2,
+          color: "#fff",
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      indexAxis: "y",
+      responsive: true,
+      plugins: {
+        labels: {
+          render: "value",
+          fontColor: "#5c5c5c",
+          position: "outside",
+        },
+        legend: {
+          position: "bottom",
+        },
+        title: {
+          display: true,
+          text: "Taux de satisfaction du client",
+        },
+        datalabels: {
+          color: "#fff",
         },
       },
-    });
-  }
-}
+    },
+  });
+};
 
 export {
   DoughNutChart,
