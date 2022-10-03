@@ -58,6 +58,7 @@ defmodule PmLoginWeb.Router do
     resources "/clients_requests", ClientsRequestController
     get "/requests", ClientsRequestController, :requests
     get "/my_requests", ClientsRequestController, :my_requests
+    get "/client_tasks", ClientsRequestController, :client_tasks
 
     #=== Sondage client ===#
     get "/requests/survey", ClientsRequestController, :survey
