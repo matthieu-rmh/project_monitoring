@@ -82,15 +82,21 @@ Hooks.StackedBarChart = {
   },
 };
 
-
 Hooks.SurveyChart = {
   mounted() {
-    console.log("is mounted");
-
+    // console.log("is mounted");
     const { values } = JSON.parse(this.el.dataset.chartData);
 
-    this.mychart = new SurveyChart(this.el, values);
-  }
+    SurveyChart(this.el, values);
+  },
+
+  updated() {
+    // console.log("is updated");
+    const { values } = JSON.parse(this.el.dataset.chartData);
+
+    SurveyChart(this.el, values);
+    console.log(SurveyChart(this.el, values))
+  },
 };
 
 // Hooks.LineChart = {
