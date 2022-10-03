@@ -70,7 +70,7 @@
             -->
           </tr>
           <tr>
-            <th>Tâche</th>
+            <th>Projet</th>
             <!-- <th>Description</th> -->
             <th>Statut</th>
             <th>Progression</th>
@@ -98,6 +98,8 @@
                   </td>
                   <td><%= PmLogin.Login.get_username(PmLogin.Services.get_active_client!(project.active_client_id).user_id) %></td>
                 </form>
+
+                <td data-label="UUID"></td>
               </tr>
           <% end %>
         </tbody>
