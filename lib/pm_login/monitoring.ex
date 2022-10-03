@@ -12,6 +12,7 @@ defmodule PmLogin.Monitoring do
   alias PmLogin.Services
   alias PmLogin.Login.User
   alias PmLogin.Kanban.{Board, Stage, Card}
+  alias PmLogin.Services.ClientsRequest
 
   @topic inspect(__MODULE__)
   def subscribe do
@@ -1199,6 +1200,22 @@ defmodule PmLogin.Monitoring do
       from t in Task,
       preload: [:project, :status, :priority, card: ^card_query],
       order_by: [desc: t.updated_at]
+    Repo.all(query)
+  end
+
+  #===========================================#
+  # List all client tasks by active client ID #
+  #===========================================#
+  def list_all_client_tasks_by_active_client_id(active_client_id) do
+    task_id = from cr in ClientsRequest,
+              where: not is_nil(cr.task_id) and not is_nil(cr.project_id) and cr.active_client_id == ^active_client_id,
+              select: cr.task_id
+
+    query = from t in Task,
+            where: t.id in ^Repo.all(task_id),
+            preload: [:project, :status, :priority],
+            order_by: [desc: t.updated_at]
+
     Repo.all(query)
   end
 

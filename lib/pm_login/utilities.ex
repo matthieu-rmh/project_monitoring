@@ -100,6 +100,17 @@ defmodule PmLogin.Utilities do
       )
   end
 
+  def letters_date_format_without_days(naive_dt) do
+
+    Calendar.strftime(naive_dt,"%d %B %Y",
+       month_names: fn month ->
+         {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+         "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"}
+         |> elem(month - 1)
+       end
+      )
+  end
+
   def naive_to_datetime(naive) do
     {:ok, datetime} = DateTime.from_naive(naive, "Etc/UTC")
     datetime
