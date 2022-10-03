@@ -1207,14 +1207,29 @@ defmodule PmLogin.Monitoring do
   # List all client tasks by active client ID #
   #===========================================#
   def list_all_client_tasks_by_active_client_id(active_client_id) do
-    task_id = from cr in ClientsRequest,
+    task_ids = from cr in ClientsRequest,
               where: not is_nil(cr.task_id) and not is_nil(cr.project_id) and cr.active_client_id == ^active_client_id,
               select: cr.task_id
 
     query = from t in Task,
-            where: t.id in ^Repo.all(task_id),
+            where: t.id in ^Repo.all(task_ids),
             preload: [:project, :status, :priority],
             order_by: [desc: t.updated_at]
+
+    Repo.all(query)
+  end
+
+   #===========================================#
+  # List all client project by active client ID #
+  #===========================================#
+  def list_all_client_projects_by_active_client_id(active_client_id) do
+    project_ids = from cr in ClientsRequest,
+              where: not is_nil(cr.project_id) and cr.active_client_id == ^active_client_id,
+              select: cr.project_id
+
+    query = from p in Project,
+            where: p.id in ^Repo.all(project_ids),
+            order_by: [desc: p.updated_at]
 
     Repo.all(query)
   end
