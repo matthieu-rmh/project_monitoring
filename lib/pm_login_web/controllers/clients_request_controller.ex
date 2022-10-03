@@ -79,6 +79,28 @@ defmodule PmLoginWeb.ClientsRequestController do
     end
   end
 
+  #===========================#
+  # Client project controller #
+  #===========================#
+  def client_projects(conn, _params) do
+    if Login.is_connected?(conn) do
+      cond do
+        Login.is_active_client?(conn) ->
+            LiveView.Controller.live_render(conn, PmLoginWeb.Services.ClientProjectsLive, session: %{"curr_user_id" => get_session(conn, :curr_user_id)}, router: PmLoginWeb.Router)
+
+        true ->
+          conn
+            |>Login.not_active_client_redirection
+
+      end
+    else
+      conn
+      |> Login.not_connected_redirection
+    end
+  end
+
+
+
   def new(conn, _params) do
     changeset = Services.change_clients_request(%ClientsRequest{})
     render(conn, "new.html", changeset: changeset)
