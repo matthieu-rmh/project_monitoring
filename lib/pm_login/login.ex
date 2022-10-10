@@ -409,6 +409,16 @@ defmodule PmLogin.Login do
     Repo.all(User)
   end
 
+  def list_clients do
+    clients_query = from u in User,
+    where: u.right_id == 4
+
+    ac_ids_query = from ac in ActiveClient, select: ac.user_id
+
+    query = from u in subquery(clients_query), where: u.id in subquery(ac_ids_query)
+    Repo.all(query)
+  end
+
   def list_non_active_clients do
     clients_query = from u in User,
                     where: u.right_id == 4

@@ -50,7 +50,7 @@ defmodule PmLogin.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:contex, git: "https://github.com/mindok/contex"},
-      {:bcrypt_elixir, "~> 1.0"},
+      {:pbkdf2_elixir, "~> 2.0"},
       {:plug_cowboy, "~> 2.5"}
     ]
   end

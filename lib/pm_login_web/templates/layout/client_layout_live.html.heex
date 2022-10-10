@@ -14,9 +14,7 @@
       <script>0</script>
 
       <div class="wrapper site-header__wrapper">
-
-        <img class="profile-pic-header" src={Routes.static_path(@socket, "/#{PmLogin.Login.get_profile_picture(@curr_user_id) }") } width="50"/>
-        <%= link "Mgbi", to: Routes.user_path(@socket, :index), class: "brand" %>
+        <%= link "Monitoring - Mgbi", to: Routes.user_path(@socket, :index), class: "brand" %>
         <nav class="nav">
           <a  class="menu-btn nav__toggle"><div class="menu-btn__burger"></div></a>
           <ul class="nav__wrapper">
@@ -57,16 +55,22 @@
             </li>
 
             <li class="nav__item">
-              <a href={ Routes.user_path(@socket, :show, @curr_user_id) } class="nav__item__link">
-              <span class="material-icons mat__ico">account_circle</span>
-              <p><%= PmLogin.Login.get_user!(@curr_user_id).username %></p></a>
+              <div class="dropdown">
+                <a href={ Routes.user_path(@socket, :show, @curr_user_id) } class="nav__item__link">
+                <img class="profile-pic-header" src={Routes.static_path(@socket, "/#{PmLogin.Login.get_profile_picture(@curr_user_id) }")} width="50" style="position: relative;top: 5px;"/>
+                <p><%= PmLogin.Login.get_user!(@curr_user_id).username %></p></a>
+                <div class="dropdown-content">
+                  <a href={ Routes.user_path(@socket, :show, @curr_user_id) } class="admin__links">
+                    <p>Mon profil</p>
+                  </a>
+                  <a href={ Routes.auth_path(@socket, :sign_out) } class="admin__links">
+                    <p style="color: red;">Se déconnecter <i class="bi bi-box-arrow-right deconnexion__icon"></i></p>
+                  </a>
+                </div>
+              </div>
             </li>
 
-            <li class="nav__item">
-              <a href={ Routes.auth_path(@socket, :sign_out) } class="nav__item__link deconnexion__link" title="Se déconnecter">
-                <i title="Se déconnecter" class="bi bi-box-arrow-right deconnexion__icon"></i>
-              </a>
-            </li>          </ul>
+            </ul>
         </nav>
       </div>
 

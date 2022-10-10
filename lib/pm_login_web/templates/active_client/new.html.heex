@@ -9,7 +9,7 @@
   <tbody>
     <%= for client <- @inactives do %>
     <tr>
-    <.form let={f} for={nil} phx-submit="activate_c">
+    <.form let={f} for={:my_form} phx-submit="activate_c">
       <input type="hidden" name="client_id" value={client.id}>
         <td><%= client.username %></td>
         <td><%= client.email %></td>

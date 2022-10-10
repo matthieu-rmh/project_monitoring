@@ -7,18 +7,23 @@ defmodule PmLogin.ActiveClient.IndexLive do
 
     {:ok,
        socket
-       |> assign(active_clients: active_clients, curr_user_id: curr_user_id, show_notif: false, notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)),
+       |> assign(active_clients: active_clients,
+                curr_user_id: curr_user_id,
+                show_notif: false,
+                notifs: Services.list_my_notifications_with_limit(curr_user_id, 4),
+                active_clients_selected: true),
        layout: {PmLoginWeb.LayoutView, "admin_layout_live.html"}
        }
   end
 
   def handle_event("filter-client", params, socket) do
+    IO.puts "TAFIDITRA FILTER"
     case params["client_selection"] do
       "1" ->
-        {:noreply, socket |> assign(active_clients: Services.list_active_clients())}
+        {:noreply, socket |> assign(active_clients: Services.list_active_clients(), active_clients_selected: true)}
 
       _ ->
-        {:noreply, socket |> assign(active_clients: Login.list_non_active_clients())}
+        {:noreply, socket |> assign(active_clients: Login.list_non_active_clients(), active_clients_selected: false)}
     end
   end
 

@@ -105,7 +105,7 @@ defmodule PmLogin.Login.User do
 
       if user != nil and pwd != nil and (is_user?(user_name) or is_email?(user_name)) do
         str_pwd = to_string(pwd)
-        checked = Bcrypt.verify_pass(str_pwd, user.password)
+        checked = Pbkdf2.verify_pass(str_pwd, user.password)
           case checked do
             false -> add_error(changeset, :wrong_pass, "Mot de passe incorrect")
             _ -> changeset
@@ -125,14 +125,14 @@ defmodule PmLogin.Login.User do
     |> required_old_password(attrs)
     |> validate_old_password(user, attrs)
     |> required_new_password(attrs)
-    |> put_change(:password, Bcrypt.hash_pwd_salt(attrs["new_password"]))
+    |> put_change(:password, Pbkdf2.hash_pwd_salt(attrs["new_password"]))
   end
 
   def update_raw_password(user, attrs) do
     user
     |> cast(attrs, [])
     |> required_new_password(attrs)
-    |> put_change(:password, Bcrypt.hash_pwd_salt(attrs["new_password"]))
+    |> put_change(:password, Pbkdf2.hash_pwd_salt(attrs["new_password"]))
   end
 
   def required_old_password(changeset, attrs) do
@@ -143,7 +143,7 @@ defmodule PmLogin.Login.User do
   end
 
   def validate_old_password(changeset, user, attrs) do
-      case Bcrypt.verify_pass(attrs["old_password"], user.password) do
+      case Pbkdf2.verify_pass(attrs["old_password"], user.password) do
         false -> add_error(changeset, :old_password, "Ne correspond pas à l'ancien mot de passe")
         _ -> changeset
       end
@@ -244,7 +244,7 @@ defmodule PmLogin.Login.User do
   defp crypt_pass(changeset) do
     pass_field = get_field(changeset, :password)
     cry = to_string(pass_field)
-    encrypted = Bcrypt.hash_pwd_salt(cry)
+    encrypted = Pbkdf2.hash_pwd_salt(cry)
     put_change(changeset, :password, encrypted)
   end
 

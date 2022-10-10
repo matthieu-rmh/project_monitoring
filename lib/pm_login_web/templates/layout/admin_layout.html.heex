@@ -17,7 +17,7 @@
       <div class="wrapper site-header__wrapper">
 
         <img class="profile-pic-header" src={Routes.static_path(@socket, "/#{PmLogin.Login.get_profile_picture(Plug.Conn.get_session(@socket, :curr_user_id)) }")} width="50"/>
-        <%= link "Mgbi", to: Routes.user_path(@socket, :index), class: "brand" %>
+        <%= link "Monitoring - Mgbi", to: Routes.user_path(@socket, :index), class: "brand" %>
         <nav class="nav">
           <a  class="menu-btn nav__toggle"><div class="menu-btn__burger"></div></a>
           <ul class="nav__wrapper">
