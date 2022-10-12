@@ -19,6 +19,7 @@ defmodule PmLogin.Monitoring.Task do
     field :achieved_at, :naive_datetime
     field :hidden, :boolean
     field :without_control, :boolean
+    field :is_major, :boolean
     # field :parent_id, :id
     # field :parent_id, :id
     # field :project_id, :id
@@ -47,7 +48,7 @@ defmodule PmLogin.Monitoring.Task do
   #REAL CREATION
   def real_creation_changeset(task, attrs) do
     task
-        |> cast(attrs, [:title, :description, :without_control,:attributor_id, :contributor_id, :project_id, :date_start, :estimated_duration, :deadline])
+        |> cast(attrs, [:title, :description, :without_control,:attributor_id, :contributor_id, :project_id, :date_start, :estimated_duration, :deadline, :is_major])
         # |> validate_required(:title, message: "Entrez tâche")
         # |> unique_constraint(:title, message: "Tâche déjà existante")
         # |> validate_required(:estimated_duration, message: "Entrez estimation")
@@ -66,13 +67,13 @@ defmodule PmLogin.Monitoring.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:title, :description, :attributor_id, :progression, :date_start, :date_end, :estimated_duration, :performed_duration, :deadline])
+    |> cast(attrs, [:title, :description, :attributor_id, :progression, :date_start, :date_end, :estimated_duration, :performed_duration, :deadline, :is_major])
     |> validate_required([:title, :progression, :date_start, :date_end, :estimated_duration, :performed_duration, :deadline])
   end
 
   def update_changeset(task, attrs) do
     task
-    |> cast(attrs, [:title, :description, :progression, :deadline,:date_start, :date_end, :estimated_duration, :performed_duration, :contributor_id, :priority_id, :status_id])
+    |> cast(attrs, [:title, :description, :progression, :deadline,:date_start, :date_end, :estimated_duration, :performed_duration, :contributor_id, :priority_id, :status_id, :is_major])
     # |> Monitoring.validate_dates_without_deadline
     |> validate_required(:title, message: "Nom de tâche ne doit pas être vide!")
     |> validate_length(:title, max: 300, message: "Nom de tâche trop long !")
@@ -104,7 +105,7 @@ defmodule PmLogin.Monitoring.Task do
   def secondary_changeset(task, attrs) do
     IO.inspect attrs
     task
-    |> cast(attrs, [:parent_id, :without_control, :title, :description, :priority_id, :contributor_id,:attributor_id, :project_id,:date_start, :date_end, :estimated_duration, :deadline])
+    |> cast(attrs, [:parent_id, :without_control, :title, :description, :priority_id, :contributor_id,:attributor_id, :project_id,:date_start, :date_end, :estimated_duration, :deadline, :is_major])
     |> validate_required(:parent_id ,message: "Entrez une tâche parente")
     |> validate_required(:attributor_id,message: "La tâche n'a pas d'Attributeur")
     |> validate_required(:title, message: "Entrez tâche")
@@ -138,7 +139,7 @@ defmodule PmLogin.Monitoring.Task do
       # IO.puts("tafiditra create task")
       # IO.inspect(attrs)
         task
-        |> cast(attrs, [:title, :description, :without_control,:attributor_id, :contributor_id, :project_id, :date_start, :estimated_duration, :deadline])
+        |> cast(attrs, [:title, :description, :without_control,:attributor_id, :contributor_id, :project_id, :date_start, :estimated_duration, :deadline, :is_major])
         |> validate_required(:title, message: "Entrez tâche")
         |> unique_constraint(:title, message: "Tâche déjà existante")
         |> validate_length(:title, max: 300, message: "Nom de tâche trop long !")

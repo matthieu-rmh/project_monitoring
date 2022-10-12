@@ -600,6 +600,16 @@ defmodule PmLogin.Services do
     # Repo.all(ActiveClient)
   end
 
+  def list_active_clients_by_company_id(company_id) do
+    company_query = from c in Company
+    user_query = from u in User
+    query = from ac in ActiveClient,
+            preload: [user: ^user_query, company: ^company_query],
+            where: ac.company_id == ^company_id
+    Repo.all(query)
+    # Repo.all(ActiveClient)
+  end
+
   @doc """
   Gets a single active_client.
 

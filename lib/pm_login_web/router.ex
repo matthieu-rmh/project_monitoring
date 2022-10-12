@@ -59,10 +59,12 @@ defmodule PmLoginWeb.Router do
     get "/requests", ClientsRequestController, :requests
     get "/my_requests", ClientsRequestController, :my_requests
     get "/client_tasks", ClientsRequestController, :client_tasks
+    get "/client_users", ClientsRequestController, :client_users
 
     #=== Sondage client ===#
     get "/requests/survey", ClientsRequestController, :survey
 
+    # get ""
     get "/users/:id/edit_profile", UserController, :edit_profile
     get "/users/:id/edit_password", UserController, :edit_password
     get "/list_users", UserController, :list

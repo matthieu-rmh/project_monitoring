@@ -269,6 +269,10 @@ defmodule PmLoginWeb.Project.IndexLive do
     # IO.inspect params["estimated_duration"]
     # IO.puts("#{is_integer(params["estimated_duration"])}")
 
+
+
+    IO.inspect(params)
+
     pro_id = params["project_id"]
 
     project = Monitoring.get_project!(pro_id)

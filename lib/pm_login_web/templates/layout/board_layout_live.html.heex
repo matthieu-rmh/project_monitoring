@@ -92,14 +92,6 @@
             </li>
 
             <li class="nav__item">
-              <a href={ Routes.user_path(@socket, :show, @curr_user_id) } class="nav__item__link">
-              <span class="material-icons mat__ico">account_circle</span>
-              <p><%= PmLogin.Login.get_user!(@curr_user_id).username %></p></a>
-
-
-            </li>
-
-            <li class="nav__item">
               <div class="dropdown">
                 <a href={ Routes.user_path(@socket, :show, @curr_user_id) } class="nav__item__link">
                 <img class="profile-pic-header" src={Routes.static_path(@socket, "/#{PmLogin.Login.get_profile_picture(@curr_user_id) }")} width="50" style="position: relative;top: 5px;"/>
