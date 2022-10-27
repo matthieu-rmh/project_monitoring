@@ -70,7 +70,7 @@ defmodule PmLogin.ActiveClient.ActiveClientLive do
       }
   end
 
-  def handle_event("activate_c", %{"client_id" => client_id, "nil" => %{"company_id" => company_id}}, socket) do
+  def handle_event("activate_c", %{"client_id" => client_id, "my_form" => %{"company_id" => company_id}}, socket) do
     IO.puts client_id
     IO.puts company_id
     params = %{"user_id" => client_id, "company_id" => company_id}

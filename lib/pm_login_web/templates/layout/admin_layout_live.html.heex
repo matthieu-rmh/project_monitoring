@@ -22,8 +22,12 @@
 
             <li class="nav__item">
               <div class="dropdown">
-                <a href={Routes.user_path(@socket, :admin_space)} class="nav__item__link"><span class="material-icons mat__ico" style="display: inline;">admin_panel_settings</span> <p class="header_link_text">Espace administrateur</p></a>
+                <a href={Routes.user_path(@socket, :index)} class="nav__item__link"><span class="material-icons mat__ico" style="display: inline;">admin_panel_settings</span> <p class="header_link_text">Espace administrateur</p></a>
                 <div class="dropdown-content">
+                  <a href={Routes.project_path(@socket, :logs)} class="admin__links">
+                    <span class="material-icons mat__ico">table_chart</span>
+                    Tableau de bord
+                  </a>                  
                   <a href={Routes.project_path(@socket, :index)} class="admin__links">
                     <span class="material-icons mat__ico">insert_chart</span>
                     Projets

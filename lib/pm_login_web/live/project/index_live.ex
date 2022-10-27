@@ -15,6 +15,11 @@ defmodule PmLoginWeb.Project.IndexLive do
     Monitoring.subscribe()
 
     list_clients_requests = Services.list_clients_requests_with_client_name
+    not_ongoing_requests = Services.list_not_ongoing_clients_requests
+
+    IO.puts "CLIENTS REQUESTS"
+    IO.inspect list_clients_requests
+    IO.inspect list_clients_requests |> length()
 
     task_changeset = Monitoring.change_task(%Task{})
 

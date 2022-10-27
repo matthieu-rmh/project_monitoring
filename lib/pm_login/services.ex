@@ -761,6 +761,18 @@ defmodule PmLogin.Services do
     Repo.all(query)
   end
 
+  def list_not_ongoing_clients_requests do
+    user_query = from u in User
+    ac_query = from ac in ActiveClient,
+            preload: [user: ^user_query]
+    query = from req in ClientsRequest,
+            preload: [active_client: ^ac_query],
+            order_by: [asc: req.date_post],
+            where: req.ongoing == false
+
+    Repo.all(query)
+  end
+
   # def list_random_clients_requests_with_client_name do
   #   user_query = from u in User
 
