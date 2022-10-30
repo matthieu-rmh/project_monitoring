@@ -16,10 +16,15 @@ defmodule PmLoginWeb.Project.IndexLive do
 
     list_clients_requests = Services.list_clients_requests_with_client_name
     not_ongoing_requests = Services.list_not_ongoing_clients_requests
+    next_shown = cond do
+      length(not_ongoing_requests) <= 1 -> false
+      true -> true
+    end
 
-    IO.puts "CLIENTS REQUESTS"
-    IO.inspect list_clients_requests
-    IO.inspect list_clients_requests |> length()
+    # IO.puts "CLIENTS REQUESTS"
+    # IO.inspect not_ongoing_requests |> Enum.map(&(&1.title))
+    # IO.inspect not_ongoing_requests |> length()
+    # IO.inspect not_ongoing_requests |> Enum.at(10)
 
     task_changeset = Monitoring.change_task(%Task{})
 
@@ -57,10 +62,38 @@ defmodule PmLoginWeb.Project.IndexLive do
         show_notif: false,
         list_projects: list_projects,
         client_request: nil,
+        not_ongoing_requests: not_ongoing_requests,
+        not_ongoing_index: 0,
+        prev_shown: false,
+        next_shown: next_shown,
         notifs: Services.list_my_notifications_with_limit(curr_user_id, 4)
         ),
         layout: layout
     }
+  end
+
+  def handle_event("inc_ongoing_index", _params, socket) do
+    not_ongoing_index = socket.assigns.not_ongoing_index
+    current_index_id = not_ongoing_index+1
+    size = socket.assigns.not_ongoing_requests |> length()
+    max_index = size-1
+    is_next_shown = cond do
+      current_index_id == max_index -> false
+      true -> true
+    end
+    IO.puts("CURRENT INDEX: #{current_index_id} MAX INDEX: #{max_index}")
+    IO.inspect is_next_shown
+    {:noreply, socket |> assign(not_ongoing_index: current_index_id, prev_shown: true, next_shown: is_next_shown)}
+  end
+
+  def handle_event("dec_ongoing_index", _params, socket) do
+    current_index_id = socket.assigns.not_ongoing_index
+    is_prev_shown = cond do
+      current_index_id == 0 -> false
+      true -> true
+
+    end
+    {:noreply, socket |> assign(not_ongoing_index: current_index_id-1, prev_shown: is_prev_shown, next_shown: true)}
   end
 
   def handle_event("search-project", params, socket) do

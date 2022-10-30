@@ -34,19 +34,19 @@
 </style>
 
 <div class="responsive-customer-request">
-
-  <%= for request <- @list_clients_requests do %>
+  <% request = Enum.at(@not_ongoing_requests, @not_ongoing_index) %>
   <div class="card-info" data-id={request.id} id="card-drop" style="margin-bottom: -3rem; margin-right: 3rem;">
     <div class="row" style="margin-left: 0; align-items: center;">
       
       <div style="display: flex; gap: 1rem;">
-        <div phx-click="previous-client-request" phx-value-date_post={request.date_post} style="cursor: pointer;">
-          <i class="bi bi-chevron-left customer-request-prev"></i>
-        </div>
-  
-        <div phx-click="next-client-request" phx-value-date_post={request.date_post} style="cursor: pointer;">
-          <i class="bi bi-chevron-right customer-request-next"></i>
-        </div>
+        <a phx-click={if @prev_shown, do: "dec_ongoing_index"}>
+          <i class={"bi bi-chevron-left #{if @prev_shown, do: "customer-request-prev", else: "customer-request-prev-disabled"} "}></i>
+        </a>
+
+        <a phx-click={if @next_shown, do: "inc_ongoing_index"}>
+          <i class={"bi bi-chevron-right #{if @next_shown, do: "customer-request-next", else: "customer-request-next-disabled"} "}></i>
+        </a>
+
       </div>
     
 
@@ -106,7 +106,6 @@
       
     </div>
   </div>
-  <% end %>
 
     <%= if PmLogin.Login.get_user!(@curr_user_id).right_id==1 or PmLogin.Login.get_user!(@curr_user_id).right_id==2 do
       %>

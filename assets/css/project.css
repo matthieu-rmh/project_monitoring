@@ -31,6 +31,7 @@
 .customer-request-next:hover {
   background: #0069d9;
   color: #fff;
+  cursor: pointer;
 }
 
 .button-cr-see, 
