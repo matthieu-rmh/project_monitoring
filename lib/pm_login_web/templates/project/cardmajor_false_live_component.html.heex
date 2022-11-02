@@ -4,7 +4,7 @@
         class="icon"
         style={"color: #{@color}; background-color: #{@background_color};"}
       >
-        <i class={"bi bi-#{@icon}"}></i>
+      <a phx-click="show-task-ismajor-false-component"><i class={"bi bi-#{@icon}"}></i></a>
       </div>
       <div class="content">
         <h6><%= @content_name %></h6>

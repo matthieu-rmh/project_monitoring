@@ -3,6 +3,8 @@ defmodule PmLoginWeb.Project.LogsLive do
   alias PmLogin.Services
   alias PmLogin.Login
   alias PmLogin.Monitoring
+  alias PmLogin.Kanban
+  alias PmLogin.Monitoring.{Task}
 
 
   def mount(_params, %{"curr_user_id" => curr_user_id}, socket) do
@@ -52,6 +54,7 @@ defmodule PmLoginWeb.Project.LogsLive do
         |> Enum.count()
       end
 
+    task_changeset = Monitoring.change_task(%Task{})
 
     socket =
       socket
@@ -60,6 +63,9 @@ defmodule PmLoginWeb.Project.LogsLive do
           show_project_component: false,
           show_task_component: false,
           show_user_component: false,
+          show_task_ismajor_true: false,
+          show_task_ismajor_false: false,
+          show_plus_modal: false,
           curr_user_id: curr_user_id,
           list_projects: Monitoring.list_projects,
           list_tasks: Monitoring.list_tasks,
@@ -79,6 +85,10 @@ defmodule PmLoginWeb.Project.LogsLive do
           list_notifications_updated_yesterday: Services.list_notifications_updated_yesterday,
           show_notif: false,
           notifs: Services.list_my_notifications_with_limit(curr_user_id, 4),
+          values_tasks_ismajor_true: Monitoring.list_tasks_ismajor_true,
+          values_tasks_ismajor_false: Monitoring.list_tasks_ismajor_false,
+          task_changeset: task_changeset,
+          card: nil,
           chart_data: %{
             labels_tasks_by_contributors: labels_tasks_by_contributors,
             values_tasks_by_contributors: values_tasks_by_contributors,
@@ -163,7 +173,9 @@ defmodule PmLoginWeb.Project.LogsLive do
             show_dashboard_component: false,
             show_project_component: false,
             show_task_component: true,
-            show_user_component: false
+            show_user_component: false,
+            show_task_ismajor_true: false,
+            show_task_ismajor_false: false
           )
 
       {:noreply, socket |> assign(loading: false)}
@@ -229,4 +241,57 @@ defmodule PmLoginWeb.Project.LogsLive do
       PmLoginWeb.ProjectView.render("loading.html", assigns)
     end
   end
+
+  # New
+  def handle_event("show-task-ismajor-true-component", _params, socket) do
+    if not connected?(socket) do
+      {:noreply, socket |> assign(loading: true)}
+    else
+      socket =
+        socket
+        |> assign(
+            show_dashboard_component: false,
+            show_project_component: false,
+            show_task_component: false,
+            show_user_component: false,
+            show_task_ismajor_true: true,
+            show_task_ismajor_false: false
+          )
+
+      {:noreply, socket |> assign(loading: false)}
+    end
+  end
+
+  def handle_event("show-task-ismajor-false-component", _params, socket) do
+    if not connected?(socket) do
+      {:noreply, socket |> assign(loading: true)}
+    else
+      socket =
+        socket
+        |> assign(
+            show_dashboard_component: false,
+            show_project_component: false,
+            show_task_component: false,
+            show_user_component: false,
+            show_task_ismajor_true: false,
+            show_task_ismajor_false: true
+          )
+
+      {:noreply, socket |> assign(loading: false)}
+    end
+  end
+
+  def handle_event("show_plus_modal", %{"id" => id}, socket) do
+    card = Monitoring.get_tasks_by_id(id)
+
+    {:noreply,
+     socket
+     |> assign(show_plus_modal: true, card: card)}
+  end
+
+  def handle_event("close", _, socket) do
+    {:noreply, assign(socket, show_plus_modal: false)}
+  end
+
+  # end
 end

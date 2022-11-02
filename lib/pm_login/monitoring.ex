@@ -2197,4 +2197,27 @@ defmodule PmLogin.Monitoring do
   # def achieved_number_by_day(list) do
 
   # end
+
+  #New function
+  def list_tasks_ismajor_true do
+    query = from t in Task,
+          where: t.is_major == true,
+          select: t
+    Repo.all(query)
+  end
+
+  def list_tasks_ismajor_false do
+    query = from t in Task,
+          where: t.is_major == false,
+          select: t
+    Repo.all(query)
+  end
+
+  def get_tasks_by_id(id) do
+    query = from t in Task,
+            where: t.id == ^id,
+            select: t
+    Repo.all(query)
+  end
+
 end

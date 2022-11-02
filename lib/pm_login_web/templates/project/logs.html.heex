@@ -171,19 +171,198 @@
       
       <%= if @show_task_component == true do %>
         <!-- Task Card BEGIN -->
+        <div class="row list-user-card" style="padding: 0; width: auto">
+          <%= 
+          live_component(
+            CardTaskmajorAllLiveComponent,
+            color: "#0069d9",
+            background_color: "#6365f117",
+            icon: "bi bi-window-sidebar",
+            content_name: "Toutes les tâches",
+            content_list: @list_tasks,
+            font_color: "#1e293b"
+          )
+          %>
+          <%= 
+          live_component(
+            CardTaskmajorTrueLiveComponent,
+            color: "#0069d9",
+            background_color: "#6365f117",
+            icon: "bi bi-window-sidebar",
+            content_name: "Interventions majeurs",
+            content_list: @values_tasks_ismajor_true,
+            font_color: "#de0a26",
+            phx_click: "Click_ismajor_true"
+          )
+          %>
+          <%= 
+          live_component(
+            CardTaskmajorFalseLiveComponent,
+            color: "#0069d9",
+            background_color: "#6365f117",
+            icon: "bi bi-window-sidebar",
+            content_name: "Tâches mineurs",
+            content_list: @values_tasks_ismajor_false,
+            font_color: "#1e293b"
+          )
+          %>
+        </div>
+        
+
         <%= 
           live_component(
             TaskLiveComponent,
             list_tasks: @list_tasks,
             list_tasks_by_contributor_id: @list_tasks_by_contributor_id,
             list_tasks_not_achieved: @list_tasks_not_achieved,
-            list_contributors: @list_contributors
+            list_contributors: @list_contributors,
+            list_tasks_ismajor_true: @values_tasks_ismajor_true,
+            list_tasks_ismajor_false: @values_tasks_ismajor_false
           )
         %>
         <!-- Task Card END -->
       <% end %>
 
+      <!-- Interventions majeurs -->
+      <%= if @show_task_ismajor_true == true do %>
+      <div class="row list-user-card" style="padding: 0; width: auto">
+        <%= 
+        live_component(
+          CardTaskmajorAllLiveComponent,
+          color: "#0069d9",
+          background_color: "#6365f117",
+          icon: "bi bi-window-sidebar",
+          content_name: "Toutes les tâches",
+          content_list: @list_tasks,
+          font_color: "#1e293b"
+        )
+        %>
+        <%= 
+        live_component(
+          CardTaskmajorTrueLiveComponent,
+          color: "#0069d9",
+          background_color: "#6365f117",
+          icon: "bi bi-window-sidebar",
+          content_name: "Interventions majeurs",
+          content_list: @values_tasks_ismajor_true,
+          font_color: "#de0a26",
+          phx_click: "Click_ismajor_true"
+        )
+        %>
+        <%= 
+        live_component(
+          CardTaskmajorFalseLiveComponent,
+          color: "#0069d9",
+          background_color: "#6365f117",
+          icon: "bi bi-window-sidebar",
+          content_name: "Tâches mineurs",
+          content_list: @values_tasks_ismajor_false,
+          font_color: "#1e293b"
+        )
+        %>
+      </div>
+
+        <%= 
+          live_component(
+            TaskmajorTrueLiveComponent,
+            list_tasks_ismajor_true: @values_tasks_ismajor_true,
+            list_tasks_by_contributor_id: @list_tasks_by_contributor_id,
+            list_tasks_not_achieved: @list_tasks_not_achieved,
+            list_contributors: @list_contributors
+          )
+        %>
+      <% end %>
+      <!-- END -->
+      <!-- Tache mineurs -->
+      <%= if @show_task_ismajor_false == true do %>
+      <div class="row list-user-card" style="padding: 0; width: auto">
+        <%= 
+        live_component(
+          CardTaskmajorAllLiveComponent,
+          color: "#0069d9",
+          background_color: "#6365f117",
+          icon: "bi bi-window-sidebar",
+          content_name: "Toutes les tâches",
+          content_list: @list_tasks,
+          font_color: "#1e293b"
+        )
+        %>
+        <%= 
+        live_component(
+          CardTaskmajorTrueLiveComponent,
+          color: "#0069d9",
+          background_color: "#6365f117",
+          icon: "bi bi-window-sidebar",
+          content_name: "Interventions majeurs",
+          content_list: @values_tasks_ismajor_true,
+          font_color: "#de0a26",
+          phx_click: "Click_ismajor_true"
+        )
+        %>
+        <%= 
+        live_component(
+          CardTaskmajorFalseLiveComponent,
+          color: "#0069d9",
+          background_color: "#6365f117",
+          icon: "bi bi-window-sidebar",
+          content_name: "Tâches mineurs",
+          content_list: @values_tasks_ismajor_false,
+          font_color: "#1e293b"
+        )
+        %>
+      </div>
+
+        <%= 
+          live_component(
+            TaskmajorFalseLiveComponent,
+            list_tasks_ismajor_false: @values_tasks_ismajor_false,
+            list_tasks_by_contributor_id: @list_tasks_by_contributor_id,
+            list_tasks_not_achieved: @list_tasks_not_achieved,
+            list_contributors: @list_contributors
+          )
+        %>
+      <% end %>
+      <!-- END -->
     </div>
+    <%= if  @show_plus_modal == true  do %>
+      <%= 
+        live_component(
+            VoirModalLive,
+            id: "confirm-arch", 
+            title: "Détails", 
+            body: nil, 
+            right_button: nil,
+            right_button_action: nil, 
+            right_button_param: nil, 
+            left_button: "Retour" , 
+            left_button_action: "cancel-plus",
+            task_changeset: @task_changeset, 
+            curr_user_id: @curr_user_id, 
+            show_plus_modal: @show_plus_modal, 
+            card: @card
+        ) 
+      %>
+    <% end %>
+
+    <%= if @show_plus_modal == false do %>
+      <%= 
+        live_component(
+            VoirModalLive,
+            id: "confirm-arch", 
+            title: "Détails", 
+            body: nil, 
+            right_button: nil,
+            right_button_action: nil, 
+            right_button_param: nil, 
+            left_button: "Retour" , 
+            left_button_action: "cancel-plus",
+            task_changeset: @task_changeset, 
+            curr_user_id: @curr_user_id, 
+            show_plus_modal: @show_plus_modal, 
+            card: @card
+        )
+      %>
+    <% end %>
     <!-- Right Menu END -->
     
   </body>
