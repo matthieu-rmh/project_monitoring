@@ -89,10 +89,12 @@ defmodule PmLoginWeb.Project.IndexLive do
   def handle_event("dec_ongoing_index", _params, socket) do
     current_index_id = socket.assigns.not_ongoing_index
     is_prev_shown = cond do
-      current_index_id == 0 -> false
+      current_index_id == 1 -> false
       true -> true
 
     end
+    IO.inspect current_index_id
+    IO.inspect is_prev_shown
     {:noreply, socket |> assign(not_ongoing_index: current_index_id-1, prev_shown: is_prev_shown, next_shown: true)}
   end
 

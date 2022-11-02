@@ -569,4 +569,12 @@ body {
     background-color: #FFFFFF;
     padding-bottom: 1em; */
   }
-  
+
+  .customer-request-next-disabled,
+  .customer-request-prev-disabled{
+  font-size: 21px;
+  padding: 10px;
+  display: flex;
+  clip-path: circle();
+  transition: 0.2s;
+  }

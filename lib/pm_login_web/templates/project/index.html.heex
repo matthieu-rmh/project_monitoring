@@ -38,14 +38,21 @@
   <div class="card-info" data-id={request.id} id="card-drop" style="margin-bottom: -3rem; margin-right: 3rem;">
     <div class="row" style="margin-left: 0; align-items: center;">
       
-      <div style="display: flex; gap: 1rem;">
-        <a phx-click={if @prev_shown, do: "dec_ongoing_index"}>
-          <i class={"bi bi-chevron-left #{if @prev_shown, do: "customer-request-prev", else: "customer-request-prev-disabled"} "}></i>
-        </a>
+      <div style="display: block; gap: 1rem;">
 
-        <a phx-click={if @next_shown, do: "inc_ongoing_index"}>
-          <i class={"bi bi-chevron-right #{if @next_shown, do: "customer-request-next", else: "customer-request-next-disabled"} "}></i>
-        </a>
+        <div style="padding-left: 23px;">
+          <%="#{@not_ongoing_index+1} / #{@not_ongoing_requests |> length()}"  %>
+        </div>
+        <div style="display: flex;">
+          <a phx-click={if @prev_shown, do: "dec_ongoing_index"}>
+            <i class={"bi bi-chevron-left #{if @prev_shown, do: "customer-request-prev", else: "customer-request-prev-disabled"} "}></i>
+          </a>
+
+          <a phx-click={if @next_shown, do: "inc_ongoing_index"}>
+            <i class={"bi bi-chevron-right #{if @next_shown, do: "customer-request-next", else: "customer-request-next-disabled"} "}></i>
+          </a>
+        </div>
+
 
       </div>
     

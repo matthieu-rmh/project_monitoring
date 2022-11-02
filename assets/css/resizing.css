@@ -55,9 +55,13 @@
       font-size: 25px;
   }
 
-  .deconnexion__icon:hover{
-      color: lightgray;
+  .my-profile-icons{
+    font-size: 25px;
   }
+
+  /* .deconnexion__icon:hover{
+      color: lightgray;
+  } */
 
   .deconnexion__link{
     position: relative;

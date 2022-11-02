@@ -99,11 +99,11 @@
                 <img class="profile-pic-header" src={Routes.static_path(@socket, "/#{PmLogin.Login.get_profile_picture(@curr_user_id) }")} width="50" style="position: relative;top: 5px;"/>
                 <p><%= PmLogin.Login.get_user!(@curr_user_id).username %></p></a>
                 <div class="dropdown-content">
-                  <a href={ Routes.user_path(@socket, :show, @curr_user_id) } class="admin__links">
-                    <p>Mon profil</p>
+                  <a href={ Routes.user_path(@socket, :show, @curr_user_id) } class="admin__links" style="display: flex;justify-content: space-between;">
+                    <p>Mon profil</p><p><i class="bi bi-person my-profile-icons"></i></p>
                   </a>
-                  <a href={ Routes.auth_path(@socket, :sign_out) } class="admin__links">
-                    <p style="color: red;">Se déconnecter <i class="bi bi-box-arrow-right deconnexion__icon"></i></p>
+                  <a href={ Routes.auth_path(@socket, :sign_out) } class="admin__links" style="display: flex;justify-content: space-between;">
+                    <p style="color: red;">Se déconnecter</p><p style="color: red;"><i class="bi bi-box-arrow-right deconnexion__icon"></i></p>
                   </a>
                 </div>
               </div>
