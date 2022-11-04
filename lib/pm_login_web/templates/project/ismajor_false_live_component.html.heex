@@ -35,15 +35,21 @@
                     Tâches mineures (<%= Enum.count(@list_tasks_ismajor_false) %>)
                     <% end %>
                   </td>
-                  <td style="border: none;"> 
-                    <p>Date début :</p>
-                    <p>Date fin :</p>
-                  </td>
-                  <td style="border: none; text-align:center;">
-                    <form action="#" phx-submit="filter_by_date_ismajor_false" style="margin-bottom: -2rem;">      
+                  <td colspan="5" class="select"> 
+                    <form action="#" phx-submit="filter_by_date_ismajor_false">  
+                    <div style="display:flex; height:100px;align-items:center;">
+                      <div class="datedebut" style="width:auto;display:flex;margin-top:50px">
+                        <p>Date début : </p>
                         <input type="date" id="date_start" name="datestart">
+                      </div>
+                      <div class="datefin" style="width:auto;display:flex;margin-left:20px;margin-top:50px">
+                        <p>Date fin :</p>
                         <input type="date" id="date_end" name="dateend">
+                      </div>
+                      <div class="datefin" style="width:auto; display:flex;margin-left:25px;margin-top:30px">
                         <button type="submit">Filtre</button>
+                      </div>
+                    </div>
                     </form>
                   </td>
                   <td class="select">
