@@ -29,14 +29,23 @@
                   "
                 >
                   <td class="title">
-                    <%= if @list_tasks_by_contributor_id == nil do %>
-                      Interventions majeurs (<%= Enum.count(@list_tasks_ismajor_true) %>)
+                    <%= if @list_tasks_by_contributor_id == nil && @list_tasks_by_date do %>
+                      Interventions majeures (<%= Enum.count(@list_tasks_ismajor_true) %>)
                     <% else %>
-                      Intervention majeurs (<%= Enum.count(@list_tasks_ismajor_true) %>)
+                      Interventions majeures (<%= Enum.count(@list_tasks_ismajor_true) %>)
                     <% end %>
                   </td>
-                  <td style="border: none;"></td>
-                  <td style="border: none;"></td>
+                  <td style="border: none;"> 
+                    <p>Date début :</p>
+                    <p>Date fin :</p>
+                  </td>
+                  <td style="border: none; text-align:center;">
+                    <form action="#" phx-submit="filter_by_date_ismajor_true" style="margin-bottom: -2rem;">      
+                        <input type="date" id="date_start" name="datestart">
+                        <input type="date" id="date_end" name="dateend">
+                        <button type="submit">Filtre</button>
+                    </form>
+                  </td>
                   <td class="select">
                     <form phx-change="logs_filtered_by_contributors"  style="margin-bottom: -2rem;">
                       <select

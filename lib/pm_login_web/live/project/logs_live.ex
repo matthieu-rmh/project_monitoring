@@ -76,6 +76,7 @@ defmodule PmLoginWeb.Project.LogsLive do
           list_tasks_achieved: Monitoring.list_tasks_achieved_order_by_updated_at,
           list_tasks_by_contributor_id: nil,
           list_tasks_filtered_by_date: nil,
+          list_tasks_by_date: nil,
           list_admins: Login.list_admins_users,
           list_attributors: Login.list_attributors_users,
           list_contributors: Login.list_contributors_users,
@@ -293,5 +294,31 @@ defmodule PmLoginWeb.Project.LogsLive do
     {:noreply, assign(socket, show_plus_modal: false)}
   end
 
+  def handle_event("filter_by_date", params, socket) do
+    date_start = params["datestart"]
+    date_end = params["dateend"]
+
+    list_tasks_by_date = Monitoring.list_tasks_by_date(date_start, date_end)
+
+    {:noreply, socket |> assign(list_tasks: list_tasks_by_date)}
+  end
+
+  def handle_event("filter_by_date_ismajor_true", params, socket) do
+    date_start = params["datestart"]
+    date_end = params["dateend"]
+
+    list_tasks_by_date = Monitoring.list_tasks_by_date(date_start, date_end)
+
+    {:noreply, socket |> assign(values_tasks_ismajor_true: list_tasks_by_date)}
+  end
+
+  def handle_event("filter_by_date_ismajor_false", params, socket) do
+    date_start = params["datestart"]
+    date_end = params["dateend"]
+
+    list_tasks_by_date = Monitoring.list_tasks_by_date(date_start, date_end)
+
+    {:noreply, socket |> assign(values_tasks_ismajor_false: list_tasks_by_date)}
+  end
   # end
 end

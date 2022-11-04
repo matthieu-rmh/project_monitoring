@@ -142,7 +142,7 @@ defmodule PmLoginWeb.LiveComponent.VoirModalLive do
                                 Aucune description
                             </td>
                             <% end %>
-                            <td data-label="Date de mise a jour"> <%= task.updated_at %> </td>
+                            <td data-label="Date de mise a jour">  <%= Utilities.letters_date_format(task.updated_at) %> </td>
                         </tr>
                       <% end %>
                     </tbody>
