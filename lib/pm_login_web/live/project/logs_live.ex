@@ -299,26 +299,35 @@ defmodule PmLoginWeb.Project.LogsLive do
     date_end = params["dateend"]
 
     list_tasks_by_date = Monitoring.list_tasks_by_date(date_start, date_end)
+    list_tasks_by_date_is_major_true = Monitoring.list_tasks_by_date_ismajor_true(date_start, date_end)
+    list_tasks_by_date_is_major_false = Monitoring.list_tasks_by_date_ismajor_false(date_start, date_end)
 
-    {:noreply, socket |> assign(list_tasks: list_tasks_by_date)}
+    # {:noreply, socket |> assign(list_tasks: list_tasks_by_date)}
+    {:noreply,
+      socket
+      |> assign(
+        list_tasks: list_tasks_by_date,
+        values_tasks_ismajor_true: list_tasks_by_date_is_major_true,
+        values_tasks_ismajor_false: list_tasks_by_date_is_major_false
+      )}
   end
 
-  def handle_event("filter_by_date_ismajor_true", params, socket) do
-    date_start = params["datestart"]
-    date_end = params["dateend"]
+  # def handle_event("filter_by_date_ismajor_true", params, socket) do
+  #   date_start = params["datestart"]
+  #   date_end = params["dateend"]
 
-    list_tasks_by_date = Monitoring.list_tasks_by_date(date_start, date_end)
+  #   list_tasks_by_date = Monitoring.list_tasks_by_date(date_start, date_end)
 
-    {:noreply, socket |> assign(values_tasks_ismajor_true: list_tasks_by_date)}
-  end
+  #   {:noreply, socket |> assign(values_tasks_ismajor_true: list_tasks_by_date)}
+  # end
 
-  def handle_event("filter_by_date_ismajor_false", params, socket) do
-    date_start = params["datestart"]
-    date_end = params["dateend"]
+  # def handle_event("filter_by_date_ismajor_false", params, socket) do
+  #   date_start = params["datestart"]
+  #   date_end = params["dateend"]
 
-    list_tasks_by_date = Monitoring.list_tasks_by_date(date_start, date_end)
+  #   list_tasks_by_date = Monitoring.list_tasks_by_date(date_start, date_end)
 
-    {:noreply, socket |> assign(values_tasks_ismajor_false: list_tasks_by_date)}
-  end
+  #   {:noreply, socket |> assign(values_tasks_ismajor_false: list_tasks_by_date)}
+  # end
   # end
 end

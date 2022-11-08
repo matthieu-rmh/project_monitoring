@@ -1,5 +1,5 @@
  <!-- New Task Card -->
-<style>
+ <style>
   .contenues{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -43,30 +43,30 @@
               >
                 <td class="title">
                   <%= if @list_tasks_by_contributor_id == nil && @list_tasks_by_date do %>
-                    Tous les tâches (<%= Enum.count(@list_tasks) %>)
+                    Toutes les tâches (<%= Enum.count(@list_tasks) %>)
                   <% else %>
-                    Tâches (<%= Enum.count(@list_tasks) %>)
+                    Toutes les tâches (<%= Enum.count(@list_tasks) %>)
                   <% end %>
                 </td>
-                <td colspan="5" class="select"> 
+                <td colspan="4" style="border:none;position:relative;"> 
                   <form action="#" phx-submit="filter_by_date">  
-                  <div style="display:flex; height:100px;align-items:center;">
-                    <div class="datedebut" style="width:auto;display:flex;margin-top:50px">
-                      <p>Date début : </p>
-                      <input type="date" id="date_start" name="datestart">
+                    <div style="display:flex; height:100px;align-items:center;">
+                      <div class="datedebut" style="width:auto;display:flex;margin-top:50px;align-items:center">
+                        <label style="width:180px;">Date début : </label>
+                        <input type="date" id="date_start" name="datestart" style="margin-left:10px;">
+                      </div>
+                      <div class="datefin" style="width:auto;display:flex;margin-left:40px;margin-top:50px;align-items:center">
+                        <label style="width:150px;">Date fin : </label>
+                        <input type="date" id="date_end" name="dateend">
+                      </div>
+                      <div class="datefin" style="width:auto; display:flex;margin-left:30px;margin-top:40px">
+                        <button type="submit">Filtre</button>
+                      </div>
                     </div>
-                    <div class="datefin" style="width:auto;display:flex;margin-left:20px;margin-top:50px">
-                      <p>Date fin :</p>
-                      <input type="date" id="date_end" name="dateend">
-                    </div>
-                    <div class="datefin" style="width:auto; display:flex;margin-left:25px;margin-top:30px">
-                      <button type="submit">Filtre</button>
-                    </div>
-                  </div>
                   </form>
                 </td>
                 <td class="select">
-                  <form phx-change="logs_filtered_by_contributors"  style="margin-bottom: -2rem;">
+                  <form phx-change="logs_filtered_by_contributors"  style="margin-top:50px">
                     <select
                       id="task_filter"
                       name="contributor_select"
