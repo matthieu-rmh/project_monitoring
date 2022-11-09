@@ -24,6 +24,8 @@ defmodule PmLoginWeb.ProjectView do
     CardTaskmajorTrueLiveComponent,
     CardTaskmajorAllLiveComponent,
     VoirModalLive,
+    SidebarTrueLiveComponent,
+    SidebarFalseLiveComponent,
     Loading
   }
 

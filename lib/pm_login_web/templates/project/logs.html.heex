@@ -2,6 +2,7 @@
 <html lang="fr">
   <body style="overflow-x: hidden; color: #696666; background-color: #fff">
     <!-- Side Bar Menu BEGIN -->
+  <%= if @show_task_component == false do %>
     <%=
       live_component(
         SidebarLiveComponent,
@@ -13,7 +14,47 @@
         show_task_ismajor_true: @show_task_ismajor_true
       )
     %>
-
+  <% end %>
+  <%= if @show_task_component == true do %>
+    <%=
+      live_component(
+        SidebarLiveComponent,
+        show_dashboard_component: @show_dashboard_component,
+        show_project_component: @show_project_component,
+        show_task_component: @show_task_component,
+        show_user_component: @show_user_component,
+        show_task_ismajor_false: @show_task_ismajor_false,
+        show_task_ismajor_true: @show_task_ismajor_true
+      )
+    %>
+  <% end %>
+  <%= if @show_task_ismajor_true == true do %>
+    <%=
+      live_component(
+        SidebarTrueLiveComponent,
+        show_dashboard_component: @show_dashboard_component,
+        show_project_component: @show_project_component,
+        show_task_component: @show_task_component,
+        show_user_component: @show_user_component,
+        show_task_ismajor_false: @show_task_ismajor_false,
+        show_task_ismajor_true: @show_task_ismajor_true
+      )
+    %>
+  <% end %>
+  <%= if @show_task_ismajor_false == true do %>
+    <%=
+      live_component(
+        SidebarFalseLiveComponent,
+        show_dashboard_component: @show_dashboard_component,
+        show_project_component: @show_project_component,
+        show_task_component: @show_task_component,
+        show_user_component: @show_user_component,
+        show_task_ismajor_false: @show_task_ismajor_false,
+        show_task_ismajor_true: @show_task_ismajor_true
+      )
+    %>
+  <% end %>
+  
     <!-- Side Bar Menu END -->
 
     <!-- Right Menu BEGIN -->
