@@ -103,6 +103,18 @@ defmodule PmLoginWeb.LiveComponent.TaskModalLive do
 
                   <div class="row">
                     <div class="column">
+
+                      <%= radio_button f, :is_major, "true", class: "btn-check", id: "task_danger-outlined", autocomplete: "off" %>
+                      <%= label f, "danger-outlined", "TÂCHE MAJEURE", class: "btn btn-danger", style: "font-size: 80%;"%>
+
+                      <%= radio_button f, :is_major, "false", class: "btn-check", id: "task_secondary-outlined", autocomplete: "off" , checked: true%>
+                      <%= label f, "secondary-outlined", "Tâche mineure", class: "btn btn-outline-secondary", style: "font-size: 90%;" %>
+
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="column">
                       <label class="zoom-out">Sans contrôle</label>
                       <%= checkbox f, :without_control %>
                     </div>
