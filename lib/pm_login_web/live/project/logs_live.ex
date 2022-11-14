@@ -158,7 +158,9 @@ defmodule PmLoginWeb.Project.LogsLive do
           show_dashboard_component: false,
           show_project_component: true,
           show_task_component: false,
-          show_user_component: false
+          show_user_component: false,
+          show_task_ismajor_true: false,
+            show_task_ismajor_false: false
         )
 
     {:noreply, socket}
@@ -190,7 +192,9 @@ defmodule PmLoginWeb.Project.LogsLive do
           show_dashboard_component: true,
           show_project_component: false,
           show_task_component: false,
-          show_user_component: false
+          show_user_component: false,
+          show_task_ismajor_true: false,
+          show_task_ismajor_false: false
         )
 
     {:noreply, socket}
@@ -203,7 +207,9 @@ defmodule PmLoginWeb.Project.LogsLive do
           show_dashboard_component: false,
           show_project_component: false,
           show_task_component: false,
-          show_user_component: true
+          show_user_component: true,
+          show_task_ismajor_true: false,
+          show_task_ismajor_false: false
         )
 
     {:noreply, socket}
