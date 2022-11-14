@@ -2220,4 +2220,22 @@ defmodule PmLogin.Monitoring do
     Repo.all(query)
   end
 
+  def list_tasks_by_date(date_start, date_end) do
+    query =  from t in Task,
+            where: t.date_start >= ^date_start and t.deadline <= ^date_end,
+            select: t
+    Repo.all(query)
+  end
+  def list_tasks_by_date_ismajor_true(date_start, date_end) do
+    query = from t in Task,
+            where: t.is_major == true and t.date_start >= ^date_start and t.deadline <= ^date_end,
+            select: t
+    Repo.all(query)
+  end
+  def list_tasks_by_date_ismajor_false(date_start, date_end) do
+    query = from t in Task,
+            where: t.is_major == false and t.date_start >= ^date_start and t.deadline <= ^date_end,
+            select: t
+    Repo.all(query)
+  end
 end

@@ -2,16 +2,59 @@
 <html lang="fr">
   <body style="overflow-x: hidden; color: #696666; background-color: #fff">
     <!-- Side Bar Menu BEGIN -->
+  <%= if @show_task_component == false do %>
     <%=
       live_component(
         SidebarLiveComponent,
         show_dashboard_component: @show_dashboard_component,
         show_project_component: @show_project_component,
         show_task_component: @show_task_component,
-        show_user_component: @show_user_component
+        show_user_component: @show_user_component,
+        show_task_ismajor_false: @show_task_ismajor_false,
+        show_task_ismajor_true: @show_task_ismajor_true
       )
     %>
-
+  <% end %>
+  <%= if @show_task_component == true do %>
+    <%=
+      live_component(
+        SidebarLiveComponent,
+        show_dashboard_component: @show_dashboard_component,
+        show_project_component: @show_project_component,
+        show_task_component: @show_task_component,
+        show_user_component: @show_user_component,
+        show_task_ismajor_false: @show_task_ismajor_false,
+        show_task_ismajor_true: @show_task_ismajor_true
+      )
+    %>
+  <% end %>
+  <%= if @show_task_ismajor_true == true do %>
+    <%=
+      live_component(
+        SidebarTrueLiveComponent,
+        show_dashboard_component: @show_dashboard_component,
+        show_project_component: @show_project_component,
+        show_task_component: @show_task_component,
+        show_user_component: @show_user_component,
+        show_task_ismajor_false: @show_task_ismajor_false,
+        show_task_ismajor_true: @show_task_ismajor_true
+      )
+    %>
+  <% end %>
+  <%= if @show_task_ismajor_false == true do %>
+    <%=
+      live_component(
+        SidebarFalseLiveComponent,
+        show_dashboard_component: @show_dashboard_component,
+        show_project_component: @show_project_component,
+        show_task_component: @show_task_component,
+        show_user_component: @show_user_component,
+        show_task_ismajor_false: @show_task_ismajor_false,
+        show_task_ismajor_true: @show_task_ismajor_true
+      )
+    %>
+  <% end %>
+  
     <!-- Side Bar Menu END -->
 
     <!-- Right Menu BEGIN -->
@@ -189,7 +232,7 @@
             color: "#0069d9",
             background_color: "#6365f117",
             icon: "bi bi-window-sidebar",
-            content_name: "Interventions majeurs",
+            content_name: "Tâches majeures",
             content_list: @values_tasks_ismajor_true,
             font_color: "#de0a26",
             phx_click: "Click_ismajor_true"
@@ -201,7 +244,7 @@
             color: "#0069d9",
             background_color: "#6365f117",
             icon: "bi bi-window-sidebar",
-            content_name: "Tâches mineurs",
+            content_name: "Tâches mineures",
             content_list: @values_tasks_ismajor_false,
             font_color: "#1e293b"
           )
@@ -214,6 +257,7 @@
             TaskLiveComponent,
             list_tasks: @list_tasks,
             list_tasks_by_contributor_id: @list_tasks_by_contributor_id,
+            list_tasks_by_date: @list_tasks_by_date,
             list_tasks_not_achieved: @list_tasks_not_achieved,
             list_contributors: @list_contributors,
             list_tasks_ismajor_true: @values_tasks_ismajor_true,
@@ -243,7 +287,7 @@
           color: "#0069d9",
           background_color: "#6365f117",
           icon: "bi bi-window-sidebar",
-          content_name: "Interventions majeurs",
+          content_name: "Tâches majeures",
           content_list: @values_tasks_ismajor_true,
           font_color: "#de0a26",
           phx_click: "Click_ismajor_true"
@@ -255,7 +299,7 @@
           color: "#0069d9",
           background_color: "#6365f117",
           icon: "bi bi-window-sidebar",
-          content_name: "Tâches mineurs",
+          content_name: "Tâches mineures",
           content_list: @values_tasks_ismajor_false,
           font_color: "#1e293b"
         )
@@ -266,6 +310,7 @@
           live_component(
             TaskmajorTrueLiveComponent,
             list_tasks_ismajor_true: @values_tasks_ismajor_true,
+            list_tasks_by_date: @list_tasks_by_date,
             list_tasks_by_contributor_id: @list_tasks_by_contributor_id,
             list_tasks_not_achieved: @list_tasks_not_achieved,
             list_contributors: @list_contributors
@@ -293,7 +338,7 @@
           color: "#0069d9",
           background_color: "#6365f117",
           icon: "bi bi-window-sidebar",
-          content_name: "Interventions majeurs",
+          content_name: "Tâches majeures",
           content_list: @values_tasks_ismajor_true,
           font_color: "#de0a26",
           phx_click: "Click_ismajor_true"
@@ -305,7 +350,7 @@
           color: "#0069d9",
           background_color: "#6365f117",
           icon: "bi bi-window-sidebar",
-          content_name: "Tâches mineurs",
+          content_name: "Tâches mineures",
           content_list: @values_tasks_ismajor_false,
           font_color: "#1e293b"
         )
@@ -316,6 +361,7 @@
           live_component(
             TaskmajorFalseLiveComponent,
             list_tasks_ismajor_false: @values_tasks_ismajor_false,
+            list_tasks_by_date: @list_tasks_by_date,
             list_tasks_by_contributor_id: @list_tasks_by_contributor_id,
             list_tasks_not_achieved: @list_tasks_not_achieved,
             list_contributors: @list_contributors
